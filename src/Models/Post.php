@@ -63,7 +63,7 @@ final class Post extends Model
     {
         $author = $this->author;
 
-        return $author instanceof Author ? $author->getBlogAuthorName() : 'Equipe';
+        return $author instanceof Author ? $author->getBlogAuthorName() : 'Team';
     }
 
     public function authorInitials(): string

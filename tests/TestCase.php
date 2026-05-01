@@ -41,6 +41,7 @@ class TestCase extends Orchestra
             'prefix' => '',
         ]);
         config()->set('blog.author_model', User::class);
+        config()->set('blog.assets', []);
 
         Schema::create('users', function ($table) {
             $table->id();

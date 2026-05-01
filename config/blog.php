@@ -3,76 +3,75 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Prefixo das rotas públicas
+    | Public route prefix
     |--------------------------------------------------------------------------
     |
-    | Define o segmento da URL onde o blog público será montado. Com 'blog',
-    | as rotas ficam em /blog, /blog/{slug}, /blog/categoria/{slug}.
-    | Trocar por 'artigos' move tudo para /artigos automaticamente.
+    | The URL segment where the public blog is mounted. With 'blog', routes
+    | become /blog, /blog/{slug}, /blog/category/{slug}. Change to 'articles'
+    | and everything moves to /articles automatically.
     |
     */
     'route_prefix' => 'blog',
 
     /*
     |--------------------------------------------------------------------------
-    | Prefixo das rotas administrativas
+    | Admin route prefix
     |--------------------------------------------------------------------------
     |
-    | Onde fica o CRUD de posts e categorias. Padrão: /admin/blog.
-    | Pode ser qualquer caminho — só não conflite com rotas existentes
-    | do app consumidor.
+    | Where the post and category CRUD lives. Default: /admin/blog. Use any
+    | path you like — just don't conflict with existing app routes.
     |
     */
     'admin_route_prefix' => 'admin/blog',
 
     /*
     |--------------------------------------------------------------------------
-    | Middleware das rotas públicas
+    | Public middleware
     |--------------------------------------------------------------------------
     |
-    | Stack aplicada nas rotas /index, /show e /category. Normalmente só
-    | 'web' já basta (sessão + CSRF). Adicione middleware extra aqui se
-    | quiser, por exemplo, gating por feature flag ou cache.
+    | Stack applied to /index, /show and /category. Usually 'web' alone is
+    | enough (session + CSRF). Add extra middleware here if you need feature
+    | flag gating, response caching, etc.
     |
     */
     'public_middleware' => ['web'],
 
     /*
     |--------------------------------------------------------------------------
-    | Middleware das rotas administrativas
+    | Admin middleware
     |--------------------------------------------------------------------------
     |
-    | É AQUI que você protege o admin do blog. O pacote NÃO embute nenhuma
-    | lógica de autorização — você pluga via middleware do Laravel.
+    | This is where you protect the blog admin. The package embeds NO
+    | authorization logic — you plug it in via Laravel middleware.
     |
-    | Exemplos:
+    | Examples:
     |
-    |   Gate específico:
+    |   Specific Gate:
     |     ['web', 'auth', 'can:manage-blog']
     |
-    |   Guard separado:
+    |   Separate guard:
     |     ['web', 'auth:admin']
     |
-    |   Combo de middlewares próprios do app:
+    |   App-specific middleware combo:
     |     ['web', 'auth', 'verified', 'super.admin']
     |
-    | Se a stack autoriza, o app pode ler/criar/editar posts. Se bloqueia,
-    | a request é rejeitada antes de chegar no Livewire.
+    | If the stack authorizes the user, the app can list/create/edit posts.
+    | If it blocks, the request is rejected before reaching Livewire.
     |
     */
     'admin_middleware' => ['web', 'auth'],
 
     /*
     |--------------------------------------------------------------------------
-    | Model do autor
+    | Author model
     |--------------------------------------------------------------------------
     |
-    | Class do model usado no relacionamento Post::author(). Geralmente é o
-    | User do app. O model precisa implementar
-    | Jessecruz\SimpleBlog\Contracts\Author para que o pacote consiga
-    | renderizar nome e iniciais no layout.
+    | The model class used by the Post::author() relationship — usually your
+    | app's User. The model must implement
+    | Jessecruz\SimpleBlog\Contracts\Author so the package can render the
+    | author's name and initials in the layout.
     |
-    | Exemplo:
+    | Example:
     |     App\Models\User::class
     |
     */
@@ -83,17 +82,15 @@ return [
     | Layouts
     |--------------------------------------------------------------------------
     |
-    | Views Blade que envolvem o conteúdo do pacote. O pacote shippa um
-    | layout padrão limpo (blog::layouts.public e blog::layouts.admin).
+    | Blade views that wrap the package's content. The package ships clean
+    | default layouts (blog::layouts.public and blog::layouts.admin).
     |
-    | Para usar o layout do seu app (header/footer próprios, navegação,
-    | etc.), aponte aqui:
+    | To use your app's layout (your own header/footer/nav), point here:
     |
     |   'public' => 'layouts.app',
     |   'admin'  => 'layouts.admin',
     |
-    | Os layouts customizados precisam ter um {{ $slot }} no lugar do
-    | conteúdo principal.
+    | Custom layouts must yield content via @yield('content').
     |
     */
     'layouts' => [
@@ -103,16 +100,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | View do CTA (Call to Action)
+    | CTA view (Call to Action)
     |--------------------------------------------------------------------------
     |
-    | View opcional renderizada no fim de cada post (após o conteúdo, antes
-    | de "Continue lendo"). Use para injetar pricing, newsletter signup,
-    | banner de produto, etc.
+    | Optional view rendered at the end of every post (after the content,
+    | before "Continue reading"). Use it to inject pricing, newsletter
+    | signups, product banners, etc.
     |
-    | Deixe `null` para não renderizar nada. A view recebe a variável $post.
+    | Leave `null` to render nothing. The view receives the $post variable.
     |
-    | Exemplo:
+    | Example:
     |     'cta_view' => 'components.blog-pricing-cta'
     |
     */
@@ -120,17 +117,35 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Opções de renderização do Markdown
+    | Assets (Vite)
     |--------------------------------------------------------------------------
     |
-    | Passadas direto para Str::markdown() (CommonMark). Por padrão:
+    | Vite entrypoints injected into <head> in the package's default layouts.
+    | Since the package ships Tailwind classes, it needs the consuming app's
+    | compiled CSS to render correctly.
     |
-    |   - html_input: 'escape' — HTML cru no markdown vira texto literal
-    |     (proteção contra XSS quando autores não-confiáveis escrevem)
-    |   - allow_unsafe_links: false — bloqueia javascript:, data:, etc.
+    | Default: the standard Tailwind entrypoint of a Laravel app. Set to an
+    | empty array (`[]`) if you pointed `layouts.public`/`layouts.admin` at
+    | your own layout (which already loads its assets).
     |
-    | Se TODOS os autores são internos e confiáveis e você quer permitir
-    | HTML inline, troque 'html_input' para 'allow'.
+    */
+    'assets' => [
+        'resources/css/app.css',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Markdown rendering options
+    |--------------------------------------------------------------------------
+    |
+    | Passed straight to Str::markdown() (CommonMark). Defaults:
+    |
+    |   - html_input: 'escape' — raw HTML in markdown is rendered as literal
+    |     text (XSS protection when authors are untrusted)
+    |   - allow_unsafe_links: false — blocks javascript:, data:, etc.
+    |
+    | If ALL authors are internal/trusted and you want to allow inline HTML,
+    | switch 'html_input' to 'allow'.
     |
     */
     'markdown' => [

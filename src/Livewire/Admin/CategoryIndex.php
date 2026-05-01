@@ -61,10 +61,10 @@ final class CategoryIndex extends Component
 
         if ($this->editingId) {
             PostCategory::findOrFail($this->editingId)->update($data);
-            $this->dispatch('notify', 'Categoria atualizada.');
+            $this->dispatch('notify', 'Category updated.');
         } else {
             PostCategory::create($data);
-            $this->dispatch('notify', 'Categoria criada.');
+            $this->dispatch('notify', 'Category created.');
         }
 
         $this->cancel();
@@ -75,13 +75,13 @@ final class CategoryIndex extends Component
         $category = PostCategory::findOrFail($id);
 
         if ($category->posts()->exists()) {
-            $this->dispatch('notify', 'Não é possível excluir: a categoria possui posts.');
+            $this->dispatch('notify', 'Cannot delete: this category still has posts.');
 
             return;
         }
 
         $category->delete();
-        $this->dispatch('notify', 'Categoria excluída.');
+        $this->dispatch('notify', 'Category deleted.');
     }
 
     public function render(): View

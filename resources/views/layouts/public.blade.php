@@ -45,6 +45,10 @@
         .blog-serif { font-family: "Source Serif Pro", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif; }
     </style>
 
+    @if($assets = config('blog.assets'))
+        @vite($assets)
+    @endif
+
     @stack('head')
 </head>
 <body class="antialiased font-sans bg-white dark:bg-zinc-950 min-h-screen text-zinc-900 dark:text-zinc-100">

@@ -14,7 +14,7 @@
                 @if(isset($currentCategory) && $currentCategory->description)
                     {{ $currentCategory->description }}
                 @else
-                    Últimas publicações.
+                    Latest posts.
                 @endif
             </p>
         </header>
@@ -23,7 +23,7 @@
             <nav class="flex flex-wrap gap-x-6 gap-y-2 mb-12 pb-6 border-b border-zinc-200 dark:border-zinc-800 text-sm">
                 <a href="{{ route('blog.index') }}"
                    class="{{ ! isset($currentCategory) ? 'text-emerald-600 dark:text-emerald-400 font-medium' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200' }} transition-colors">
-                    Todos
+                    All
                 </a>
                 @foreach($categories as $category)
                     <a href="{{ route('blog.category', $category) }}"
@@ -36,7 +36,7 @@
 
         @if($posts->isEmpty())
             <div class="text-center py-16 text-zinc-500 dark:text-zinc-400">
-                <p>Em breve teremos novos conteúdos.</p>
+                <p>New content coming soon.</p>
             </div>
         @else
             <div class="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -58,10 +58,10 @@
                                         <span>{{ $post->authorName() }}</span>
                                         <span aria-hidden="true">&middot;</span>
                                         <time datetime="{{ $post->published_at->toIso8601String() }}">
-                                            {{ $post->published_at->translatedFormat('d M Y') }}
+                                            {{ $post->published_at->translatedFormat("M j, Y") }}
                                         </time>
                                         <span aria-hidden="true">&middot;</span>
-                                        <span>{{ $post->reading_time }} min de leitura</span>
+                                        <span>{{ $post->reading_time }} min read</span>
                                     </div>
                                 </div>
                                 @if($post->cover_image)

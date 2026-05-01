@@ -13,7 +13,7 @@ Route::prefix(config('blog.route_prefix'))
     ->name('blog.')
     ->group(function () {
         Route::get('/', [BlogController::class, 'index'])->name('index');
-        Route::get('/categoria/{category}', [BlogController::class, 'category'])->name('category');
+        Route::get('/category/{category}', [BlogController::class, 'category'])->name('category');
         Route::get('/{post}', [BlogController::class, 'show'])->name('show');
     });
 
@@ -22,8 +22,8 @@ Route::prefix(config('blog.admin_route_prefix'))
     ->name('blog.admin.')
     ->group(function () {
         Route::get('/', PostIndex::class)->name('index');
-        Route::get('/criar', PostForm::class)->name('create');
-        Route::get('/{post}/editar', PostForm::class)->name('edit');
+        Route::get('/create', PostForm::class)->name('create');
+        Route::get('/{post}/edit', PostForm::class)->name('edit');
         Route::get('/{post}/preview', [BlogController::class, 'preview'])->name('preview');
-        Route::get('/categorias', CategoryIndex::class)->name('categories');
+        Route::get('/categories', CategoryIndex::class)->name('categories');
     });

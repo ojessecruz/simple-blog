@@ -1,34 +1,34 @@
 # Simple Blog
 
-Um blog Laravel pronto para usar — listagem pública estilo Medium, CRUD admin com Livewire, Markdown com escape de HTML e preview de rascunhos em nova aba. Zero opinião sobre autenticação: você pluga via middleware do Laravel (Gate, guard, ou qualquer combo).
+A ready-to-use Laravel blog — Medium-style public listing, admin CRUD with Livewire, Markdown with HTML escaping, and draft preview in a new tab. Zero opinions on authentication: you plug it in via Laravel middleware (Gate, guard, or any combo).
 
-## Requisitos
+## Requirements
 
 - PHP 8.3+
 - Laravel 11 / 12 / 13
 - Livewire 3.5+
-- Tailwind CSS no app consumidor (o pacote shippa classes Tailwind, não compila CSS próprio)
+- Tailwind CSS in the consuming app (the package ships Tailwind classes, it does not compile its own CSS)
 
-## Instalação
+## Installation
 
 ```bash
 composer require ojessecruz/simple-blog
 ```
 
-Publique e rode as migrations:
+Publish and run the migrations:
 
 ```bash
 php artisan vendor:publish --tag="simple-blog-migrations"
 php artisan migrate
 ```
 
-Publique a config (opcional, mas recomendado):
+Publish the config (optional, but recommended):
 
 ```bash
 php artisan vendor:publish --tag="simple-blog-config"
 ```
 
-Publique as views (opcional, só se você quiser customizar):
+Publish the views (optional, only if you want to customize):
 
 ```bash
 php artisan vendor:publish --tag="simple-blog-views"
@@ -36,39 +36,39 @@ php artisan vendor:publish --tag="simple-blog-views"
 
 ## Quickstart
 
-Em três passos você tem o blog rodando.
+Three steps and your blog is up.
 
-### 1. Proteja as rotas admin
+### 1. Protect the admin routes
 
-O pacote **não** embute lógica de autorização. Você pluga via middleware no `config/blog.php`. Exemplos:
+The package does **not** embed any authorization logic. You plug it in via middleware in `config/blog.php`. Examples:
 
 ```php
-// Por Gate específico
+// Via a specific Gate
 'admin_middleware' => ['web', 'auth', 'can:manage-blog'],
 
-// Por guard separado
+// Via a separate guard
 'admin_middleware' => ['web', 'auth:admin'],
 
-// Combo de middlewares próprios do app
+// Combo of your app's own middleware
 'admin_middleware' => ['web', 'auth', 'verified', 'super.admin'],
 ```
 
-Se for via Gate, defina-o normalmente no `AuthServiceProvider`:
+If you go with a Gate, define it as usual in `AuthServiceProvider`:
 
 ```php
 Gate::define('manage-blog', fn ($user) => $user->is_admin === true);
 ```
 
-### 2. Configure o model do autor
+### 2. Configure the author model
 
-Aponte para o User do seu app:
+Point it to your app's User:
 
 ```php
 // config/blog.php
 'author_model' => App\Models\User::class,
 ```
 
-E faça o User implementar o contract `Author`:
+And make User implement the `Author` contract:
 
 ```php
 use Jessecruz\SimpleBlog\Contracts\Author;
@@ -93,44 +93,44 @@ class User extends Authenticatable implements Author
 }
 ```
 
-### 3. Acesse
+### 3. Access it
 
-- Público: `https://seuapp.com/blog`
-- Admin: `https://seuapp.com/admin/blog`
+- Public: `https://yourapp.com/blog`
+- Admin: `https://yourapp.com/admin/blog`
 
-Pronto.
+Done.
 
-## Rotas
+## Routes
 
-O pacote registra:
+The package registers:
 
-| Método | URL                              | Nome                  | Descrição                       |
-|--------|----------------------------------|-----------------------|---------------------------------|
-| GET    | `/blog`                          | `blog.index`          | Listagem pública                |
-| GET    | `/blog/categoria/{slug}`         | `blog.category`       | Posts de uma categoria          |
-| GET    | `/blog/{slug}`                   | `blog.show`           | Post individual                 |
-| GET    | `/admin/blog`                    | `blog.admin.index`    | Lista admin (filtro/busca)      |
-| GET    | `/admin/blog/criar`              | `blog.admin.create`   | Form de criação                 |
-| GET    | `/admin/blog/{slug}/editar`      | `blog.admin.edit`     | Form de edição                  |
-| GET    | `/admin/blog/{slug}/preview`     | `blog.admin.preview`  | Pré-visualiza rascunho/agendado |
-| GET    | `/admin/blog/categorias`         | `blog.admin.categories` | CRUD de categorias            |
+| Method | URL                              | Name                    | Description                       |
+|--------|----------------------------------|-------------------------|-----------------------------------|
+| GET    | `/blog`                          | `blog.index`            | Public listing                    |
+| GET    | `/blog/category/{slug}`         | `blog.category`         | Posts in a category               |
+| GET    | `/blog/{slug}`                   | `blog.show`             | Individual post                   |
+| GET    | `/admin/blog`                    | `blog.admin.index`      | Admin list (filter/search)        |
+| GET    | `/admin/blog/create`              | `blog.admin.create`     | Create form                       |
+| GET    | `/admin/blog/{slug}/edit`      | `blog.admin.edit`       | Edit form                         |
+| GET    | `/admin/blog/{slug}/preview`     | `blog.admin.preview`    | Preview a draft/scheduled post    |
+| GET    | `/admin/blog/categories`         | `blog.admin.categories` | Categories CRUD                   |
 
-Os prefixos `/blog` e `/admin/blog` são configuráveis (`route_prefix`, `admin_route_prefix`).
+The `/blog` and `/admin/blog` prefixes are configurable (`route_prefix`, `admin_route_prefix`).
 
-## Configuração
+## Configuration
 
-Veja `config/blog.php` (publicado) — cada chave tem comentários explicando o que faz e exemplos. Resumo:
+See `config/blog.php` (published) — every key has comments explaining what it does, with examples. Summary:
 
-- **`route_prefix`** / **`admin_route_prefix`** — onde montar as rotas
-- **`public_middleware`** / **`admin_middleware`** — stack de middleware
-- **`author_model`** — model do User
-- **`layouts.public`** / **`layouts.admin`** — layouts Blade que envolvem o conteúdo
-- **`cta_view`** — view opcional renderizada no fim de cada post (ex: pricing, newsletter)
-- **`markdown`** — opções passadas para `Str::markdown()`
+- **`route_prefix`** / **`admin_route_prefix`** — where to mount the routes
+- **`public_middleware`** / **`admin_middleware`** — middleware stacks
+- **`author_model`** — User model
+- **`layouts.public`** / **`layouts.admin`** — Blade layouts wrapping the content
+- **`cta_view`** — optional view rendered at the end of each post (e.g. pricing, newsletter)
+- **`markdown`** — options passed to `Str::markdown()`
 
-## Customizando o layout
+## Customizing the layout
 
-Por padrão, o pacote usa layouts próprios neutros. Para usar o layout do seu app:
+By default, the package uses its own neutral layouts. To use your app's layout:
 
 ```php
 // config/blog.php
@@ -140,26 +140,26 @@ Por padrão, o pacote usa layouts próprios neutros. Para usar o layout do seu a
 ],
 ```
 
-Os layouts customizados precisam ter `@yield('content')` no lugar do conteúdo principal.
+Custom layouts must have `@yield('content')` where the main content goes.
 
-## Injetando um CTA nos posts
+## Injecting a CTA into posts
 
-Crie uma view (ex: `resources/views/components/blog-cta.blade.php`) e aponte:
+Create a view (e.g. `resources/views/components/blog-cta.blade.php`) and point to it:
 
 ```php
 'cta_view' => 'components.blog-cta',
 ```
 
-A view recebe a variável `$post` e é renderizada após o conteúdo do post (na show) e abaixo do feed (na index).
+The view receives the `$post` variable and is rendered after the post content (on show) and below the feed (on index).
 
 ## Models
 
-O pacote expõe:
+The package exposes:
 
 - `Jessecruz\SimpleBlog\Models\Post`
 - `Jessecruz\SimpleBlog\Models\PostCategory`
 
-Use diretamente se precisar (ex: para gerar sitemap, exportar conteúdo):
+Use them directly when needed (e.g. to generate a sitemap, export content):
 
 ```php
 use Jessecruz\SimpleBlog\Models\Post;
@@ -167,7 +167,7 @@ use Jessecruz\SimpleBlog\Models\Post;
 $posts = Post::published()->with('category')->latest('published_at')->get();
 ```
 
-## Testando
+## Testing
 
 ```bash
 composer test
@@ -175,8 +175,8 @@ composer test
 
 ## Changelog
 
-Veja [CHANGELOG](CHANGELOG.md).
+See [CHANGELOG](CHANGELOG.md).
 
 ## License
 
-MIT — veja [License File](LICENSE.md).
+MIT — see [License File](LICENSE.md).

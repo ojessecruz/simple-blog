@@ -105,7 +105,7 @@ final class PostForm extends Component
     public function save(): void
     {
         $this->persist();
-        $this->dispatch('notify', $this->post?->wasRecentlyCreated ? 'Post criado.' : 'Post atualizado.');
+        $this->dispatch('notify', $this->post?->wasRecentlyCreated ? 'Post created.' : 'Post updated.');
         $this->redirectRoute('blog.admin.index', navigate: true);
     }
 

@@ -28,7 +28,7 @@ final class PostIndex extends Component
     public function delete(int $postId): void
     {
         Post::findOrFail($postId)->delete();
-        $this->dispatch('notify', 'Post excluído.');
+        $this->dispatch('notify', 'Post deleted.');
     }
 
     public function render(): View

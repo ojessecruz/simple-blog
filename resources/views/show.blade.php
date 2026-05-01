@@ -8,6 +8,14 @@
     @endif
 
     <article class="max-w-[44rem] mx-auto px-4 sm:px-6 pt-12 pb-16 sm:pt-16">
+        <div class="mb-8">
+            <a href="{{ route('blog.index') }}"
+               class="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 inline-flex items-center gap-1 transition-colors">
+                <x-blog::icon.arrow-left class="w-4 h-4" />
+                Back to blog
+            </a>
+        </div>
+
         <div class="mb-6">
             <a href="{{ route('blog.category', $post->category) }}"
                class="inline-block text-xs font-medium uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 transition-colors">
@@ -26,11 +34,11 @@
 
         @if(! $post->isPublished())
             <div class="mb-8 rounded-lg border border-amber-300/60 dark:border-amber-700/40 bg-amber-50 dark:bg-amber-950/30 px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
-                <strong class="font-semibold">Pré-visualização:</strong>
+                <strong class="font-semibold">Preview:</strong>
                 @if($post->published_at)
-                    agendado para {{ $post->published_at->translatedFormat('d \d\e F \d\e Y \à\s H:i') }}.
+                    scheduled for {{ $post->published_at->translatedFormat('F j, Y \a\t H:i') }}.
                 @else
-                    este post ainda é um rascunho.
+                    this post is still a draft.
                 @endif
             </div>
         @endif
@@ -44,11 +52,11 @@
                 <div class="text-zinc-500 dark:text-zinc-400">
                     @if($post->published_at)
                         <time datetime="{{ $post->published_at->toIso8601String() }}">
-                            {{ $post->published_at->translatedFormat('d \d\e F \d\e Y') }}
+                            {{ $post->published_at->translatedFormat("F j, Y") }}
                         </time>
                         <span aria-hidden="true" class="mx-1">&middot;</span>
                     @endif
-                    <span>{{ $post->reading_time }} min de leitura</span>
+                    <span>{{ $post->reading_time }} min read</span>
                 </div>
             </div>
             <div class="flex items-center gap-3 shrink-0">
@@ -136,7 +144,7 @@
         <div class="mt-16 pt-6 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between flex-wrap gap-3">
             <a href="{{ route('blog.category', $post->category) }}"
                class="inline-block text-xs font-medium uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 transition-colors">
-                Mais em {{ $post->category->name }}
+                More in {{ $post->category->name }}
             </a>
             <div class="flex items-center gap-4">
                 <a href="https://wa.me/?text={{ urlencode($post->title.' - '.$post->url()) }}" target="_blank" rel="noopener"
@@ -162,7 +170,7 @@
 
         @if($relatedPosts->isNotEmpty())
             <section class="mt-20 pt-10 border-t border-zinc-200 dark:border-zinc-800">
-                <h2 class="blog-serif text-2xl font-bold mb-8 tracking-tight">Continue lendo</h2>
+                <h2 class="blog-serif text-2xl font-bold mb-8 tracking-tight">Continue reading</h2>
                 <div class="space-y-10">
                     @foreach($relatedPosts as $related)
                         <a href="{{ $related->url() }}" class="group block">
@@ -171,7 +179,7 @@
                                 {{ $related->title }}
                             </h3>
                             <p class="text-base text-zinc-500 dark:text-zinc-400 line-clamp-2 mb-2">{{ $related->excerpt }}</p>
-                            <p class="text-sm text-zinc-400 dark:text-zinc-500">{{ $related->reading_time }} min de leitura</p>
+                            <p class="text-sm text-zinc-400 dark:text-zinc-500">{{ $related->reading_time }} min read</p>
                         </a>
                     @endforeach
                 </div>
