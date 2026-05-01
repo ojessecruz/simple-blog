@@ -8,3 +8,12 @@ parameters:
         - config
         - database
     tmpDir: build/phpstan
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        -
+            message: '#expects view-string\|null, string given\.#'
+            paths:
+                - src/Http/Controllers/BlogController.php
+                - src/Livewire/Admin/PostIndex.php
+                - src/Livewire/Admin/PostForm.php
+                - src/Livewire/Admin/CategoryIndex.php

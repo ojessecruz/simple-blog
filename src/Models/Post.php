@@ -8,9 +8,31 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Jessecruz\SimpleBlog\Contracts\Author;
 
+/**
+ * @property int $id
+ * @property string $slug
+ * @property string $title
+ * @property string $excerpt
+ * @property string $body
+ * @property int $blog_category_id
+ * @property string|null $cover_image
+ * @property int|null $author_id
+ * @property Carbon|null $published_at
+ * @property int $reading_time
+ * @property int $views_count
+ * @property string|null $meta_title
+ * @property string|null $meta_description
+ * @property string|null $og_image
+ * @property array<int, string>|null $keywords
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read PostCategory $category
+ * @property-read \Illuminate\Database\Eloquent\Model|null $author
+ */
 final class Post extends Model
 {
     protected $table = 'blog_posts';
