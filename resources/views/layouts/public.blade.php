@@ -37,14 +37,6 @@
     <link rel="canonical" href="{{ request()->url() }}">
     <meta name="robots" content="index, follow">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&display=swap">
-
-    <style>
-        .blog-serif { font-family: "Source Serif Pro", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif; }
-    </style>
-
     @if($assets = config('blog.assets'))
         @vite($assets)
     @endif
