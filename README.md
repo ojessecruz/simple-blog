@@ -164,6 +164,18 @@ Then point the config at the wrapper:
 
 Three lines of plumbing, your app's chrome (header/nav/footer) wrapping the blog.
 
+## Customizing the visual style
+
+The package ships with `emerald` as the accent colour and `zinc` as the neutral. To brand it differently, publish the views and edit them directly:
+
+```bash
+php artisan vendor:publish --tag="simple-blog-views"
+```
+
+The Blade files land in `resources/views/vendor/blog/`. From that point Laravel uses your published copies, so a global find-and-replace (`emerald-` → `blue-`, `emerald-` → `rose-`, etc.) is enough to retheme the whole package.
+
+Trade-off: published views are frozen at the version you published — bug fixes and new features that ship in later releases of the package won't reach them automatically. Diff your views against the upstream when upgrading.
+
 ## Injecting a CTA into posts
 
 Create a view (e.g. `resources/views/components/blog-cta.blade.php`) and point to it:
