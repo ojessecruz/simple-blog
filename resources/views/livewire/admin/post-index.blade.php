@@ -1,12 +1,14 @@
 <div class="py-6 sm:py-10 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
-        <div class="flex items-center gap-3 mb-6">
-            <a href="{{ url()->previous() }}"
-               class="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 inline-flex items-center gap-1">
-                <x-blog::icon.arrow-left class="w-4 h-4" />
-                Back
-            </a>
-        </div>
+        @if(config('blog.admin_back_url'))
+            <div class="flex items-center gap-3 mb-6">
+                <a href="{{ config('blog.admin_back_url') }}"
+                   class="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 inline-flex items-center gap-1">
+                    <x-blog::icon.arrow-left class="w-4 h-4" />
+                    Back
+                </a>
+            </div>
+        @endif
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
             <div class="flex items-center gap-3">

@@ -117,6 +117,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Admin "Back" URL
+    |--------------------------------------------------------------------------
+    |
+    | Where the "Back" link at the top of /admin/blog should go. Typically
+    | the host app's admin dashboard or wherever the operator was before
+    | entering the blog area.
+    |
+    | Leave `null` to hide the back link entirely.
+    |
+    | Example:
+    |     'admin_back_url' => '/admin',
+    |
+    */
+    'admin_back_url' => null,
+
+    /*
+    |--------------------------------------------------------------------------
     | Assets (Vite)
     |--------------------------------------------------------------------------
     |
