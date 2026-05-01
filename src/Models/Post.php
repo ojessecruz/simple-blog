@@ -31,7 +31,7 @@ use Jessecruz\SimpleBlog\Contracts\Author;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read PostCategory $category
- * @property-read \Illuminate\Database\Eloquent\Model|null $author
+ * @property-read Model|null $author
  */
 final class Post extends Model
 {
