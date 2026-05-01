@@ -49,6 +49,6 @@ final class PostIndex extends Component
 
         return view('blog::livewire.admin.post-index', [
             'posts' => $query->latest('published_at')->latest('id')->paginate(15),
-        ])->extends(config('blog.layouts.admin'))->section('content');
+        ])->layout(config('blog.layouts.admin'));
     }
 }

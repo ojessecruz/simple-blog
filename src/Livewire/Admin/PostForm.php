@@ -119,7 +119,7 @@ final class PostForm extends Component
     {
         return view('blog::livewire.admin.post-form', [
             'categories' => PostCategory::orderBy('name')->get(),
-        ])->extends(config('blog.layouts.admin'))->section('content');
+        ])->layout(config('blog.layouts.admin'));
     }
 
     protected function messages(): array

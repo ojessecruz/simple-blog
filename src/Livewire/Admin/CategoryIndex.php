@@ -88,7 +88,7 @@ final class CategoryIndex extends Component
     {
         return view('blog::livewire.admin.category-index', [
             'categories' => PostCategory::withCount('posts')->orderBy('name')->get(),
-        ])->extends(config('blog.layouts.admin'))->section('content');
+        ])->layout(config('blog.layouts.admin'));
     }
 
     protected function messages(): array
