@@ -142,6 +142,28 @@ By default, the package uses its own neutral layouts. To use your app's layout:
 
 Custom layouts must have `@yield('content')` where the main content goes.
 
+### Using a slot-based layout (Breeze, Jetstream, Folio)
+
+If your app's layout is a Blade component (`<x-app-layout>`, `<x-site-layout>`, etc.), create a small wrapper view that bridges `@yield` and `{{ $slot }}`:
+
+```blade
+{{-- resources/views/layouts/blog-wrapper.blade.php --}}
+<x-app-layout>
+    @yield('content')
+</x-app-layout>
+```
+
+Then point the config at the wrapper:
+
+```php
+'layouts' => [
+    'public' => 'layouts.blog-wrapper',
+    'admin' => 'layouts.blog-wrapper',
+],
+```
+
+Three lines of plumbing, your app's chrome (header/nav/footer) wrapping the blog.
+
 ## Injecting a CTA into posts
 
 Create a view (e.g. `resources/views/components/blog-cta.blade.php`) and point to it:
