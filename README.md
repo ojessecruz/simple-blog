@@ -1,71 +1,173 @@
-# :package_description
+# Simple Blog
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-<!--delete-->
----
-This repo can be used to scaffold a Laravel package. Follow these steps to get started:
+Um blog Laravel pronto para usar — listagem pública estilo Medium, CRUD admin com Livewire, Markdown com escape de HTML e preview de rascunhos em nova aba. Zero opinião sobre autenticação: você pluga via middleware do Laravel (Gate, guard, ou qualquer combo).
 
-1. Press the "Use this template" button at the top of this repo to create a new repo with the contents of this skeleton.
-2. Run "php ./configure.php" to run a script that will replace all placeholders throughout all the files.
-3. Have fun creating your package.
-4. If you need help creating a package, consider picking up our <a href="https://laravelpackage.training">Laravel Package Training</a> video course.
----
-<!--/delete-->
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+## Requisitos
 
-## Support us
+- PHP 8.3+
+- Laravel 11 / 12 / 13
+- Livewire 3.5+
+- Tailwind CSS no app consumidor (o pacote shippa classes Tailwind, não compila CSS próprio)
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/:package_name.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/:package_name)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
-
-## Installation
-
-You can install the package via composer:
+## Instalação
 
 ```bash
-composer require :vendor_slug/:package_slug
+composer require ojessecruz/simple-blog
 ```
 
-You can publish and run the migrations with:
+Publique e rode as migrations:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
+php artisan vendor:publish --tag="simple-blog-migrations"
 php artisan migrate
 ```
 
-You can publish the config file with:
+Publique a config (opcional, mas recomendado):
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-config"
+php artisan vendor:publish --tag="simple-blog-config"
 ```
 
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
+Publique as views (opcional, só se você quiser customizar):
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-views"
+php artisan vendor:publish --tag="simple-blog-views"
 ```
 
-## Usage
+## Quickstart
+
+Em três passos você tem o blog rodando.
+
+### 1. Proteja as rotas admin
+
+O pacote **não** embute lógica de autorização. Você pluga via middleware no `config/blog.php`. Exemplos:
 
 ```php
-$:variable = new VendorName\Skeleton();
-echo $:variable->echoPhrase('Hello, VendorName!');
+// Por Gate específico
+'admin_middleware' => ['web', 'auth', 'can:manage-blog'],
+
+// Por guard separado
+'admin_middleware' => ['web', 'auth:admin'],
+
+// Combo de middlewares próprios do app
+'admin_middleware' => ['web', 'auth', 'verified', 'super.admin'],
 ```
 
-## Testing
+Se for via Gate, defina-o normalmente no `AuthServiceProvider`:
+
+```php
+Gate::define('manage-blog', fn ($user) => $user->is_admin === true);
+```
+
+### 2. Configure o model do autor
+
+Aponte para o User do seu app:
+
+```php
+// config/blog.php
+'author_model' => App\Models\User::class,
+```
+
+E faça o User implementar o contract `Author`:
+
+```php
+use Jessecruz\SimpleBlog\Contracts\Author;
+
+class User extends Authenticatable implements Author
+{
+    public function getBlogAuthorName(): string
+    {
+        return $this->name;
+    }
+
+    public function getBlogAuthorInitials(): string
+    {
+        $words = preg_split('/\s+/', trim($this->name)) ?: [];
+        $initials = array_map(
+            fn (string $w) => mb_strtoupper(mb_substr($w, 0, 1)),
+            array_slice($words, 0, 2),
+        );
+
+        return implode('', $initials);
+    }
+}
+```
+
+### 3. Acesse
+
+- Público: `https://seuapp.com/blog`
+- Admin: `https://seuapp.com/admin/blog`
+
+Pronto.
+
+## Rotas
+
+O pacote registra:
+
+| Método | URL                              | Nome                  | Descrição                       |
+|--------|----------------------------------|-----------------------|---------------------------------|
+| GET    | `/blog`                          | `blog.index`          | Listagem pública                |
+| GET    | `/blog/categoria/{slug}`         | `blog.category`       | Posts de uma categoria          |
+| GET    | `/blog/{slug}`                   | `blog.show`           | Post individual                 |
+| GET    | `/admin/blog`                    | `blog.admin.index`    | Lista admin (filtro/busca)      |
+| GET    | `/admin/blog/criar`              | `blog.admin.create`   | Form de criação                 |
+| GET    | `/admin/blog/{slug}/editar`      | `blog.admin.edit`     | Form de edição                  |
+| GET    | `/admin/blog/{slug}/preview`     | `blog.admin.preview`  | Pré-visualiza rascunho/agendado |
+| GET    | `/admin/blog/categorias`         | `blog.admin.categories` | CRUD de categorias            |
+
+Os prefixos `/blog` e `/admin/blog` são configuráveis (`route_prefix`, `admin_route_prefix`).
+
+## Configuração
+
+Veja `config/blog.php` (publicado) — cada chave tem comentários explicando o que faz e exemplos. Resumo:
+
+- **`route_prefix`** / **`admin_route_prefix`** — onde montar as rotas
+- **`public_middleware`** / **`admin_middleware`** — stack de middleware
+- **`author_model`** — model do User
+- **`layouts.public`** / **`layouts.admin`** — layouts Blade que envolvem o conteúdo
+- **`cta_view`** — view opcional renderizada no fim de cada post (ex: pricing, newsletter)
+- **`markdown`** — opções passadas para `Str::markdown()`
+
+## Customizando o layout
+
+Por padrão, o pacote usa layouts próprios neutros. Para usar o layout do seu app:
+
+```php
+// config/blog.php
+'layouts' => [
+    'public' => 'layouts.app',
+    'admin' => 'layouts.admin',
+],
+```
+
+Os layouts customizados precisam ter `@yield('content')` no lugar do conteúdo principal.
+
+## Injetando um CTA nos posts
+
+Crie uma view (ex: `resources/views/components/blog-cta.blade.php`) e aponte:
+
+```php
+'cta_view' => 'components.blog-cta',
+```
+
+A view recebe a variável `$post` e é renderizada após o conteúdo do post (na show) e abaixo do feed (na index).
+
+## Models
+
+O pacote expõe:
+
+- `Jessecruz\SimpleBlog\Models\Post`
+- `Jessecruz\SimpleBlog\Models\PostCategory`
+
+Use diretamente se precisar (ex: para gerar sitemap, exportar conteúdo):
+
+```php
+use Jessecruz\SimpleBlog\Models\Post;
+
+$posts = Post::published()->with('category')->latest('published_at')->get();
+```
+
+## Testando
 
 ```bash
 composer test
@@ -73,21 +175,8 @@ composer test
 
 ## Changelog
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
-## Credits
-
-- [:author_name](https://github.com/:author_username)
-- [All Contributors](../../contributors)
+Veja [CHANGELOG](CHANGELOG.md).
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+MIT — veja [License File](LICENSE.md).
