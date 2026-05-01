@@ -130,39 +130,121 @@ See `config/blog.php` (published) — every key has comments explaining what it 
 
 ## Customizing the layout
 
-By default, the package uses its own neutral layouts. To use your app's layout:
+The package ships two neutral default layouts, both pulled from `config/blog.php`:
 
-```php
-// config/blog.php
-'layouts' => [
-    'public' => 'layouts.app',
-    'admin' => 'layouts.admin',
-],
-```
+- **public** (`blog::layouts.public`) — used for `/blog` and `/blog/{slug}`. Plain HTML, no nav, content rendered through `@yield('content')`.
+- **admin** (`blog::layouts.admin`) — used for `/admin/blog`. Slot-based, content rendered through `{{ $slot }}` so it can be pointed straight at modern Laravel layouts.
 
-Custom layouts must have `@yield('content')` where the main content goes.
+Most apps want the public side wrapped in their site chrome (header, nav, footer, SEO meta) and the admin inside their auth shell.
 
-### Using a slot-based layout (Breeze, Jetstream, Folio)
+### Public layout: build it from scratch
 
-If your app's layout is a Blade component (`<x-app-layout>`, `<x-site-layout>`, etc.), create a small wrapper view that bridges `@yield` and `{{ $slot }}`:
+The simplest path is creating a dedicated layout for the blog with `@yield('content')`:
 
 ```blade
-{{-- resources/views/layouts/blog-wrapper.blade.php --}}
-<x-app-layout>
-    @yield('content')
-</x-app-layout>
+{{-- resources/views/layouts/blog-public.blade.php --}}
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', config('app.name'))</title>
+
+    @stack('head') {{-- Required: lets the package emit SEO meta and JSON-LD --}}
+
+    @vite('resources/css/app.css')
+</head>
+<body class="bg-white text-gray-900">
+    <header class="border-b">
+        <div class="max-w-3xl mx-auto px-4 py-4">
+            <a href="/" class="text-xl font-bold">{{ config('app.name') }}</a>
+        </div>
+    </header>
+
+    <main>
+        @yield('content')
+    </main>
+
+    <footer class="border-t mt-16 py-8 text-center text-sm text-gray-500">
+        © {{ date('Y') }} {{ config('app.name') }}
+    </footer>
+</body>
+</html>
 ```
 
-Then point the config at the wrapper:
+Then point the config at it:
 
 ```php
 'layouts' => [
-    'public' => 'layouts.blog-wrapper',
-    'admin' => 'layouts.blog-wrapper',
+    'public' => 'layouts.blog-public',
+    'admin' => 'blog::layouts.admin',
 ],
 ```
 
-Three lines of plumbing, your app's chrome (header/nav/footer) wrapping the blog.
+If your layout already loads its own CSS via `@vite`, set `'assets' => []` in `config/blog.php` to avoid loading it twice.
+
+### Public layout: reuse a Blade component (slot-based)
+
+If your app already has a slot-based layout (Breeze, Jetstream, Folio, or a custom `<x-site-layout>`), create a small wrapper that bridges `@yield('content')` and `{{ $slot }}`:
+
+```blade
+{{-- resources/views/layouts/blog-public.blade.php --}}
+<x-site-layout>
+    @yield('content')
+</x-site-layout>
+```
+
+```php
+'public' => 'layouts.blog-public',
+```
+
+Three lines of plumbing, your app's chrome wrapping the blog.
+
+### Admin layout
+
+The admin Livewire components use `->layout()` (slot-based), so the admin layout key can point at any slot-based view directly:
+
+```php
+'admin' => 'layouts.app',  // your <x-app-layout> view, no wrapper needed
+```
+
+If your admin layout is `@yield`-based instead, build a small slot bridge:
+
+```blade
+{{-- resources/views/layouts/blog-admin.blade.php --}}
+<!DOCTYPE html>
+<html>
+<head>
+    @vite('resources/css/app.css')
+    @livewireStyles
+</head>
+<body>
+    {{ $slot }}
+    @livewireScripts
+</body>
+</html>
+```
+
+### Make Tailwind aware of the package views
+
+If you use Tailwind CSS, add the package views to your `tailwind.config.js` `content` array so JIT compiles classes used in the package:
+
+```js
+content: [
+    // ... your existing paths ...
+    './vendor/ojessecruz/simple-blog/resources/views/**/*.blade.php',
+],
+```
+
+### Required directives in your layout
+
+The package emits SEO meta tags, OG tags and JSON-LD via `@push('head')`. For these to render, your layout's `<head>` must contain:
+
+```blade
+@stack('head')
+```
+
+Without it, `<title>` and meta tags from posts won't appear in the head.
 
 ## Customizing the visual style
 

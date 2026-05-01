@@ -1,5 +1,32 @@
 @extends(config('blog.layouts.public'))
 
+@push('head')
+    <title>{{ $post->meta_title ?? $post->title }}</title>
+    <meta name="description" content="{{ $post->meta_description ?? $post->excerpt }}">
+    <meta name="keywords" content="{{ implode(', ', $post->keywords ?? []) }}">
+    <meta property="og:title" content="{{ $post->title }}">
+    <meta property="og:description" content="{{ $post->excerpt }}">
+    <meta property="og:type" content="article">
+    @if($post->og_image)
+        <meta property="og:image" content="{{ $post->og_image }}">
+    @endif
+    @if($post->published_at)
+        <meta property="article:published_time" content="{{ $post->published_at->toIso8601String() }}">
+    @endif
+    @if($post->isPublished())
+        <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "Article",
+            "headline": "{{ $post->title }}",
+            "description": "{{ $post->excerpt }}",
+            "datePublished": "{{ $post->published_at->toIso8601String() }}",
+            "mainEntityOfPage": {"@type": "WebPage", "@id": "{{ $post->url() }}"}
+        }
+        </script>
+    @endif
+@endpush
+
 @section('content')
     <article class="max-w-2xl mx-auto px-4 sm:px-6 pt-10 pb-16">
         <div class="mb-6">

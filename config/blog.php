@@ -82,15 +82,11 @@ return [
     | Layouts
     |--------------------------------------------------------------------------
     |
-    | Blade views that wrap the package's content. The package ships clean
-    | default layouts (blog::layouts.public and blog::layouts.admin).
-    |
-    | To use your app's layout (your own header/footer/nav), point here:
-    |
-    |   'public' => 'layouts.app',
-    |   'admin'  => 'layouts.admin',
-    |
-    | Custom layouts must yield content via @yield('content').
+    | The package ships neutral defaults (blog::layouts.public for the public
+    | side using @yield('content'), blog::layouts.admin for admin using
+    | {{ \$slot }}). Point at your own views to wrap the blog in your app's
+    | chrome — see the README for slot-based hosts (Breeze/Jetstream/Folio)
+    | and a full example of writing a layout from scratch.
     |
     */
     'layouts' => [

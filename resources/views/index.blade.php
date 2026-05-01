@@ -1,5 +1,12 @@
 @extends(config('blog.layouts.public'))
 
+@push('head')
+    <title>@if(isset($currentCategory)){{ $currentCategory->name }} — @endif Blog</title>
+    @if(isset($currentCategory) && $currentCategory->description)
+        <meta name="description" content="{{ $currentCategory->description }}">
+    @endif
+@endpush
+
 @section('content')
     <div class="max-w-2xl mx-auto px-4 sm:px-6 py-10">
         <header class="mb-8">
