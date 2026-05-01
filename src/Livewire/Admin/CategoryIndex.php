@@ -90,4 +90,24 @@ final class CategoryIndex extends Component
             'categories' => PostCategory::withCount('posts')->orderBy('name')->get(),
         ])->extends(config('blog.layouts.admin'))->section('content');
     }
+
+    protected function messages(): array
+    {
+        return [
+            'required' => 'The :attribute field is required.',
+            'string' => 'The :attribute must be a string.',
+            'alpha_dash' => 'The :attribute may only contain letters, numbers, dashes and underscores.',
+            'max.string' => 'The :attribute may not exceed :max characters.',
+            'unique' => 'The :attribute has already been taken.',
+        ];
+    }
+
+    protected function validationAttributes(): array
+    {
+        return [
+            'name' => 'name',
+            'slug' => 'slug',
+            'description' => 'description',
+        ];
+    }
 }

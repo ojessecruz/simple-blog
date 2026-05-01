@@ -122,6 +122,40 @@ final class PostForm extends Component
         ])->extends(config('blog.layouts.admin'))->section('content');
     }
 
+    protected function messages(): array
+    {
+        return [
+            'required' => 'The :attribute field is required.',
+            'string' => 'The :attribute must be a string.',
+            'integer' => 'The :attribute must be a number.',
+            'date' => 'The :attribute must be a valid date.',
+            'url' => 'The :attribute must be a valid URL.',
+            'alpha_dash' => 'The :attribute may only contain letters, numbers, dashes and underscores.',
+            'max.string' => 'The :attribute may not exceed :max characters.',
+            'max.numeric' => 'The :attribute may not be greater than :max.',
+            'min.numeric' => 'The :attribute must be at least :min.',
+            'unique' => 'The :attribute has already been taken.',
+            'exists' => 'The selected :attribute is invalid.',
+        ];
+    }
+
+    protected function validationAttributes(): array
+    {
+        return [
+            'title' => 'title',
+            'slug' => 'slug',
+            'excerpt' => 'excerpt',
+            'body' => 'content',
+            'blog_category_id' => 'category',
+            'cover_image' => 'cover image',
+            'published_at' => 'publish date',
+            'reading_time' => 'reading time',
+            'meta_title' => 'meta title',
+            'meta_description' => 'meta description',
+            'og_image' => 'og:image',
+        ];
+    }
+
     private function persist(): void
     {
         $data = $this->validate();
