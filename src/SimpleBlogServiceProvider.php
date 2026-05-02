@@ -18,7 +18,6 @@ final class SimpleBlogServiceProvider extends PackageServiceProvider
         $package
             ->name('simple-blog')
             ->hasConfigFile('blog')
-            ->hasViews('blog')
             ->hasRoute('web')
             ->hasMigrations([
                 'create_blog_categories_table',
@@ -32,22 +31,27 @@ final class SimpleBlogServiceProvider extends PackageServiceProvider
         Livewire::component('blog::admin.post-form', PostForm::class);
         Livewire::component('blog::admin.category-index', CategoryIndex::class);
 
-        $this->registerGranularViewPublishing();
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'blog');
+
+        $this->registerViewPublishing();
     }
 
     /**
-     * Granular publish tags for views, on top of the all-encompassing
-     * "simple-blog-views" tag registered by hasViews().
+     * Publish tags for views — all prefixed with the package name "simple-blog":
      *
+     *   --tag="simple-blog-views"          → everything (public + admin + layouts)
      *   --tag="simple-blog-views-public"   → public templates + public layout
      *   --tag="simple-blog-views-admin"    → Livewire admin templates + admin layout
      *   --tag="simple-blog-views-layouts"  → just the public + admin layouts
-     *   --tag="simple-blog-views"          → everything (default)
      */
-    private function registerGranularViewPublishing(): void
+    private function registerViewPublishing(): void
     {
         $views = __DIR__.'/../resources/views';
         $target = fn (string $path) => resource_path('views/vendor/blog/'.$path);
+
+        $this->publishes([
+            $views => $target(''),
+        ], 'simple-blog-views');
 
         $this->publishes([
             $views.'/index.blade.php' => $target('index.blade.php'),
