@@ -1,6 +1,6 @@
 # Simple Blog
 
-A ready-to-use Laravel blog — Medium-style public listing, admin CRUD with Livewire, Markdown with HTML escaping, and draft preview in a new tab. Zero opinions on authentication: you plug it in via Laravel middleware (Gate, guard, or any combo).
+A ready-to-use Laravel blog — minimal reading-focused public listing, admin CRUD with Livewire, Markdown with HTML escaping, and draft preview in a new tab. Zero opinions on authentication: you plug it in via Laravel middleware (Gate, guard, or any combo).
 
 ## Requirements
 
