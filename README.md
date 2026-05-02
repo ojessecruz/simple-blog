@@ -248,15 +248,25 @@ Without it, `<title>` and meta tags from posts won't appear in the head.
 
 ## Customizing the visual style
 
-The package ships with `emerald` as the accent colour and `zinc` as the neutral. To brand it differently, publish the views and edit them directly:
+The package ships with `emerald` as the accent colour and `zinc` as the neutral. To brand it differently, publish the views and edit them directly. Three granularities are available:
 
 ```bash
+# Everything (public + admin + layouts + icons)
 php artisan vendor:publish --tag="simple-blog-views"
+
+# Just the public side (index, show, public layout)
+php artisan vendor:publish --tag="simple-blog-views-public"
+
+# Just the admin side (Livewire admin views + admin layout)
+php artisan vendor:publish --tag="simple-blog-views-admin"
+
+# Just the layouts (public and admin shells, no inner content)
+php artisan vendor:publish --tag="simple-blog-views-layouts"
 ```
 
-The Blade files land in `resources/views/vendor/blog/`. From that point Laravel uses your published copies, so a global find-and-replace (`emerald-` → `blue-`, `emerald-` → `rose-`, etc.) is enough to retheme the whole package.
+The Blade files land in `resources/views/vendor/blog/`. From that point Laravel uses your published copies, so a global find-and-replace (`emerald-` → `blue-`, `emerald-` → `rose-`, etc.) is enough to retheme that slice.
 
-Trade-off: published views are frozen at the version you published — bug fixes and new features that ship in later releases of the package won't reach them automatically. Diff your views against the upstream when upgrading.
+Trade-off: published views are frozen at the version you published — bug fixes and new features that ship in later releases of the package won't reach them automatically. Publishing only the slice you actually want to customize (admin or public) keeps the rest tracking upstream.
 
 ## Injecting a CTA into posts
 
