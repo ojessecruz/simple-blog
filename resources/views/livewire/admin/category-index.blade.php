@@ -24,26 +24,26 @@
                 <div>
                     <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.name') }}</label>
                     <input type="text" wire:model.live.debounce.500ms="name"
-                           class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
+                           class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                     @error('name') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.slug') }}</label>
                     <input type="text" wire:model="slug"
-                           class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
+                           class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                     @error('slug') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
             <div>
                 <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.description') }}</label>
                 <input type="text" wire:model="description"
-                       class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
+                       class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                 @error('description') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
             </div>
             <div class="flex items-center justify-end gap-2">
                 @if ($editingId)
                     <button type="button" wire:click="cancel"
-                            class="px-3 py-1.5 rounded-lg text-sm font-medium border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+                            class="px-3 py-1.5 rounded-lg text-sm font-medium border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                         {{ __('blog::messages.cancel_edit') }}
                     </button>
                 @endif

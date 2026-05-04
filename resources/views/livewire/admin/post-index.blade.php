@@ -24,7 +24,7 @@
             </div>
             <div class="flex flex-wrap items-center gap-2">
                 <a href="{{ route('blog.admin.categories') }}"
-                   class="px-4 py-2 rounded-lg text-sm font-medium border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+                   class="px-4 py-2 rounded-lg text-sm font-medium border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                     {{ __('blog::messages.categories') }}
                 </a>
                 <a href="{{ route('blog.admin.create') }}"
@@ -39,7 +39,7 @@
                 <div>
                     <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.status') }}</label>
                     <select wire:model.live="statusFilter"
-                            class="block rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
+                            class="block rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                         <option value="">{{ __('blog::messages.all') }}</option>
                         <option value="published">{{ __('blog::messages.published') }}</option>
                         <option value="draft">{{ __('blog::messages.draft') }}</option>
@@ -50,7 +50,7 @@
                     <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.search') }}</label>
                     <input wire:model.live.debounce.400ms="search" type="text"
                            placeholder="{{ __('blog::messages.post_title_placeholder') }}"
-                           class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
+                           class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                 </div>
             </div>
         </div>
@@ -95,7 +95,7 @@
                         <div class="shrink-0 flex items-center gap-2">
                             @if ($post->isPublished())
                                 <a href="{{ $post->url() }}" target="_blank"
-                                   class="px-3 py-1.5 text-xs rounded-lg border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+                                   class="px-3 py-1.5 text-xs rounded-lg border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                                     {{ __('blog::messages.view') }}
                                 </a>
                             @endif

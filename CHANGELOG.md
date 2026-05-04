@@ -2,6 +2,12 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.4.1 - 2026-05-04
+
+### Fixed
+
+- Dark mode text color on form controls and ghost-style buttons across the admin views (status filter, search, post form fields, "Categorias" / "Ver" / "Cancel" buttons). User-agent stylesheets and inconsistent preflight loading were leaving these elements with black text on the dark background.
+
 ## 0.4.0 - 2026-05-04
 
 ### Added
