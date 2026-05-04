@@ -80,8 +80,11 @@
 
         {{-- Cover --}}
         @if($post->cover_image)
-            <img src="{{ $post->cover_image }}" alt="{{ $post->title }}"
-                 class="w-full h-auto rounded-lg mb-8 object-cover" />
+            <figure class="-mx-5 sm:-mx-6 lg:-mx-20 my-10 lg:my-12">
+                <img src="{{ $post->cover_image }}"
+                     alt="{{ $post->title }}"
+                     class="w-full aspect-[16/9] object-cover lg:rounded-lg" />
+            </figure>
         @endif
 
         {{-- Content --}}
