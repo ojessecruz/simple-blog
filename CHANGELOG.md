@@ -2,6 +2,12 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.4.2 - 2026-05-04
+
+### Changed
+
+- Post form now uses `max-w-7xl` to match the post index, giving the split-view editor and preview panes enough horizontal room on wide screens.
+
 ## 0.4.1 - 2026-05-04
 
 ### Fixed
