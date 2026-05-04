@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 use Jessecruz\SimpleBlog\Http\Controllers\BlogController;
+use Jessecruz\SimpleBlog\Http\Middleware\SetBlogLocale;
 use Jessecruz\SimpleBlog\Livewire\Admin\CategoryIndex;
 use Jessecruz\SimpleBlog\Livewire\Admin\PostForm;
 use Jessecruz\SimpleBlog\Livewire\Admin\PostIndex;
 
 Route::prefix(config('blog.route_prefix'))
-    ->middleware(config('blog.public_middleware'))
+    ->middleware([...config('blog.public_middleware'), SetBlogLocale::class])
     ->name('blog.')
     ->group(function () {
         Route::get('/', [BlogController::class, 'index'])->name('index');
@@ -18,7 +19,7 @@ Route::prefix(config('blog.route_prefix'))
     });
 
 Route::prefix(config('blog.admin_route_prefix'))
-    ->middleware(config('blog.admin_middleware'))
+    ->middleware([...config('blog.admin_middleware'), SetBlogLocale::class])
     ->name('blog.admin.')
     ->group(function () {
         Route::get('/', PostIndex::class)->name('index');

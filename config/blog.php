@@ -148,6 +148,27 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Locale
+    |--------------------------------------------------------------------------
+    |
+    | Forces the locale used for the package's translated strings (admin and
+    | public views). Leave `null` to follow the host app's locale —
+    | `app()->getLocale()`. Set to a specific locale to pin the blog to that
+    | language regardless of the rest of the app.
+    |
+    | Built-in locales: 'en', 'pt_BR', 'es'. Publish the lang files
+    | (`vendor:publish --tag="simple-blog-lang"`) to add more.
+    |
+    | Examples:
+    |     'locale' => null,        // follow app.locale
+    |     'locale' => 'pt_BR',     // always Portuguese (Brazil)
+    |     'locale' => 'es',        // always Spanish
+    |
+    */
+    'locale' => null,
+
+    /*
+    |--------------------------------------------------------------------------
     | Markdown rendering options
     |--------------------------------------------------------------------------
     |

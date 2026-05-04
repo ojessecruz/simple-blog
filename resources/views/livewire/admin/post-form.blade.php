@@ -6,7 +6,7 @@
             <a href="{{ route('blog.admin.index') }}"
                class="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 inline-flex items-center gap-1">
                 <x-blog::icon.arrow-left class="w-4 h-4" />
-                Back
+                {{ __('blog::messages.back') }}
             </a>
         </div>
 
@@ -15,9 +15,9 @@
                 <x-blog::icon.pencil-square class="w-6 h-6 text-white" />
             </div>
             <div>
-                <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{{ $post ? 'Edit post' : 'New post' }}</h2>
+                <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{{ $post ? __('blog::messages.edit_post') : __('blog::messages.new_post') }}</h2>
                 <p class="text-sm text-zinc-500 dark:text-zinc-400">
-                    Markdown content. Cover image and og:image via URL.
+                    {{ __('blog::messages.post_form_subtitle') }}
                 </p>
             </div>
         </div>
@@ -25,7 +25,7 @@
         <form wire:submit="save" class="space-y-6">
             <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-6 space-y-4">
                 <div>
-                    <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">Title</label>
+                    <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.title') }}</label>
                     <input type="text" wire:model.live.debounce.500ms="title"
                            class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                     @error('title') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
@@ -33,16 +33,16 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="sm:col-span-2">
-                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">Slug</label>
+                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.slug') }}</label>
                         <input type="text" wire:model="slug"
                                class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                         @error('slug') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">Category</label>
+                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.category') }}</label>
                         <select wire:model="blog_category_id"
                                 class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
-                            <option value="">Select...</option>
+                            <option value="">{{ __('blog::messages.select_placeholder') }}</option>
                             @foreach ($categories as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                             @endforeach
@@ -53,7 +53,7 @@
 
                 <div>
                     <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
-                        Excerpt <span class="text-zinc-400 dark:text-zinc-500">— shown in the listing</span>
+                        {{ __('blog::messages.excerpt') }} <span class="text-zinc-400 dark:text-zinc-500">— {{ __('blog::messages.excerpt_hint') }}</span>
                     </label>
                     <textarea wire:model="excerpt" rows="2"
                               class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"></textarea>
@@ -63,8 +63,8 @@
 
             <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-6">
                 <div class="flex items-center justify-between mb-3">
-                    <label class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Content (Markdown)</label>
-                    <span class="text-xs text-zinc-500">Use `![alt](url)` for images.</span>
+                    <label class="text-xs font-medium text-zinc-500 dark:text-zinc-400">{{ __('blog::messages.content_markdown') }}</label>
+                    <span class="text-xs text-zinc-500">{{ __('blog::messages.images_hint') }}</span>
                 </div>
                 <textarea wire:model="body" rows="22"
                           class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm font-mono leading-relaxed focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
@@ -74,30 +74,30 @@
 
             <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-6 space-y-4">
                 <div class="flex items-center justify-between gap-3 flex-wrap">
-                    <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Publishing</h3>
+                    <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{{ __('blog::messages.publishing') }}</h3>
                     <label class="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
                         <input type="checkbox" wire:model.live="isDraft"
                                class="rounded border-zinc-300 dark:border-zinc-700 text-emerald-600 focus:ring-emerald-500">
-                        Mark as draft
+                        {{ __('blog::messages.mark_as_draft') }}
                     </label>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
-                            Publish at <span class="text-zinc-400 dark:text-zinc-500">— empty = draft</span>
+                            {{ __('blog::messages.publish_at') }} <span class="text-zinc-400 dark:text-zinc-500">— {{ __('blog::messages.publish_at_hint') }}</span>
                         </label>
                         <input type="datetime-local" wire:model.live="published_at"
                                class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                         @error('published_at') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">Reading time (min)</label>
+                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.reading_time') }}</label>
                         <input type="number" min="1" max="120" wire:model="reading_time"
                                class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                         @error('reading_time') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">Cover image URL</label>
+                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.cover_image_url') }}</label>
                         <input type="url" wire:model="cover_image" placeholder="https://..."
                                class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                         @error('cover_image') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
@@ -106,30 +106,30 @@
             </div>
 
             <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-6 space-y-4">
-                <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">SEO</h3>
+                <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{{ __('blog::messages.seo') }}</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">Meta title</label>
+                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.meta_title') }}</label>
                         <input type="text" wire:model="meta_title"
                                class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                         @error('meta_title') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">og:image URL</label>
+                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.og_image_url') }}</label>
                         <input type="url" wire:model="og_image" placeholder="https://..."
                                class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                         @error('og_image') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">Meta description</label>
+                    <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.meta_description') }}</label>
                     <textarea wire:model="meta_description" rows="2"
                               class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"></textarea>
                     @error('meta_description') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
-                        Keywords <span class="text-zinc-400 dark:text-zinc-500">— comma-separated</span>
+                        {{ __('blog::messages.keywords') }} <span class="text-zinc-400 dark:text-zinc-500">— {{ __('blog::messages.keywords_hint') }}</span>
                     </label>
                     <input type="text" wire:model="keywords" placeholder="scheduling, management, freelancers"
                            class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
@@ -139,17 +139,17 @@
             <div class="flex items-center justify-end gap-3 flex-wrap">
                 <a href="{{ route('blog.admin.index') }}"
                    class="px-4 py-2 rounded-lg text-sm font-medium border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                    Cancel
+                    {{ __('blog::messages.cancel') }}
                 </a>
                 <button type="button" wire:click="preview"
                         class="px-4 py-2 rounded-lg text-sm font-medium border border-emerald-500/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors inline-flex items-center gap-2"
                         title="Saves changes and opens a preview in a new tab.">
-                    Save and preview
+                    {{ __('blog::messages.save_and_preview') }}
                     <span aria-hidden="true">&UpperRightArrow;</span>
                 </button>
                 <button type="submit"
                         class="px-4 py-2 rounded-lg text-sm font-medium bg-emerald-600 text-white hover:bg-emerald-500 transition-colors">
-                    {{ $post ? 'Save changes' : 'Create post' }}
+                    {{ $post ? __('blog::messages.save_changes') : __('blog::messages.create_post') }}
                 </button>
             </div>
         </form>

@@ -5,7 +5,7 @@
                 <a href="{{ config('blog.admin_back_url') }}"
                    class="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 inline-flex items-center gap-1">
                     <x-blog::icon.arrow-left class="w-4 h-4" />
-                    Back
+                    {{ __('blog::messages.back') }}
                 </a>
             </div>
         @endif
@@ -16,20 +16,20 @@
                     <x-blog::icon.pencil-square class="w-6 h-6 text-white" />
                 </div>
                 <div>
-                    <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Blog</h2>
+                    <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{{ __('blog::messages.blog') }}</h2>
                     <p class="text-sm text-zinc-500 dark:text-zinc-400">
-                        Manage published posts, drafts, and scheduled posts.
+                        {{ __('blog::messages.admin_subtitle') }}
                     </p>
                 </div>
             </div>
             <div class="flex flex-wrap items-center gap-2">
                 <a href="{{ route('blog.admin.categories') }}"
                    class="px-4 py-2 rounded-lg text-sm font-medium border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                    Categories
+                    {{ __('blog::messages.categories') }}
                 </a>
                 <a href="{{ route('blog.admin.create') }}"
                    class="px-4 py-2 rounded-lg text-sm font-medium bg-emerald-600 text-white hover:bg-emerald-500 transition-colors">
-                    New post
+                    {{ __('blog::messages.new_post') }}
                 </a>
             </div>
         </div>
@@ -37,19 +37,19 @@
         <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 mb-6">
             <div class="flex flex-wrap items-end gap-3">
                 <div>
-                    <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">Status</label>
+                    <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.status') }}</label>
                     <select wire:model.live="statusFilter"
                             class="block rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
-                        <option value="">All</option>
-                        <option value="published">Published</option>
-                        <option value="draft">Draft</option>
-                        <option value="scheduled">Scheduled</option>
+                        <option value="">{{ __('blog::messages.all') }}</option>
+                        <option value="published">{{ __('blog::messages.published') }}</option>
+                        <option value="draft">{{ __('blog::messages.draft') }}</option>
+                        <option value="scheduled">{{ __('blog::messages.scheduled') }}</option>
                     </select>
                 </div>
                 <div class="flex-1 min-w-[200px]">
-                    <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">Search</label>
+                    <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.search') }}</label>
                     <input wire:model.live.debounce.400ms="search" type="text"
-                           placeholder="Post title..."
+                           placeholder="{{ __('blog::messages.post_title_placeholder') }}"
                            class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                 </div>
             </div>
@@ -66,18 +66,18 @@
                                 </span>
                                 @if ($post->isPublished())
                                     <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                                        Publicado
+                                        {{ __('blog::messages.published') }}
                                     </span>
                                 @elseif ($post->published_at)
                                     <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                                        Agendado
+                                        {{ __('blog::messages.scheduled') }}
                                     </span>
                                 @else
                                     <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-500/10 text-zinc-600 dark:text-zinc-400">
-                                        Rascunho
+                                        {{ __('blog::messages.draft') }}
                                     </span>
                                 @endif
-                                <span class="text-xs text-zinc-500">{{ $post->views_count }} views</span>
+                                <span class="text-xs text-zinc-500">{{ __('blog::messages.views_count', ['count' => $post->views_count]) }}</span>
                             </div>
                             <h3 class="text-base font-semibold break-words text-zinc-900 dark:text-zinc-100">{{ $post->title }}</h3>
                             <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1 break-words line-clamp-2">{{ $post->excerpt }}</p>
@@ -88,7 +88,7 @@
                                     <span>{{ $post->published_at->format('m/d/Y H:i') }}</span>
                                 @endif
                                 <span>•</span>
-                                <span>{{ $post->reading_time }} min</span>
+                                <span>{{ $post->reading_time }} {{ __('blog::messages.min') }}</span>
                             </div>
                         </div>
 
@@ -96,25 +96,25 @@
                             @if ($post->isPublished())
                                 <a href="{{ $post->url() }}" target="_blank"
                                    class="px-3 py-1.5 text-xs rounded-lg border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                                    Ver
+                                    {{ __('blog::messages.view') }}
                                 </a>
                             @endif
                             <a href="{{ route('blog.admin.edit', $post) }}"
                                class="px-3 py-1.5 text-xs rounded-lg bg-emerald-600 text-white hover:bg-emerald-500 transition-colors">
-                                Edit
+                                {{ __('blog::messages.edit') }}
                             </a>
                             <button type="button"
                                     wire:click="delete({{ $post->id }})"
-                                    wire:confirm="Delete this post?"
+                                    wire:confirm="{{ __('blog::messages.delete_post_confirm') }}"
                                     class="px-3 py-1.5 text-xs rounded-lg border border-red-300 dark:border-red-700/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/50 transition-colors">
-                                Delete
+                                {{ __('blog::messages.delete') }}
                             </button>
                         </div>
                     </div>
                 </div>
             @empty
                 <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 text-center text-zinc-500 dark:text-zinc-400">
-                    No posts found.
+                    {{ __('blog::messages.no_posts') }}
                 </div>
             @endforelse
         </div>

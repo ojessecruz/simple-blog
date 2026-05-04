@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jessecruz\SimpleBlog;
 
+use Jessecruz\SimpleBlog\Http\Middleware\SetBlogLocale;
 use Jessecruz\SimpleBlog\Livewire\Admin\CategoryIndex;
 use Jessecruz\SimpleBlog\Livewire\Admin\PostForm;
 use Jessecruz\SimpleBlog\Livewire\Admin\PostIndex;
@@ -31,9 +32,13 @@ final class SimpleBlogServiceProvider extends PackageServiceProvider
         Livewire::component('blog::admin.post-form', PostForm::class);
         Livewire::component('blog::admin.category-index', CategoryIndex::class);
 
+        Livewire::addPersistentMiddleware([SetBlogLocale::class]);
+
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'blog');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'blog');
 
         $this->registerViewPublishing();
+        $this->registerLangPublishing();
     }
 
     /**
@@ -68,5 +73,12 @@ final class SimpleBlogServiceProvider extends PackageServiceProvider
             $views.'/layouts/public.blade.php' => $target('layouts/public.blade.php'),
             $views.'/layouts/admin.blade.php' => $target('layouts/admin.blade.php'),
         ], 'simple-blog-views-layouts');
+    }
+
+    private function registerLangPublishing(): void
+    {
+        $this->publishes([
+            __DIR__.'/../resources/lang' => lang_path('vendor/blog'),
+        ], 'simple-blog-lang');
     }
 }

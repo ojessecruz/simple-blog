@@ -14,14 +14,14 @@
                 @if(isset($currentCategory))
                     {{ $currentCategory->name }}
                 @else
-                    Blog
+                    {{ __('blog::messages.blog') }}
                 @endif
             </h1>
             <p class="text-base text-zinc-600 dark:text-zinc-400">
                 @if(isset($currentCategory) && $currentCategory->description)
                     {{ $currentCategory->description }}
                 @else
-                    Latest posts.
+                    {{ __('blog::messages.latest_posts') }}
                 @endif
             </p>
         </header>
@@ -30,7 +30,7 @@
             <nav class="flex flex-wrap gap-x-5 gap-y-2 mb-8 pb-5 border-b border-zinc-200 dark:border-zinc-800 text-sm">
                 <a href="{{ route('blog.index') }}"
                    class="{{ ! isset($currentCategory) ? 'text-emerald-600 dark:text-emerald-400 font-medium' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200' }} transition-colors">
-                    All
+                    {{ __('blog::messages.all') }}
                 </a>
                 @foreach($categories as $category)
                     <a href="{{ route('blog.category', $category) }}"
@@ -43,7 +43,7 @@
 
         @if($posts->isEmpty())
             <div class="text-center py-12 text-zinc-500 dark:text-zinc-400 text-sm">
-                <p>New content coming soon.</p>
+                <p>{{ __('blog::messages.no_posts_yet') }}</p>
             </div>
         @else
             <ul class="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -67,7 +67,7 @@
                                         {{ $post->published_at->translatedFormat('M j, Y') }}
                                     </time>
                                     <span aria-hidden="true">&middot;</span>
-                                    <span>{{ $post->reading_time }} min read</span>
+                                    <span>{{ $post->reading_time }} {{ __('blog::messages.min_read') }}</span>
                                 </div>
                             </div>
                             @if($post->cover_image)

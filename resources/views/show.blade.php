@@ -34,7 +34,7 @@
         <a href="{{ route('blog.index') }}"
            class="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 inline-flex items-center gap-1 mb-8 transition-colors">
             <x-blog::icon.arrow-left class="w-4 h-4" />
-            Back
+            {{ __('blog::messages.back') }}
         </a>
 
         {{-- Header --}}
@@ -63,17 +63,17 @@
                     </time>
                 @endif
                 <span aria-hidden="true">·</span>
-                <span>{{ $post->reading_time }} min read</span>
+                <span>{{ $post->reading_time }} {{ __('blog::messages.min_read') }}</span>
             </div>
         </header>
 
         @if(! $post->isPublished())
             <div class="mb-8 rounded border border-amber-300/60 dark:border-amber-700/40 bg-amber-50 dark:bg-amber-950/30 px-3 py-2 text-sm text-amber-800 dark:text-amber-300">
-                <strong class="font-semibold">Preview:</strong>
+                <strong class="font-semibold">{{ __('blog::messages.preview_label') }}</strong>
                 @if($post->published_at)
-                    scheduled for {{ $post->published_at->translatedFormat('F j, Y \a\t H:i') }}.
+                    {{ __('blog::messages.preview_scheduled', ['date' => $post->published_at->translatedFormat('F j, Y \a\t H:i')]) }}
                 @else
-                    draft.
+                    {{ __('blog::messages.preview_draft') }}
                 @endif
             </div>
         @endif
@@ -130,7 +130,7 @@
         <div class="mt-12 pt-6 border-t border-zinc-200 dark:border-zinc-800 flex justify-between items-center text-sm text-zinc-500 dark:text-zinc-400">
             <a href="{{ route('blog.category', $post->category) }}"
                class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
-                More in {{ $post->category->name }}
+                {{ __('blog::messages.more_in', ['name' => $post->category->name]) }}
             </a>
 
             <div class="flex items-center gap-4">
@@ -153,7 +153,7 @@
 
         @if($relatedPosts->isNotEmpty())
             <section class="mt-12 pt-6 border-t border-zinc-200 dark:border-zinc-800">
-                <h2 class="text-sm font-semibold mb-3 text-zinc-700 dark:text-zinc-300">Related</h2>
+                <h2 class="text-sm font-semibold mb-3 text-zinc-700 dark:text-zinc-300">{{ __('blog::messages.related') }}</h2>
                 <ul class="space-y-2 text-sm">
                     @foreach($relatedPosts as $related)
                         <li>
