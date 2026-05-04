@@ -16,7 +16,7 @@
                     <x-blog::icon.pencil-square class="w-6 h-6 text-white" />
                 </div>
                 <div>
-                    <h2 class="text-2xl font-bold">Blog</h2>
+                    <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Blog</h2>
                     <p class="text-sm text-zinc-500 dark:text-zinc-400">
                         Manage published posts, drafts, and scheduled posts.
                     </p>
@@ -79,7 +79,7 @@
                                 @endif
                                 <span class="text-xs text-zinc-500">{{ $post->views_count }} views</span>
                             </div>
-                            <h3 class="text-base font-semibold break-words">{{ $post->title }}</h3>
+                            <h3 class="text-base font-semibold break-words text-zinc-900 dark:text-zinc-100">{{ $post->title }}</h3>
                             <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1 break-words line-clamp-2">{{ $post->excerpt }}</p>
                             <div class="flex flex-wrap items-center gap-2 mt-3 text-xs text-zinc-500">
                                 <span>/{{ $post->slug }}</span>

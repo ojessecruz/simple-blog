@@ -32,7 +32,7 @@
 
         {{-- Back --}}
         <a href="{{ route('blog.index') }}"
-           class="text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 inline-flex items-center gap-1 mb-8 transition-colors">
+           class="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 inline-flex items-center gap-1 mb-8 transition-colors">
             <x-blog::icon.arrow-left class="w-4 h-4" />
             Back
         </a>
@@ -44,7 +44,7 @@
                 {{ $post->category->name }}
             </a>
 
-            <h1 class="text-3xl sm:text-4xl font-semibold mt-2 leading-tight tracking-tight">
+            <h1 class="text-3xl sm:text-4xl font-semibold mt-2 leading-tight tracking-tight text-zinc-900 dark:text-zinc-100">
                 {{ $post->title }}
             </h1>
 

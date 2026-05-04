@@ -15,7 +15,7 @@
                 <x-blog::icon.pencil-square class="w-6 h-6 text-white" />
             </div>
             <div>
-                <h2 class="text-2xl font-bold">{{ $post ? 'Edit post' : 'New post' }}</h2>
+                <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{{ $post ? 'Edit post' : 'New post' }}</h2>
                 <p class="text-sm text-zinc-500 dark:text-zinc-400">
                     Markdown content. Cover image and og:image via URL.
                 </p>
@@ -53,7 +53,7 @@
 
                 <div>
                     <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
-                        Excerpt <span class="text-zinc-400">— shown in the listing</span>
+                        Excerpt <span class="text-zinc-400 dark:text-zinc-500">— shown in the listing</span>
                     </label>
                     <textarea wire:model="excerpt" rows="2"
                               class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"></textarea>
@@ -74,7 +74,7 @@
 
             <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-6 space-y-4">
                 <div class="flex items-center justify-between gap-3 flex-wrap">
-                    <h3 class="text-sm font-semibold">Publishing</h3>
+                    <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Publishing</h3>
                     <label class="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
                         <input type="checkbox" wire:model.live="isDraft"
                                class="rounded border-zinc-300 dark:border-zinc-700 text-emerald-600 focus:ring-emerald-500">
@@ -84,7 +84,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
-                            Publish at <span class="text-zinc-400">— empty = draft</span>
+                            Publish at <span class="text-zinc-400 dark:text-zinc-500">— empty = draft</span>
                         </label>
                         <input type="datetime-local" wire:model.live="published_at"
                                class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
@@ -106,7 +106,7 @@
             </div>
 
             <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-6 space-y-4">
-                <h3 class="text-sm font-semibold">SEO</h3>
+                <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">SEO</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">Meta title</label>
@@ -129,7 +129,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
-                        Keywords <span class="text-zinc-400">— comma-separated</span>
+                        Keywords <span class="text-zinc-400 dark:text-zinc-500">— comma-separated</span>
                     </label>
                     <input type="text" wire:model="keywords" placeholder="scheduling, management, freelancers"
                            class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">

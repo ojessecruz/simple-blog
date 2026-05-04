@@ -13,13 +13,13 @@
                 <x-blog::icon.pencil-square class="w-6 h-6 text-white" />
             </div>
             <div>
-                <h2 class="text-2xl font-bold">Blog categories</h2>
+                <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Blog categories</h2>
                 <p class="text-sm text-zinc-500 dark:text-zinc-400">Create, edit, and organize categories.</p>
             </div>
         </div>
 
         <form wire:submit="save" class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-5 mb-6 space-y-4">
-            <h3 class="text-sm font-semibold">{{ $editingId ? 'Edit category' : 'New category' }}</h3>
+            <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{{ $editingId ? 'Edit category' : 'New category' }}</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">Name</label>
@@ -59,7 +59,7 @@
                 <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 flex items-center justify-between gap-3">
                     <div class="min-w-0">
                         <div class="flex items-center gap-2">
-                            <h3 class="text-sm font-semibold">{{ $category->name }}</h3>
+                            <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{{ $category->name }}</h3>
                             <span class="text-xs text-zinc-500">/{{ $category->slug }}</span>
                         </div>
                         @if ($category->description)

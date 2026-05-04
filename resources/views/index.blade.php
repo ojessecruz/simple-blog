@@ -10,7 +10,7 @@
 @section('content')
     <div class="max-w-2xl mx-auto px-4 sm:px-6 py-10">
         <header class="mb-8">
-            <h1 class="text-3xl sm:text-4xl font-bold mb-2">
+            <h1 class="text-3xl sm:text-4xl font-bold mb-2 text-zinc-900 dark:text-zinc-100">
                 @if(isset($currentCategory))
                     {{ $currentCategory->name }}
                 @else
@@ -54,7 +54,7 @@
                                 <span class="text-xs font-medium uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
                                     {{ $post->category->name }}
                                 </span>
-                                <h2 class="text-lg sm:text-xl font-bold mt-1 mb-1 leading-snug group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                                <h2 class="text-lg sm:text-xl font-bold mt-1 mb-1 leading-snug text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                                     {{ $post->title }}
                                 </h2>
                                 <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-2 line-clamp-2">
