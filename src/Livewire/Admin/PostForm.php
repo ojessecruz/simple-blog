@@ -55,6 +55,8 @@ final class PostForm extends Component
 
     public bool $isDraft = true;
 
+    public bool $splitView = false;
+
     public function mount(?Post $post = null): void
     {
         if ($post?->exists) {

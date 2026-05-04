@@ -8,6 +8,7 @@ All notable changes to `simple-blog` will be documented in this file.
 
 - Dark mode support across all public and admin views via Tailwind `dark:` variants. The host app's Tailwind config controls the strategy (`media` or `class`).
 - Translation support with built-in `en`, `pt_BR`, and `es` locales. New `locale` config key in `config/blog.php` — `null` follows `app()->getLocale()`, a string pins the blog to that locale. Custom translations can be added via `vendor:publish --tag="simple-blog-lang"`.
+- Split-view toggle in the post form: two icon buttons switch between Markdown-only editing and a side-by-side editor + live preview. The preview renders through the same `Str::markdown()` pipeline as the published post and uses inline styles, so it does not depend on the `@tailwindcss/typography` plugin in the host app.
 
 ### Changed
 
