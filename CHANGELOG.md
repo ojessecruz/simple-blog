@@ -2,6 +2,12 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.4.3 - 2026-05-04
+
+### Fixed
+
+- "Mark as draft" checkbox and label now follow dark mode: explicit `text-zinc-900 dark:text-zinc-100` on the label and `bg-white dark:bg-zinc-900` on the checkbox so it stops rendering as a bright white square against the dark card.
+
 ## 0.4.2 - 2026-05-04
 
 ### Changed

@@ -102,9 +102,9 @@
             <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-6 space-y-4">
                 <div class="flex items-center justify-between gap-3 flex-wrap">
                     <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{{ __('blog::messages.publishing') }}</h3>
-                    <label class="inline-flex items-center gap-2 text-sm cursor-pointer select-none">
+                    <label class="inline-flex items-center gap-2 text-sm cursor-pointer select-none text-zinc-900 dark:text-zinc-100">
                         <input type="checkbox" wire:model.live="isDraft"
-                               class="rounded border-zinc-300 dark:border-zinc-700 text-emerald-600 focus:ring-emerald-500">
+                               class="rounded border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-emerald-600 focus:ring-emerald-500 focus:ring-offset-0">
                         {{ __('blog::messages.mark_as_draft') }}
                     </label>
                 </div>
