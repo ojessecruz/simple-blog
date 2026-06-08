@@ -2,6 +2,17 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.5.0 - 2026-06-08
+
+### Added
+
+- Livewire 4 support. The `livewire/livewire` constraint widens to `^3.5||^4.0`, so the package installs cleanly alongside either major version. The full test suite passes against the Livewire 3.5 floor (with Laravel 11) and against Livewire 4.3 (with Laravel 12).
+
+### Fixed
+
+- Admin Livewire components are now registered under dotted names (`blog.admin.post-index`, `blog.admin.post-form`, `blog.admin.category-index`) instead of `blog::admin.*`. Livewire 4 reserves `::` for namespace resolution and would fail to resolve the `::`-style names, throwing `ComponentNotFoundException`. The new names resolve identically on Livewire 3 and 4. Routing is unaffected (admin routes reference the component classes directly).
+- `Post::published()` scope now uses the `scopePublished()` naming convention instead of the `#[Scope]` attribute. The attribute (`Illuminate\Database\Eloquent\Attributes\Scope`) only exists in Laravel 12+, so on Laravel 11 the scope threw `ArgumentCountError`. This is the version range declared in `composer.json` (`illuminate/contracts: ^11.0`) but was never exercised in CI, which only ran Laravel 12/13. The conventional `scopePublished()` works across Laravel 11/12/13.
+
 ## 0.4.3 - 2026-05-04
 
 ### Fixed

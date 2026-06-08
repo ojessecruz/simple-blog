@@ -6,7 +6,7 @@ A ready-to-use Laravel blog — minimal reading-focused public listing, admin CR
 
 - PHP 8.3+
 - Laravel 11 / 12 / 13
-- Livewire 3.5+
+- Livewire 3.5+ or 4
 - Tailwind CSS in the consuming app (the package ships Tailwind classes, it does not compile its own CSS)
 
 ## Installation

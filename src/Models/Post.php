@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jessecruz\SimpleBlog\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -118,8 +117,7 @@ final class Post extends Model
         return 'slug';
     }
 
-    #[Scope]
-    protected function published(Builder $query): Builder
+    public function scopePublished(Builder $query): Builder
     {
         return $query->whereNotNull('published_at')
             ->where('published_at', '<=', now());

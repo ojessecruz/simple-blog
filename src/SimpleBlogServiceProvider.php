@@ -28,9 +28,9 @@ final class SimpleBlogServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
-        Livewire::component('blog::admin.post-index', PostIndex::class);
-        Livewire::component('blog::admin.post-form', PostForm::class);
-        Livewire::component('blog::admin.category-index', CategoryIndex::class);
+        Livewire::component('blog.admin.post-index', PostIndex::class);
+        Livewire::component('blog.admin.post-form', PostForm::class);
+        Livewire::component('blog.admin.category-index', CategoryIndex::class);
 
         Livewire::addPersistentMiddleware([SetBlogLocale::class]);
 
