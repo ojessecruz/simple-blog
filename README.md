@@ -34,6 +34,15 @@ Publish the views (optional, only if you want to customize):
 php artisan vendor:publish --tag="simple-blog-views"
 ```
 
+Make Tailwind aware of the package views — add them to your `tailwind.config.js` `content` array so JIT compiles the classes the package uses (without this, the default styling renders broken):
+
+```js
+content: [
+    // ... your existing paths ...
+    './vendor/ojessecruz/simple-blog/resources/views/**/*.blade.php',
+],
+```
+
 ## Quickstart
 
 Three steps and your blog is up.
@@ -223,17 +232,6 @@ If your admin layout is `@yield`-based instead, build a small slot bridge:
     @livewireScripts
 </body>
 </html>
-```
-
-### Make Tailwind aware of the package views
-
-If you use Tailwind CSS, add the package views to your `tailwind.config.js` `content` array so JIT compiles classes used in the package:
-
-```js
-content: [
-    // ... your existing paths ...
-    './vendor/ojessecruz/simple-blog/resources/views/**/*.blade.php',
-],
 ```
 
 ### Required directives in your layout
