@@ -2,6 +2,12 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.6.0 - 2026-06-09
+
+### Added
+
+- `simple-blog:install` command. One idempotent command publishes the config and migrations, registers the Tailwind v4 source by injecting `@import '../../vendor/ojessecruz/simple-blog/resources/css/simple-blog.css';` into `resources/css/app.css` (right after the `@import "tailwindcss";` line, or prepended when absent), and offers to run the migrations. A clean install is now `composer require` → `php artisan simple-blog:install` → `npm run build` instead of hand-editing CSS. Re-running is safe — it never duplicates the import — and when `resources/css/app.css` is missing it prints the line to add manually.
+
 ## 0.5.1 - 2026-06-09
 
 ### Added
