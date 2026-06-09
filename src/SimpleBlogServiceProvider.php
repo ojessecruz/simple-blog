@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jessecruz\SimpleBlog;
 
+use Jessecruz\SimpleBlog\Commands\InstallCommand;
 use Jessecruz\SimpleBlog\Http\Middleware\SetBlogLocale;
 use Jessecruz\SimpleBlog\Livewire\Admin\CategoryIndex;
 use Jessecruz\SimpleBlog\Livewire\Admin\PostForm;
@@ -23,7 +24,8 @@ final class SimpleBlogServiceProvider extends PackageServiceProvider
             ->hasMigrations([
                 'create_blog_categories_table',
                 'create_blog_posts_table',
-            ]);
+            ])
+            ->hasCommand(InstallCommand::class);
     }
 
     public function packageBooted(): void

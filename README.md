@@ -15,6 +15,24 @@ A ready-to-use Laravel blog — minimal reading-focused public listing, admin CR
 composer require ojessecruz/simple-blog
 ```
 
+### Quick install (recommended)
+
+One command publishes the config & migrations and wires Tailwind up for you:
+
+```bash
+php artisan simple-blog:install
+```
+
+It is idempotent — safe to re-run — and will:
+
+- publish `config/blog.php` and the migrations;
+- add the Tailwind source `@import` to `resources/css/app.css` (Tailwind v4), right after your `@import "tailwindcss";`;
+- offer to run the migrations.
+
+Afterwards, protect the admin routes (see below) and run `npm run build`. To wire things up by hand instead, follow the manual steps.
+
+### Manual installation
+
 Publish and run the migrations:
 
 ```bash
