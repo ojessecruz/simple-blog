@@ -2,6 +2,16 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.5.1 - 2026-06-09
+
+### Added
+
+- Tailwind v4 CSS source entrypoint at `resources/css/simple-blog.css`. It registers the package views via `@source`, so a consuming app enables the package's styling with a single `@import '../../vendor/ojessecruz/simple-blog/resources/css/simple-blog.css';` from its main stylesheet instead of hardcoding the vendor path. Without it, Tailwind v4 never scans the package and the blog renders unstyled. The `@source` path is resolved relative to the package file, so it survives host-app restructuring.
+
+### Documentation
+
+- The Tailwind setup step moved into the Installation section (was buried under "Customizing the layout"), since it affects every install — the default styling renders broken without it. The README now documents both the Tailwind v4 (`@import`) and v3 (`tailwind.config.js` `content`) wiring.
+
 ## 0.5.0 - 2026-06-08
 
 ### Added
