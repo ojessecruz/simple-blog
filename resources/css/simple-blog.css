@@ -1,0 +1,18 @@
+/*
+ * Tailwind v4 source registration for Simple Blog.
+ *
+ * The package ships Blade views full of Tailwind utility classes but does not
+ * compile its own CSS — the consuming app does. Tailwind v4 only generates the
+ * classes it finds in the paths registered via `@source`, and a Composer
+ * package living under `vendor/` is never scanned automatically.
+ *
+ * Import this file from your app's main CSS entrypoint so Tailwind scans the
+ * package views and compiles their classes (without it, the blog renders
+ * unstyled):
+ *
+ *     @import '../../vendor/ojessecruz/simple-blog/resources/css/simple-blog.css';
+ *
+ * `@source` is resolved relative to THIS file, so it keeps pointing at the
+ * package's own views even if the host app moves things around.
+ */
+@source "../views";

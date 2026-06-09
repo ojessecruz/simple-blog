@@ -34,7 +34,17 @@ Publish the views (optional, only if you want to customize):
 php artisan vendor:publish --tag="simple-blog-views"
 ```
 
-Make Tailwind aware of the package views — add them to your `tailwind.config.js` `content` array so JIT compiles the classes the package uses (without this, the default styling renders broken):
+Make Tailwind aware of the package views, otherwise it won't compile the classes they use and the blog renders unstyled.
+
+**Tailwind v4** (CSS-based config) — import the package's CSS entrypoint from your app's main stylesheet. It registers the package views as a source, and because the path is resolved relative to the package file, your app never has to know the package's internal structure:
+
+```css
+/* resources/css/app.css */
+@import 'tailwindcss';
+@import '../../vendor/ojessecruz/simple-blog/resources/css/simple-blog.css';
+```
+
+**Tailwind v3** (`tailwind.config.js`) — add the views to the `content` array:
 
 ```js
 content: [
@@ -42,6 +52,8 @@ content: [
     './vendor/ojessecruz/simple-blog/resources/views/**/*.blade.php',
 ],
 ```
+
+If you published the views (`--tag="simple-blog-views"`), they live in `resources/views/` and are already covered by your app's default Tailwind sources — but keep the import above if you rely on any **non-published** views (e.g. the admin panel).
 
 ## Quickstart
 
