@@ -2,6 +2,12 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.6.1 - 2026-06-10
+
+### Documentation
+
+- Republished release carrying the `0.6.0` changelog entry. The `0.6.0` feature code (the `simple-blog:install` command) is unchanged; this patch only adds its changelog entry, which landed after `0.6.0` was already tagged. No functional changes.
+
 ## 0.6.0 - 2026-06-09
 
 ### Added
