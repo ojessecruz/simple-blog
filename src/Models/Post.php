@@ -104,6 +104,13 @@ final class Post extends Model
         return implode('', $initials);
     }
 
+    public function authorAvatarUrl(): ?string
+    {
+        $author = $this->author;
+
+        return $author instanceof Author ? $author->getBlogAuthorAvatarUrl() : null;
+    }
+
     public function renderedBody(): string
     {
         return Str::markdown($this->body, config('blog.markdown', [

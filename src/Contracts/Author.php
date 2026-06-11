@@ -9,4 +9,6 @@ interface Author
     public function getBlogAuthorName(): string;
 
     public function getBlogAuthorInitials(): string;
+
+    public function getBlogAuthorAvatarUrl(): ?string;
 }

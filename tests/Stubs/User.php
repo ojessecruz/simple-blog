@@ -30,4 +30,9 @@ final class User extends Authenticatable implements Author
 
         return implode('', $initials);
     }
+
+    public function getBlogAuthorAvatarUrl(): ?string
+    {
+        return $this->avatar_url ?? null;
+    }
 }
