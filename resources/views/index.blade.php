@@ -15,13 +15,15 @@
              style="background-image: radial-gradient(currentColor 1px, transparent 1px); background-size: 26px 26px;"
              aria-hidden="true"></div>
 
-        <div class="relative px-6 pt-6">
-            <a href="{{ url('/') }}"
-               class="group inline-flex items-center gap-1.5 font-mono text-xs font-semibold tracking-wide text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200">
-                <x-blog::icon.arrow-left class="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-                {{ __('blog::messages.back_to_site') }}
-            </a>
-        </div>
+        @if(config('blog.public_back_url'))
+            <div class="relative px-6 pt-6">
+                <a href="{{ config('blog.public_back_url') }}"
+                   class="group inline-flex items-center gap-1.5 font-mono text-xs font-semibold tracking-wide text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200">
+                    <x-blog::icon.arrow-left class="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+                    {{ __('blog::messages.back_to_site') }}
+                </a>
+            </div>
+        @endif
 
         <div class="relative mx-auto max-w-2xl px-6 pb-12 pt-8 sm:pb-14 sm:pt-10">
             @if(isset($currentCategory))

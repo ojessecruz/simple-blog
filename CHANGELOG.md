@@ -2,11 +2,27 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.7.5 - 2026-06-11
+
+### Added
+
+- `public_back_url` config key — where the "Back to site" link on the public blog index points. Defaults to `'/'` (previous hardcoded behavior); set to `null` to hide the link, mirroring `admin_back_url`.
+
+### Fixed
+
+- `author_model => null` (the default) no longer fatals on the public pages. `Post::author()` used to fall back to the abstract `Illuminate\Database\Eloquent\Model`, which crashed as soon as a view touched the relation; it now binds to a concrete model with an always-false constraint, so the relation stays callable and simply resolves to no author (name falls back to "Team", avatar to `null`).
+- Eager-load the `author` relation on the public index and category listings, removing an N+1 introduced when the templates started rendering author name/avatar per post.
+
+### Changed
+
+- `orchestra/testbench` dev constraint now allows `^11.0`, matching the Laravel 13 entry already exercised in CI.
+
 ## 0.7.0 - 2026-06-11
 
 ### Added
 
 - `<x-blog::squiggle />` component — a hand-drawn SVG underline accent. It inherits its color from `text-*` classes (`currentColor`), so host apps can retheme it with a single utility class.
+- **Breaking**: the `Author` contract gained `getBlogAuthorAvatarUrl(): ?string`, surfaced in the templates through `Post::authorAvatarUrl()`. Host models implementing the contract must add the method (returning `null` is fine — the templates fall back to an initials badge).
 
 ### Changed
 

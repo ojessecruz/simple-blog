@@ -113,6 +113,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Public "Back to site" URL
+    |--------------------------------------------------------------------------
+    |
+    | Where the "Back to site" link at the top of the public blog index
+    | should go. Defaults to the app root. Use any path or full URL.
+    |
+    | Leave `null` to hide the link entirely.
+    |
+    | Example:
+    |     'public_back_url' => '/welcome',
+    |
+    */
+    'public_back_url' => '/',
+
+    /*
+    |--------------------------------------------------------------------------
     | Admin "Back" URL
     |--------------------------------------------------------------------------
     |

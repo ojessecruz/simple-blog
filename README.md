@@ -129,6 +129,11 @@ class User extends Authenticatable implements Author
 
         return implode('', $initials);
     }
+
+    public function getBlogAuthorAvatarUrl(): ?string
+    {
+        return $this->avatar_url; // or null if you don't have avatars
+    }
 }
 ```
 
@@ -165,6 +170,7 @@ See `config/blog.php` (published) — every key has comments explaining what it 
 - **`author_model`** — User model
 - **`layouts.public`** / **`layouts.admin`** — Blade layouts wrapping the content
 - **`cta_view`** — optional view rendered at the end of each post (e.g. pricing, newsletter)
+- **`public_back_url`** / **`admin_back_url`** — where the "back" links point (`null` hides them)
 - **`markdown`** — options passed to `Str::markdown()`
 
 ## Customizing the layout

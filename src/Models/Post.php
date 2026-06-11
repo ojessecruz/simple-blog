@@ -65,9 +65,17 @@ final class Post extends Model
 
     public function author(): BelongsTo
     {
+        /** @var class-string<Model>|null $model */
         $model = config('blog.author_model');
 
-        return $this->belongsTo($model ?? Model::class, 'author_id');
+        // Without a configured model the relation must remain callable (views
+        // and eager loads still reference it), so bind it to this model with
+        // an always-false constraint — it resolves to null and never matches.
+        if ($model === null) {
+            return $this->belongsTo(self::class, 'author_id')->whereRaw('1 = 0');
+        }
+
+        return $this->belongsTo($model, 'author_id');
     }
 
     public function isPublished(): bool

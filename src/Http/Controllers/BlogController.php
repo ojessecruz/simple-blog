@@ -14,7 +14,7 @@ final class BlogController extends Controller
     public function index(): View
     {
         $posts = Post::published()
-            ->with('category')
+            ->with('category', 'author')
             ->latest('published_at')
             ->get();
 
@@ -48,7 +48,7 @@ final class BlogController extends Controller
     {
         $posts = Post::published()
             ->where('blog_category_id', $category->id)
-            ->with('category')
+            ->with('category', 'author')
             ->latest('published_at')
             ->get();
 
