@@ -5,6 +5,7 @@ declare(strict_types=1);
 return [
     // Common actions
     'back' => 'Volver',
+    'back_to_site' => 'Volver al sitio',
     'edit' => 'Editar',
     'delete' => 'Eliminar',
     'save' => 'Guardar',

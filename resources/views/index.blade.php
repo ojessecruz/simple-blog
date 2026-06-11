@@ -15,20 +15,29 @@
              style="background-image: radial-gradient(currentColor 1px, transparent 1px); background-size: 26px 26px;"
              aria-hidden="true"></div>
 
-        <div class="relative mx-auto max-w-2xl px-6 pb-12 pt-10 sm:pb-14 sm:pt-12">
+        <div class="relative px-6 pt-6">
+            <a href="{{ url('/') }}"
+               class="group inline-flex items-center gap-1.5 font-mono text-xs font-semibold tracking-wide text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200">
+                <x-blog::icon.arrow-left class="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+                {{ __('blog::messages.back_to_site') }}
+            </a>
+        </div>
+
+        <div class="relative mx-auto max-w-2xl px-6 pb-12 pt-8 sm:pb-14 sm:pt-10">
             @if(isset($currentCategory))
-                <p class="font-mono text-xs font-semibold uppercase tracking-[0.25em] text-zinc-500 dark:text-zinc-400">
-                    {{ __('blog::messages.category') }}
+                <p class="font-mono text-xs font-semibold uppercase tracking-[0.25em] text-emerald-600 dark:text-emerald-400">
+                    <span aria-hidden="true">✦</span> {{ __('blog::messages.category') }}
                 </p>
             @endif
 
             <h1 class="mt-4 text-5xl font-bold leading-[1.05] tracking-tight text-zinc-900 sm:text-6xl dark:text-zinc-100">
                 <span class="relative inline-block font-serif italic">
                     {{ isset($currentCategory) ? $currentCategory->name : __('blog::messages.blog') }}
+                    <x-blog::squiggle class="absolute -bottom-2 left-0 h-3 w-full text-emerald-500" />
                 </span>
             </h1>
 
-            <p class="mt-7 text-base leading-relaxed text-zinc-600 sm:text-lg dark:text-zinc-400">
+            <p class="mt-7 max-w-prose text-base leading-relaxed text-zinc-600 sm:text-lg dark:text-zinc-400">
                 @if(isset($currentCategory) && $currentCategory->description)
                     {{ $currentCategory->description }}
                 @else
@@ -66,7 +75,7 @@
 
         @if($posts->isEmpty())
             <div class="py-12 text-center">
-                <p class="mx-auto w-fit -rotate-1 border-2 border-zinc-900 bg-emerald-400 px-6 py-4 font-mono text-sm font-semibold text-zinc-900 shadow-[4px_4px_0_0_theme(colors.zinc.900)] dark:border-zinc-100 dark:shadow-[4px_4px_0_0_theme(colors.zinc.100)]">
+                <p class="font-mono text-sm text-zinc-400 dark:text-zinc-500">
                     {{ __('blog::messages.no_posts_yet') }}
                 </p>
             </div>
