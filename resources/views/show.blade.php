@@ -56,9 +56,9 @@
 
             <div class="mt-6 flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-500 dark:text-zinc-400">
                 @if ($post->authorAvatarUrl())
-                    <img src="{{ $post->authorAvatarUrl() }}" alt="" class="size-[18px] rounded-full border border-emerald-500 object-cover" />
+                    <img src="{{ $post->authorAvatarUrl() }}" alt="" class="size-4 rounded-full border border-emerald-500 object-cover" />
                 @else
-                    <span aria-hidden="true" class="flex size-[18px] items-center justify-center rounded-full border border-emerald-500 bg-emerald-50 text-[9px] font-bold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">{{ $post->authorInitials() }}</span>
+                    <span aria-hidden="true" class="flex size-4 items-center justify-center rounded-full border border-emerald-500 bg-emerald-50 text-[9px] font-bold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">{{ $post->authorInitials() }}</span>
                 @endif
                 <span class="font-semibold text-zinc-900 dark:text-zinc-100">{{ $post->authorName() }}</span>
                 @if($post->published_at)
