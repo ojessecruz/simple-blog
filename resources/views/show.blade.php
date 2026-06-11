@@ -56,9 +56,9 @@
 
             <div class="mt-6 flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-500 dark:text-zinc-400">
                 @if ($post->authorAvatarUrl())
-                    <img src="{{ $post->authorAvatarUrl() }}" alt="" class="size-7 rounded-full border-2 border-emerald-500 object-cover" />
+                    <img src="{{ $post->authorAvatarUrl() }}" alt="" class="size-[18px] rounded-full border border-emerald-500 object-cover" />
                 @else
-                    <span aria-hidden="true" class="flex size-7 items-center justify-center rounded-full border-2 border-emerald-500 bg-emerald-50 text-[10px] font-bold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">{{ $post->authorInitials() }}</span>
+                    <span aria-hidden="true" class="flex size-[18px] items-center justify-center rounded-full border border-emerald-500 bg-emerald-50 text-[9px] font-bold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">{{ $post->authorInitials() }}</span>
                 @endif
                 <span class="font-semibold text-zinc-900 dark:text-zinc-100">{{ $post->authorName() }}</span>
                 @if($post->published_at)
@@ -70,10 +70,6 @@
                 <span aria-hidden="true" class="text-emerald-500">✦</span>
                 <span>{{ $post->reading_time }} {{ __('blog::messages.min_read') }}</span>
             </div>
-
-            <svg class="mt-6 h-3 w-32" viewBox="0 0 220 12" fill="none" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M3 8.5 C 32 3, 58 10.5, 92 6.5 S 158 2.5, 217 7.5" stroke="#10b981" stroke-width="5" stroke-linecap="round" />
-            </svg>
         </header>
 
         @if(! $post->isPublished())

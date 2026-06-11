@@ -25,9 +25,6 @@
             <h1 class="mt-4 text-5xl font-bold leading-[1.05] tracking-tight text-zinc-900 sm:text-6xl dark:text-zinc-100">
                 <span class="relative inline-block font-serif italic">
                     {{ isset($currentCategory) ? $currentCategory->name : __('blog::messages.blog') }}
-                    <svg class="absolute -bottom-2 left-0 h-3 w-full" viewBox="0 0 220 12" fill="none" preserveAspectRatio="none" aria-hidden="true">
-                        <path d="M3 8.5 C 32 3, 58 10.5, 92 6.5 S 158 2.5, 217 7.5" stroke="#10b981" stroke-width="5" stroke-linecap="round" />
-                    </svg>
                 </span>
             </h1>
 
@@ -90,9 +87,9 @@
                                 </p>
                                 <div class="flex items-center gap-2 font-mono text-xs text-zinc-500 dark:text-zinc-500">
                                     @if ($post->authorAvatarUrl())
-                                        <img src="{{ $post->authorAvatarUrl() }}" alt="" class="size-5 rounded-full border border-zinc-300 object-cover dark:border-zinc-600" />
+                                        <img src="{{ $post->authorAvatarUrl() }}" alt="" class="size-[18px] rounded-full border border-zinc-300 object-cover dark:border-zinc-600" />
                                     @else
-                                        <span aria-hidden="true" class="flex size-5 items-center justify-center rounded-full bg-emerald-100 text-[9px] font-bold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">{{ $post->authorInitials() }}</span>
+                                        <span aria-hidden="true" class="flex size-[18px] items-center justify-center rounded-full bg-emerald-100 text-[9px] font-bold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">{{ $post->authorInitials() }}</span>
                                     @endif
                                     <span>{{ $post->authorName() }}</span>
                                     <span aria-hidden="true" class="text-emerald-500">✦</span>
