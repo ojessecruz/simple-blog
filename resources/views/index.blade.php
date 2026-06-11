@@ -87,9 +87,9 @@
                                 </p>
                                 <div class="flex items-center gap-2 font-mono text-xs text-zinc-500 dark:text-zinc-500">
                                     @if ($post->authorAvatarUrl())
-                                        <img src="{{ $post->authorAvatarUrl() }}" alt="" class="size-4 rounded-full border border-zinc-300 object-cover dark:border-zinc-600" />
+                                        <img src="{{ $post->authorAvatarUrl() }}" alt="" class="size-[24px] shrink-0 rounded-full border border-zinc-300 object-cover dark:border-zinc-600" />
                                     @else
-                                        <span aria-hidden="true" class="flex size-4 items-center justify-center rounded-full bg-emerald-100 text-[9px] font-bold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">{{ $post->authorInitials() }}</span>
+                                        <span aria-hidden="true" class="flex size-[24px] shrink-0 items-center justify-center rounded-full bg-emerald-100 text-[9px] font-bold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">{{ $post->authorInitials() }}</span>
                                     @endif
                                     <span>{{ $post->authorName() }}</span>
                                     <span aria-hidden="true" class="text-emerald-500">✦</span>
