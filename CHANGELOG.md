@@ -2,7 +2,15 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
-## 0.6.1 - 2026-06-10
+## 0.7.0 - 2026-06-11
+
+### Added
+
+- `<x-blog::squiggle />` component — a hand-drawn SVG underline accent. It inherits its color from `text-*` classes (`currentColor`), so host apps can retheme it with a single utility class.
+
+### Changed
+
+- Redesigned the default public templates (`index`, `show`) with a more editorial layout while keeping the neutral zinc/emerald palette and dark mode support: serif-italic display title with a squiggle accent on the index, category navigation as bordered chips, mono uppercase category eyebrows, mono meta lines with ✦ separators, thick accent underline on hovered titles, serif-italic excerpt lede on the post page, and accent-underlined links, accent blockquotes and list markers in the post body typography. Apps that published the views (`vendor:publish --tag="simple-blog-views-public"`) are unaffected; republish to adopt the new defaults.
 
 ### Documentation
 
