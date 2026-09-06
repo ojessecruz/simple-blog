@@ -2,6 +2,12 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.8.1 - 2026-09-06
+
+### Changed
+
+- Docs only: the `seo` example in `config/blog.php` and the README now uses Hoot (usehoot.app) as the sample site.
+
 ## 0.8.0 - 2026-09-06
 
 ### Added
