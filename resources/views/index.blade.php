@@ -1,12 +1,26 @@
 @extends(config('blog.layouts.public'))
 
+@php
+    $seoTitle = isset($currentCategory)
+        ? \Jessecruz\SimpleBlog\Support\Seo::categoryTitle($currentCategory)
+        : \Jessecruz\SimpleBlog\Support\Seo::indexTitle();
+    $seoDescription = \Jessecruz\SimpleBlog\Support\Seo::indexDescription($currentCategory ?? null);
+    $seoImage = \Jessecruz\SimpleBlog\Support\Seo::defaultImage();
+@endphp
+
 @push('head')
-    <title>@if(isset($currentCategory)){{ $currentCategory->name }} — @endif Blog</title>
-    @if(isset($currentCategory) && $currentCategory->description)
-        <meta name="description" content="{{ $currentCategory->description }}">
+    <title>{{ $seoTitle }}</title>
+    @if($seoDescription)
+        <meta name="description" content="{{ $seoDescription }}">
+        <meta property="og:description" content="{{ $seoDescription }}">
     @endif
-    <meta property="og:title" content="@if(isset($currentCategory)){{ $currentCategory->name }} — @endif Blog">
+    <meta property="og:title" content="{{ $seoTitle }}">
     <meta property="og:type" content="website">
+    @if($seoImage)
+        <meta property="og:image" content="{{ $seoImage }}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="{{ $seoImage }}">
+    @endif
 @endpush
 
 @section('content')

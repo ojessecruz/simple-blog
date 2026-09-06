@@ -171,6 +171,7 @@ See `config/blog.php` (published) — every key has comments explaining what it 
 - **`layouts.public`** / **`layouts.admin`** — Blade layouts wrapping the content
 - **`cta_view`** — optional view rendered at the end of each post (e.g. pricing, newsletter)
 - **`public_back_url`** / **`admin_back_url`** — where the "back" links point (`null` hides them)
+- **`seo`** — site/blog names, default description and images used in titles, meta tags and the Article JSON-LD (see [SEO](#seo))
 - **`markdown`** — options passed to `Str::markdown()`
 
 ## Customizing the layout
@@ -193,9 +194,10 @@ The simplest path is creating a dedicated layout for the blog with `@yield('cont
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', config('app.name'))</title>
 
-    @stack('head') {{-- Required: lets the package emit SEO meta and JSON-LD --}}
+    @stack('head') {{-- Required: the package pushes <title>, meta, OG tags and JSON-LD here --}}
+
+    <link rel="canonical" href="{{ request()->url() }}">
 
     @vite('resources/css/app.css')
 </head>
@@ -272,13 +274,40 @@ If your admin layout is `@yield`-based instead, build a small slot bridge:
 
 ### Required directives in your layout
 
-The package emits SEO meta tags, OG tags and JSON-LD via `@push('head')`. For these to render, your layout's `<head>` must contain:
+The package emits the `<title>`, meta description, OG tags and JSON-LD of every public page via `@push('head')`. For these to render, your layout's `<head>` must contain:
 
 ```blade
 @stack('head')
 ```
 
-Without it, `<title>` and meta tags from posts won't appear in the head.
+Without it, titles and meta tags won't appear in the head. Do **not** add your own `<title>` to the public layout — the page already pushes one, and you would end up with two.
+
+## SEO
+
+Every public page renders exactly one `<title>`, a meta description when one is available, Open Graph / Twitter tags and, on published posts, a schema.org `Article`. The defaults work with zero configuration and derive from `config('app.name')`:
+
+| Page | `<title>` | Description |
+|---|---|---|
+| Index | `Blog \| {app.name}` | `seo.description` |
+| Category | `{Category} \| Blog \| {app.name}` | category description, then `seo.description` |
+| Post | `{meta_title or title} \| Blog \| {app.name}` | `meta_description`, then `excerpt` |
+
+Tune them in `config/blog.php`:
+
+```php
+'seo' => [
+    'site_name' => 'Elenya',                                   // brand; null → config('app.name')
+    'blog_name' => 'Blog do Elenya',                           // index title + suffix of the other pages
+    'index_title' => 'Blog do Elenya | Agenda e gestão',       // optional tagline for the index only
+    'description' => 'Artigos e novidades sobre agendamento.', // index + categories without one
+    'image' => 'https://example.com/img/og-card.png',          // default og:image
+    'publisher_logo' => 'https://example.com/img/logo.png',    // Article publisher logo
+],
+```
+
+Posts use `og_image`, then `cover_image`, then `seo.image` for their social image. The Article JSON-LD includes `headline`, `description`, `author` (from your `Author` model), `publisher`, `image`, `datePublished`, `dateModified` and `inLanguage`.
+
+If you publish and customize the public views, `Jessecruz\SimpleBlog\Support\Seo` exposes the same resolvers (`indexTitle()`, `categoryTitle($category)`, `postTitle($post)`, `postImage($post)`, `articleSchema($post)`, …) so your templates keep the fallbacks.
 
 ## Customizing the visual style
 

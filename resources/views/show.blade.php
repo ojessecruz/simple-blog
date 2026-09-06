@@ -1,29 +1,33 @@
 @extends(config('blog.layouts.public'))
 
+@php
+    $seoTitle = \Jessecruz\SimpleBlog\Support\Seo::postTitle($post);
+    $seoDescription = \Jessecruz\SimpleBlog\Support\Seo::postDescription($post);
+    $seoImage = \Jessecruz\SimpleBlog\Support\Seo::postImage($post);
+@endphp
+
 @push('head')
-    <title>{{ $post->meta_title ?? $post->title }}</title>
-    <meta name="description" content="{{ $post->meta_description ?? $post->excerpt }}">
-    <meta name="keywords" content="{{ implode(', ', $post->keywords ?? []) }}">
+    <title>{{ $seoTitle }}</title>
+    @if($seoDescription)
+        <meta name="description" content="{{ $seoDescription }}">
+        <meta property="og:description" content="{{ $seoDescription }}">
+    @endif
+    @if($post->keywords)
+        <meta name="keywords" content="{{ implode(', ', $post->keywords) }}">
+    @endif
     <meta property="og:title" content="{{ $post->title }}">
-    <meta property="og:description" content="{{ $post->excerpt }}">
     <meta property="og:type" content="article">
-    @if($post->og_image)
-        <meta property="og:image" content="{{ $post->og_image }}">
+    @if($seoImage)
+        <meta property="og:image" content="{{ $seoImage }}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="{{ $seoImage }}">
     @endif
     @if($post->published_at)
         <meta property="article:published_time" content="{{ $post->published_at->toIso8601String() }}">
+        <meta property="article:modified_time" content="{{ ($post->updated_at ?? $post->published_at)->toIso8601String() }}">
     @endif
     @if($post->isPublished())
-        <script type="application/ld+json">
-        {
-            "@@context": "https://schema.org",
-            "@@type": "Article",
-            "headline": "{{ $post->title }}",
-            "description": "{{ $post->excerpt }}",
-            "datePublished": "{{ $post->published_at->toIso8601String() }}",
-            "mainEntityOfPage": {"@type": "WebPage", "@id": "{{ $post->url() }}"}
-        }
-        </script>
+        <script type="application/ld+json">{!! json_encode(\Jessecruz\SimpleBlog\Support\Seo::articleSchema($post), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     @endif
 @endpush
 

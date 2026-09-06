@@ -185,6 +185,50 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | SEO defaults for the public pages
+    |--------------------------------------------------------------------------
+    |
+    | Every public page emits exactly one <title>, a meta description, Open
+    | Graph tags and (on posts) a schema.org Article via @push('head'). These
+    | keys feed the fallbacks; all of them are optional.
+    |
+    |   - site_name:       Brand name used in titles and as the Article
+    |                      publisher. null → config('app.name').
+    |   - blog_name:       The blog's own name. It is the index title and the
+    |                      suffix of category and post titles
+    |                      ("{Category} | {blog_name}", "{Post} | {blog_name}").
+    |                      null → "Blog | {site_name}".
+    |   - index_title:     Full <title> for the index only, when you want a
+    |                      tagline there. null → blog_name.
+    |   - description:     Meta description for the index and for categories
+    |                      without their own description. null → no tag.
+    |   - image:           Absolute URL of the default og:image for the index,
+    |                      categories and posts without a cover. null → no tag.
+    |   - publisher_logo:  Absolute URL of the logo used in the Article
+    |                      publisher. null → publisher without logo.
+    |
+    | Example:
+    |     'seo' => [
+    |         'site_name' => 'Elenya',
+    |         'blog_name' => 'Blog do Elenya',
+    |         'index_title' => 'Blog do Elenya | Agenda e gestão para quem atende',
+    |         'description' => 'Artigos e novidades sobre agendamento online.',
+    |         'image' => 'https://example.com/img/og-card.png',
+    |         'publisher_logo' => 'https://example.com/img/logo.png',
+    |     ],
+    |
+    */
+    'seo' => [
+        'site_name' => null,
+        'blog_name' => null,
+        'index_title' => null,
+        'description' => null,
+        'image' => null,
+        'publisher_logo' => null,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Markdown rendering options
     |--------------------------------------------------------------------------
     |

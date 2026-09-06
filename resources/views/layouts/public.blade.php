@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>@yield('title', 'Blog')</title>
+    {{-- Each public view pushes its own <title>, description, OG tags and JSON-LD --}}
+    @stack('head')
 
-    <meta property="og:url" content="{{ url()->current() }}">
     <link rel="canonical" href="{{ request()->url() }}">
     <meta name="robots" content="index, follow">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="{{ \Jessecruz\SimpleBlog\Support\Seo::siteName() }}">
+    <meta property="og:locale" content="{{ app()->getLocale() }}">
 
     @if($assets = config('blog.assets'))
         @vite($assets)
     @endif
-
-    @stack('head')
 </head>
 <body class="antialiased font-sans bg-white dark:bg-zinc-950 min-h-screen text-zinc-900 dark:text-zinc-100">
     @yield('header')

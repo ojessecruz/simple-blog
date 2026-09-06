@@ -2,6 +2,26 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.8.0 - 2026-09-06
+
+### Added
+
+- `seo` config block (`site_name`, `blog_name`, `index_title`, `description`, `image`, `publisher_logo`) feeding titles, meta descriptions, Open Graph tags and the Article JSON-LD on the public pages. Everything is optional; defaults derive from `config('app.name')`.
+- `Jessecruz\SimpleBlog\Support\Seo` — resolves those values (`indexTitle()`, `categoryTitle()`, `postTitle()`, `postImage()`, `articleSchema()`, …) so custom views can reuse the same fallbacks.
+- Index and category pages now emit a meta description (category description → `seo.description`), `og:description`, and a default `og:image` / Twitter card when `seo.image` is set.
+- Post pages fall back to the cover image for `og:image`, emit `article:modified_time`, and the Article JSON-LD now carries `author`, `publisher` (with optional logo), `image`, `dateModified`, `inLanguage` and a full `mainEntityOfPage`.
+- Default public layout emits `og:site_name` and `og:locale`.
+
+### Fixed
+
+- Public pages rendered two `<title>` tags: the layout's `@yield('title', 'Blog')` plus the one each view pushes into the `head` stack. The layout no longer emits a `<title>`; every page now has exactly one, and index/category pages get real titles (`{blog_name}`, `{Category} | {blog_name}`) instead of a bare "Blog".
+- Post titles are suffixed with the blog name (`{Post} | {blog_name}`) instead of standing alone.
+
+### Changed
+
+- `@stack('head')` moved to the top of the default public layout's `<head>`, before the fixed canonical/robots/OG tags.
+- **Custom layouts:** remove any `<title>` from your own public layout — the package pushes one for every page. Layouts that kept `<title>@yield('title', …)</title>` from the old README example will otherwise render two titles.
+
 ## 0.7.5 - 2026-06-11
 
 ### Added
