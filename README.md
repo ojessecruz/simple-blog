@@ -296,12 +296,12 @@ Tune them in `config/blog.php`:
 
 ```php
 'seo' => [
-    'site_name' => 'Elenya',                                   // brand; null → config('app.name')
-    'blog_name' => 'Blog do Elenya',                           // index title + suffix of the other pages
-    'index_title' => 'Blog do Elenya | Agenda e gestão',       // optional tagline for the index only
-    'description' => 'Artigos e novidades sobre agendamento.', // index + categories without one
-    'image' => 'https://example.com/img/og-card.png',          // default og:image
-    'publisher_logo' => 'https://example.com/img/logo.png',    // Article publisher logo
+    'site_name' => 'Hoot',                                              // brand; null → config('app.name')
+    'blog_name' => "Hoot's Blog",                                       // index title + suffix of the other pages
+    'index_title' => "Hoot's Blog | Product feedback and roadmaps",    // optional tagline for the index only
+    'description' => 'Guides on collecting feedback and shipping it.', // index + categories without one
+    'image' => 'https://usehoot.app/img/og-card.png',                  // default og:image
+    'publisher_logo' => 'https://usehoot.app/img/logo.png',            // Article publisher logo
 ],
 ```
 

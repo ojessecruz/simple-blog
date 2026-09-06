@@ -209,12 +209,12 @@ return [
     |
     | Example:
     |     'seo' => [
-    |         'site_name' => 'Elenya',
-    |         'blog_name' => 'Blog do Elenya',
-    |         'index_title' => 'Blog do Elenya | Agenda e gestão para quem atende',
-    |         'description' => 'Artigos e novidades sobre agendamento online.',
-    |         'image' => 'https://example.com/img/og-card.png',
-    |         'publisher_logo' => 'https://example.com/img/logo.png',
+    |         'site_name' => 'Hoot',
+    |         'blog_name' => "Hoot's Blog",
+    |         'index_title' => "Hoot's Blog | Product feedback, roadmaps and changelogs",
+    |         'description' => 'Stories and guides on collecting feedback and shipping what users ask for.',
+    |         'image' => 'https://usehoot.app/img/og-card.png',
+    |         'publisher_logo' => 'https://usehoot.app/img/logo.png',
     |     ],
     |
     */
