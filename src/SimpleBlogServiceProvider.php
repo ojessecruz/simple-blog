@@ -36,6 +36,11 @@ final class SimpleBlogServiceProvider extends PackageServiceProvider
 
         Livewire::addPersistentMiddleware([SetBlogLocale::class]);
 
+        // Opt-in: hosts that don't enable the API get no extra routes.
+        if (config('blog.api.enabled')) {
+            $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
+        }
+
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'blog');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'blog');
 

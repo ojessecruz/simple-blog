@@ -161,12 +161,15 @@ The package registers:
 
 The `/blog` and `/admin/blog` prefixes are configurable (`route_prefix`, `admin_route_prefix`).
 
+When the [JSON API](#json-api) is enabled, it also registers the `blog.api.*` routes under `/api/blog`.
+
 ## Configuration
 
 See `config/blog.php` (published) — every key has comments explaining what it does, with examples. Summary:
 
 - **`route_prefix`** / **`admin_route_prefix`** — where to mount the routes
 - **`public_middleware`** / **`admin_middleware`** — middleware stacks
+- **`api`** — opt-in JSON API: enable flag, prefix, middleware, token and page size (see [JSON API](#json-api))
 - **`author_model`** — User model
 - **`layouts.public`** / **`layouts.admin`** — Blade layouts wrapping the content
 - **`cta_view`** — optional view rendered at the end of each post (e.g. pricing, newsletter)
@@ -340,6 +343,53 @@ Create a view (e.g. `resources/views/components/blog-cta.blade.php`) and point t
 ```
 
 The view receives the `$post` variable and is rendered after the post content (on show) and below the feed (on index).
+
+## JSON API
+
+An optional REST API to manage content from automations (n8n, CI jobs, AI agents). It is **disabled by default** — no routes are registered until you turn it on:
+
+```dotenv
+BLOG_API_ENABLED=true
+BLOG_API_TOKEN=a-long-random-secret
+```
+
+Every request must send `Authorization: Bearer {BLOG_API_TOKEN}` and `Accept: application/json`. While the token is empty, every request is rejected with `401`.
+
+| Method | URL                          | Name                         | Description                               |
+|--------|------------------------------|------------------------------|-------------------------------------------|
+| GET    | `/api/blog/categories`       | `blog.api.categories.index`  | List categories                           |
+| POST   | `/api/blog/categories`       | `blog.api.categories.store`  | Create a category (`name`, `slug`?, `description`?) |
+| GET    | `/api/blog/posts`            | `blog.api.posts.index`       | Paginated posts, newest first, without `body` |
+| POST   | `/api/blog/posts`            | `blog.api.posts.store`       | Create a post                             |
+| GET    | `/api/blog/posts/{slug}`     | `blog.api.posts.show`        | A single post, with `body`                |
+| PATCH  | `/api/blog/posts/{slug}`     | `blog.api.posts.update`      | Update only the fields sent               |
+
+Post payload:
+
+```json
+{
+    "title": "How to reduce no-shows",
+    "excerpt": "Why clients miss appointments and what to do about it.",
+    "body": "## Markdown body...",
+    "category": "scheduling",
+    "published_at": "2026-10-01T09:00:00-03:00",
+    "keywords": ["no-shows", "reminders"]
+}
+```
+
+- `title`, `excerpt`, `body` and `category` (a category **slug**) are required on create and optional on update.
+- `slug` defaults to `Str::slug(title)` on create; `reading_time` is estimated from the body (200 words/minute) when omitted.
+- `published_at`: omitted or `null` → draft; in the past → published; in the future → scheduled. The response reports it as `status`.
+- Also accepted: `cover_image`, `og_image`, `meta_title`, `meta_description` and `author_id` (validated against `author_model` when one is configured).
+
+To use your own auth instead of the shared token, replace the middleware stack:
+
+```php
+'api' => [
+    // ...
+    'middleware' => ['api', 'auth:sanctum', 'can:manage-blog'],
+],
+```
 
 ## Models
 

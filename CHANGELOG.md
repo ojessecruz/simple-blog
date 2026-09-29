@@ -2,6 +2,15 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.8.3 - 2026-09-28
+
+### Added
+
+- Opt-in JSON API under `/api/blog` (`blog.api.*` routes) to list/create categories and list/show/create/update posts, for automations that publish content. Disabled by default: set `BLOG_API_ENABLED=true`.
+- `api` config block (`enabled`, `prefix`, `middleware`, `token`, `per_page`).
+- `Jessecruz\SimpleBlog\Http\Middleware\ValidateApiToken` — default API guard that checks `Authorization: Bearer {blog.api.token}` and rejects everything while no token is set. Replace it through `api.middleware` to use Sanctum or any other auth.
+- Posts created without `published_at` are drafts; `slug` and `reading_time` are derived from the payload when omitted.
+
 ## 0.8.2 - 2026-09-28
 
 ### Security

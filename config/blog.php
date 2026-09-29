@@ -1,5 +1,7 @@
 <?php
 
+use Jessecruz\SimpleBlog\Http\Middleware\ValidateApiToken;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -60,6 +62,44 @@ return [
     |
     */
     'admin_middleware' => ['web', 'auth'],
+
+    /*
+    |--------------------------------------------------------------------------
+    | JSON API
+    |--------------------------------------------------------------------------
+    |
+    | Optional REST API to list/create categories and list/show/create/update
+    | posts — handy for automations (n8n, CI, AI agents) that publish content.
+    | Disabled by default: no API routes are registered until you enable it.
+    |
+    |   - enabled:    Registers the routes. BLOG_API_ENABLED=true in .env.
+    |   - prefix:     URL prefix. Default /api/blog/posts, /api/blog/categories.
+    |   - middleware: Stack applied to every API route. The default
+    |                 ValidateApiToken requires `Authorization: Bearer {token}`
+    |                 and rejects everything while `token` is empty. Swap it
+    |                 for your own auth, e.g. ['api', 'auth:sanctum',
+    |                 'can:manage-blog'].
+    |   - token:      Shared secret checked by ValidateApiToken.
+    |                 BLOG_API_TOKEN in .env.
+    |   - per_page:   Page size of GET /posts.
+    |
+    | Example:
+    |     'api' => [
+    |         'enabled' => true,
+    |         'prefix' => 'api/blog',
+    |         'middleware' => ['api', \Jessecruz\SimpleBlog\Http\Middleware\ValidateApiToken::class],
+    |         'token' => env('BLOG_API_TOKEN'),
+    |         'per_page' => 50,
+    |     ],
+    |
+    */
+    'api' => [
+        'enabled' => env('BLOG_API_ENABLED', false),
+        'prefix' => 'api/blog',
+        'middleware' => ['api', ValidateApiToken::class],
+        'token' => env('BLOG_API_TOKEN'),
+        'per_page' => 50,
+    ],
 
     /*
     |--------------------------------------------------------------------------

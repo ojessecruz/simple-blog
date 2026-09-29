@@ -17,3 +17,7 @@ parameters:
                 - src/Livewire/Admin/PostIndex.php
                 - src/Livewire/Admin/PostForm.php
                 - src/Livewire/Admin/CategoryIndex.php
+        -
+            # Package config is merged into the host's config at boot, so env() here is resolved (and cached) by the host.
+            identifier: larastan.noEnvCallsOutsideOfConfig
+            path: config/blog.php

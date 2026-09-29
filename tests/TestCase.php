@@ -14,6 +14,12 @@ use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
+    /**
+     * API routes are registered at boot, so tests that need them disabled flip
+     * this flag and call refreshApplication().
+     */
+    public bool $enablesBlogApi = true;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -42,6 +48,8 @@ class TestCase extends Orchestra
         ]);
         config()->set('blog.author_model', User::class);
         config()->set('blog.assets', []);
+        config()->set('blog.api.enabled', $this->enablesBlogApi);
+        config()->set('blog.api.token', 'blog-token');
 
         Schema::create('users', function ($table) {
             $table->id();
