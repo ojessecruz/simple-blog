@@ -2,6 +2,15 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.8.2 - 2026-09-28
+
+### Security
+
+- Raised the `league/commonmark` floor to `^2.10`. Earlier 2.x releases are affected by several denial-of-service advisories in the core parser (crafted code fences, reference links, quadratic-time parsing), reachable through `Post::renderedBody()` by any post author.
+- Raised the `livewire/livewire` floor to `^3.8.3||^4.3.4`, excluding releases affected by the DOM-based XSS advisory in client-side state handling (Livewire ≤ 3.8.2 and ≤ 4.3.3), which touches the admin panel.
+
+No API or behavior changes. Supported PHP / Laravel / Livewire majors are unchanged; hosts on older Livewire or CommonMark versions will have them upgraded alongside the package.
+
 ## 0.8.1 - 2026-09-06
 
 ### Changed
