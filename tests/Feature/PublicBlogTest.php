@@ -108,3 +108,22 @@ it('filters posts by category', function () {
         ->assertSee('Post Alpha')
         ->assertDontSee('Post Beta');
 });
+
+it('renders related links with high-contrast, always-underlined classes', function () {
+    $category = PostCategory::create(['slug' => 'g', 'name' => 'Gestão']);
+    $post = Post::create(['slug' => 'principal', 'title' => 'Principal', 'excerpt' => 'r', 'body' => 'c', 'blog_category_id' => $category->id, 'published_at' => now()->subDays(2)]);
+    Post::create(['slug' => 'irmao', 'title' => 'Post Irmão', 'excerpt' => 'r', 'body' => 'c', 'blog_category_id' => $category->id, 'published_at' => now()->subDay()]);
+
+    $this->get(route('blog.show', $post))
+        ->assertOk()
+        ->assertSee('Post Irmão')
+        ->assertSee('text-gray-900 underline decoration-emerald-500/80', false)
+        ->assertSee('dark:text-gray-100', false);
+});
+
+it('does not depend on arbitrary opacity utilities for the index header pattern', function () {
+    $this->get(route('blog.index'))
+        ->assertOk()
+        ->assertSee('opacity: 0.05', false)
+        ->assertDontSee('opacity-[0.05]', false);
+});

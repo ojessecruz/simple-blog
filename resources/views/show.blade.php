@@ -167,7 +167,7 @@
 
         @if($relatedPosts->isNotEmpty())
             <section class="mt-12 border-t-2 border-zinc-100 pt-6 dark:border-zinc-800">
-                <h2 class="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.25em] text-zinc-500 dark:text-zinc-400">
+                <h2 class="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.25em] text-gray-600 dark:text-gray-300">
                     {{ __('blog::messages.related') }}
                 </h2>
                 <ul class="space-y-2.5 text-sm">
@@ -175,7 +175,7 @@
                         <li class="flex items-start gap-2">
                             <span aria-hidden="true" class="mt-0.5 text-emerald-500">✦</span>
                             <a href="{{ $related->url() }}"
-                               class="font-semibold text-zinc-900 underline-offset-4 transition hover:underline hover:decoration-emerald-500 hover:decoration-2 dark:text-zinc-100">
+                               class="font-semibold text-gray-900 underline decoration-emerald-500/80 decoration-1 underline-offset-4 transition hover:text-black hover:decoration-emerald-500 hover:decoration-2 dark:text-gray-100 dark:hover:text-white">
                                 {{ $related->title }}
                             </a>
                         </li>

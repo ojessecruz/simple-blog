@@ -25,8 +25,8 @@
 
 @section('content')
     <header class="relative overflow-hidden border-b border-zinc-200 dark:border-zinc-800">
-        <div class="pointer-events-none absolute inset-0 text-zinc-900 opacity-[0.05] dark:text-zinc-100"
-             style="background-image: radial-gradient(currentColor 1px, transparent 1px); background-size: 26px 26px;"
+        <div class="pointer-events-none absolute inset-0 text-zinc-900 dark:text-zinc-100"
+             style="opacity: 0.05; background-image: radial-gradient(currentColor 1px, transparent 1px); background-size: 26px 26px;"
              aria-hidden="true"></div>
 
         @if(config('blog.public_back_url'))
