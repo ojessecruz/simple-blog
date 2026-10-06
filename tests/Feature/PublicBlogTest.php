@@ -127,3 +127,14 @@ it('does not depend on arbitrary opacity utilities for the index header pattern'
         ->assertSee('opacity: 0.05', false)
         ->assertDontSee('opacity-[0.05]', false);
 });
+
+it('reserves the cover slot on the index whether or not a post has a cover', function () {
+    $category = PostCategory::create(['slug' => 'g', 'name' => 'Gestão']);
+    Post::create(['slug' => 'com-capa', 'title' => 'Com Capa', 'excerpt' => 'r', 'body' => 'c', 'cover_image' => 'https://example.com/capa.jpg', 'blog_category_id' => $category->id, 'published_at' => now()->subDay()]);
+    Post::create(['slug' => 'sem-capa', 'title' => 'Sem Capa', 'excerpt' => 'r', 'body' => 'c', 'blog_category_id' => $category->id, 'published_at' => now()->subDay()]);
+
+    $this->get(route('blog.index'))
+        ->assertOk()
+        ->assertSee('src="https://example.com/capa.jpg" alt="Com Capa"', false)
+        ->assertSee('data-cover-placeholder', false);
+});

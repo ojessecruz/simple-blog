@@ -125,12 +125,15 @@
                                     <span>{{ $post->reading_time }} {{ __('blog::messages.min_read') }}</span>
                                 </div>
                             </div>
-                            @if($post->cover_image)
-                                <div class="hidden shrink-0 sm:block">
-                                    <img src="{{ $post->cover_image }}" alt=""
+                            <div class="hidden shrink-0 sm:block">
+                                @if($post->cover_image)
+                                    <img src="{{ $post->cover_image }}" alt="{{ $post->title }}"
                                          class="h-24 w-24 rotate-1 rounded-lg border-2 border-zinc-200 object-cover shadow-[3px_3px_0_0_theme(colors.zinc.300)] transition group-hover:rotate-0 dark:border-zinc-700 dark:shadow-[3px_3px_0_0_theme(colors.zinc.700)]">
-                                </div>
-                            @endif
+                                @else
+                                    <div data-cover-placeholder aria-hidden="true"
+                                         class="h-24 w-24 rounded-lg border-2 border-zinc-200 bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800"></div>
+                                @endif
+                            </div>
                         </a>
                     </li>
                 @endforeach
