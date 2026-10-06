@@ -120,7 +120,7 @@
                                 <p class="mb-4 line-clamp-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
                                     {{ $post->excerpt }}
                                 </p>
-                                <div class="mt-auto flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-500 dark:text-zinc-500">
+                                <div class="mt-auto flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-600 dark:text-zinc-300">
                                     @if ($post->authorAvatarUrl())
                                         <img src="{{ $post->authorAvatarUrl() }}" alt="" class="size-[24px] shrink-0 rounded-full border border-zinc-300 object-cover dark:border-zinc-600" />
                                     @else
@@ -129,7 +129,7 @@
                                     <span>{{ $post->authorName() }}</span>
                                     <span aria-hidden="true" class="text-emerald-500">✦</span>
                                     <time datetime="{{ $post->published_at->toIso8601String() }}">
-                                        {{ $post->published_at->translatedFormat('M j, Y') }}
+                                        {{ $post->published_at->locale(app()->getLocale())->translatedFormat(__('blog::messages.date_format')) }}
                                     </time>
                                     <span aria-hidden="true" class="text-emerald-500">✦</span>
                                     <span>{{ $post->reading_time }} {{ __('blog::messages.min_read') }}</span>

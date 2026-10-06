@@ -58,7 +58,7 @@
                 </p>
             @endif
 
-            <div class="mt-6 flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-500 dark:text-zinc-400">
+            <div class="mt-6 flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-600 dark:text-zinc-300">
                 @if ($post->authorAvatarUrl())
                     <img src="{{ $post->authorAvatarUrl() }}" alt="" class="size-[24px] shrink-0 rounded-full border border-emerald-500 object-cover" />
                 @else
@@ -68,7 +68,7 @@
                 @if($post->published_at)
                     <span aria-hidden="true" class="text-emerald-500">✦</span>
                     <time datetime="{{ $post->published_at->toIso8601String() }}">
-                        {{ $post->published_at->translatedFormat('M j, Y') }}
+                        {{ $post->published_at->locale(app()->getLocale())->translatedFormat(__('blog::messages.date_format')) }}
                     </time>
                 @endif
                 <span aria-hidden="true" class="text-emerald-500">✦</span>

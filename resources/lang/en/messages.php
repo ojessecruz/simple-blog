@@ -18,6 +18,7 @@ return [
     'min_read' => 'min read',
     'min' => 'min',
     'views_count' => ':count views',
+    'date_format' => 'M j, Y',
 
     // Public — index
     'blog' => 'Blog',

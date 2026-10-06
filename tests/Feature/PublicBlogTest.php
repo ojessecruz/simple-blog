@@ -168,3 +168,20 @@ it('prefers the category description over the index blurb', function () {
         ->assertSee('Tudo sobre gestão.')
         ->assertDontSee('Dicas práticas de agenda');
 });
+
+it('formats meta dates in Portuguese when the locale is pt_BR', function () {
+    config()->set('blog.locale', 'pt_BR');
+    $category = PostCategory::create(['slug' => 'g', 'name' => 'Gestão']);
+    $post = Post::create(['slug' => 'p', 'title' => 'P', 'excerpt' => 'r', 'body' => 'c', 'blog_category_id' => $category->id, 'published_at' => '2026-03-05 10:00:00']);
+
+    $this->get(route('blog.index'))->assertOk()->assertSee('5 de março de 2026');
+    $this->get(route('blog.show', $post))->assertOk()->assertSee('5 de março de 2026');
+});
+
+it('keeps the English date format when the locale is en', function () {
+    config()->set('blog.locale', 'en');
+    $category = PostCategory::create(['slug' => 'g', 'name' => 'Gestão']);
+    Post::create(['slug' => 'p', 'title' => 'P', 'excerpt' => 'r', 'body' => 'c', 'blog_category_id' => $category->id, 'published_at' => '2026-03-05 10:00:00']);
+
+    $this->get(route('blog.index'))->assertOk()->assertSee('Mar 5, 2026');
+});
