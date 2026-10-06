@@ -40,11 +40,10 @@
         @endif
 
         <div class="relative mx-auto max-w-6xl px-6 pb-12 pt-8 sm:pb-14 sm:pt-10">
-            @if(isset($currentCategory))
-                <p class="font-mono text-xs font-semibold uppercase tracking-[0.25em] text-emerald-600 dark:text-emerald-400">
-                    <span aria-hidden="true">✦</span> {{ __('blog::messages.category') }}
-                </p>
-            @endif
+            <p class="font-mono text-xs font-semibold uppercase tracking-[0.25em] text-emerald-600 dark:text-emerald-400">
+                <span aria-hidden="true">✦</span>
+                {{ isset($currentCategory) ? __('blog::messages.category') : __('blog::messages.latest_posts') }}
+            </p>
 
             <h1 class="mt-4 text-5xl font-bold leading-[1.05] tracking-tight text-zinc-900 sm:text-6xl dark:text-zinc-100">
                 <span class="relative inline-block font-serif italic">
@@ -53,11 +52,11 @@
                 </span>
             </h1>
 
-            <p class="mt-7 max-w-prose text-base leading-relaxed text-zinc-600 sm:text-lg dark:text-zinc-400">
+            <p class="mt-7 max-w-2xl text-base leading-relaxed text-zinc-700 sm:text-lg dark:text-zinc-300">
                 @if(isset($currentCategory) && $currentCategory->description)
                     {{ $currentCategory->description }}
                 @else
-                    {{ __('blog::messages.latest_posts') }}
+                    {{ __('blog::messages.index_blurb') }}
                 @endif
             </p>
         </div>

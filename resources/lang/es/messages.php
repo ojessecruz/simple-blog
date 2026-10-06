@@ -21,7 +21,8 @@ return [
 
     // Public — index
     'blog' => 'Blog',
-    'latest_posts' => 'Últimas publicaciones.',
+    'latest_posts' => 'Últimas publicaciones',
+    'index_blurb' => 'Consejos prácticos de agenda, clientes, WhatsApp y gestión para quienes viven de atender — salones, clínicas, estudios y consultorios.',
     'no_posts_yet' => 'Próximamente nuevos contenidos.',
 
     // Public — show

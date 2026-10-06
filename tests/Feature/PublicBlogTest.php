@@ -149,3 +149,22 @@ it('renders the listing as a responsive multi-column grid', function () {
         ->assertSee('max-w-6xl', false)
         ->assertSee('grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3', false);
 });
+
+it('shows the ICP blurb on the index header in pt_BR', function () {
+    config()->set('blog.locale', 'pt_BR');
+
+    $this->get(route('blog.index'))
+        ->assertOk()
+        ->assertSee('Últimas publicações')
+        ->assertSee('Dicas práticas de agenda, clientes, WhatsApp e gestão para quem vive de atender');
+});
+
+it('prefers the category description over the index blurb', function () {
+    config()->set('blog.locale', 'pt_BR');
+    $category = PostCategory::create(['slug' => 'g', 'name' => 'Gestão', 'description' => 'Tudo sobre gestão.']);
+
+    $this->get(route('blog.category', $category))
+        ->assertOk()
+        ->assertSee('Tudo sobre gestão.')
+        ->assertDontSee('Dicas práticas de agenda');
+});
