@@ -2,6 +2,27 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.8.4 - 2026-10-06
+
+### Added
+
+- `index_blurb` lang string (pt_BR/en/es) shown as the index header subtitle when no category is active — an audience-oriented blurb (agenda, clientes, WhatsApp, gestão para quem atende). Category pages still prefer the category description.
+- `date_format` lang string controlling public meta dates: `j \d\e F \d\e Y` for pt_BR and es ("5 de março de 2026"), `M j, Y` for en.
+
+### Changed
+
+- The index listing is now a responsive grid (1 column on mobile, 2 on `md`, 3 on `xl`) inside a `max-w-6xl` container, replacing the narrow single-column list. Posts render as bordered, rounded tiles: cover on top, category eyebrow, title, 2-line excerpt and meta pinned to the bottom. Category chips stay above the grid.
+- Listing covers are now full-width 16:10 media (`aspect-[16/10]`, lazy-loaded) instead of 96×96 squares, with `alt` set to the post title.
+- `latest_posts` moved to the mono eyebrow above the index title (trailing period dropped); subtitle contrast bumped.
+- Meta rows on the index and post pages use `text-zinc-600 dark:text-zinc-300` for better contrast.
+
+### Fixed
+
+- Related ("Relacionados") links on the post page could render invisible or washed out in host apps whose Tailwind build doesn't scan the package views. They now use common high-contrast classes (`text-gray-900 dark:text-gray-100`) with an always-visible emerald underline. Hosts should still add the package views to their Tailwind `content` paths.
+- The index header dot pattern no longer depends on the arbitrary `opacity-[0.05]` utility (now an inline style), so a missing utility can't wash out the header.
+- Posts without a `cover_image` no longer drop the media slot on the index; a neutral placeholder keeps the listing rhythm aligned.
+- Public meta dates showed English month names on pt_BR/es blogs because Carbon's locale isn't synced by `app()->setLocale()`; dates are now formatted with the current app locale.
+
 ## 0.8.3 - 2026-09-28
 
 ### Added
