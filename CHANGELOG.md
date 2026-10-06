@@ -2,6 +2,13 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.8.5 - 2026-10-06
+
+### Changed
+
+- Post article column widened to `max-w-[680px]` with explicit `text-left` (was `max-w-2xl`) so the reading column is less of a thin strip on desktop.
+- Public meta rows (author / date / reading time) and the post footer's "Mais em …" link use stronger contrast (`text-zinc-700 dark:text-zinc-200`) — 0.8.4's `zinc-600` was still weak on light backgrounds.
+
 ## 0.8.4 - 2026-10-06
 
 ### Added

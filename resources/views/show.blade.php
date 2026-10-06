@@ -32,7 +32,7 @@
 @endpush
 
 @section('content')
-    <article class="mx-auto max-w-2xl px-5 py-12 sm:px-6">
+    <article class="mx-auto max-w-[680px] px-5 py-12 text-left sm:px-6">
 
         {{-- Back --}}
         <a href="{{ route('blog.index') }}"
@@ -58,7 +58,7 @@
                 </p>
             @endif
 
-            <div class="mt-6 flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-600 dark:text-zinc-300">
+            <div class="mt-6 flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-700 dark:text-zinc-200">
                 @if ($post->authorAvatarUrl())
                     <img src="{{ $post->authorAvatarUrl() }}" alt="" class="size-[24px] shrink-0 rounded-full border border-emerald-500 object-cover" />
                 @else
@@ -162,7 +162,7 @@
         </style>
 
         {{-- Footer --}}
-        <div class="mt-14 flex items-center justify-between border-t-2 border-zinc-100 pt-6 text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+        <div class="mt-14 flex items-center justify-between border-t-2 border-zinc-100 pt-6 text-sm text-zinc-700 dark:border-zinc-800 dark:text-zinc-200">
             <a href="{{ route('blog.category', $post->category) }}"
                class="underline-offset-4 transition hover:text-zinc-900 hover:underline hover:decoration-emerald-500 hover:decoration-2 dark:hover:text-zinc-200">
                 {{ __('blog::messages.more_in', ['name' => $post->category->name]) }}
