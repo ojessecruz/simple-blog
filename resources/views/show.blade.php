@@ -97,9 +97,30 @@
         @endif
 
         {{-- Content --}}
-        <div class="blog-content">
-            {!! $post->renderedBody() !!}
-        </div>
+        @php
+            $renderedBody = $post->renderedBody();
+            $bodyParts = config('blog.mid_cta_view')
+                ? \Jessecruz\SimpleBlog\Support\ContentSplitter::splitForMidCta($renderedBody)
+                : null;
+        @endphp
+
+        @if($bodyParts)
+            <div class="blog-content">
+                {!! $bodyParts[0] !!}
+            </div>
+
+            <div class="my-10" data-blog-mid-cta>
+                @includeIf(config('blog.mid_cta_view'))
+            </div>
+
+            <div class="blog-content">
+                {!! $bodyParts[1] !!}
+            </div>
+        @else
+            <div class="blog-content">
+                {!! $renderedBody !!}
+            </div>
+        @endif
 
         <style>
             .blog-content { color: #27272a; font-size: 1.0625rem; line-height: 1.75; }

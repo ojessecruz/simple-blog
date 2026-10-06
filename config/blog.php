@@ -153,6 +153,28 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Mid-article CTA view
+    |--------------------------------------------------------------------------
+    |
+    | Optional view inserted ONCE inside the post body, between two top-level
+    | blocks (never inside a list, table, quote or code block). Placement:
+    |
+    |   - 2+ <h2> headings: before the second one (after the first section)
+    |   - otherwise: after the block that ends nearest ~40% of the content
+    |
+    | Short posts (fewer than 4 top-level blocks) are skipped, so it never sits
+    | at the very top or very bottom. Independent from `cta_view`.
+    |
+    | Leave `null` to render nothing. The view receives the $post variable.
+    |
+    | Example:
+    |     'mid_cta_view' => 'components.blog-mid-cta'
+    |
+    */
+    'mid_cta_view' => null,
+
+    /*
+    |--------------------------------------------------------------------------
     | Public "Back to site" URL
     |--------------------------------------------------------------------------
     |

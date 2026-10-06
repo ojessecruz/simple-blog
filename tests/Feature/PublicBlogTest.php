@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\View;
 use Jessecruz\SimpleBlog\Models\Post;
 use Jessecruz\SimpleBlog\Models\PostCategory;
 use Jessecruz\SimpleBlog\Tests\Stubs\User;
@@ -184,4 +185,68 @@ it('keeps the English date format when the locale is en', function () {
     Post::create(['slug' => 'p', 'title' => 'P', 'excerpt' => 'r', 'body' => 'c', 'blog_category_id' => $category->id, 'published_at' => '2026-03-05 10:00:00']);
 
     $this->get(route('blog.index'))->assertOk()->assertSee('Mar 5, 2026');
+});
+
+function postWithBody(string $body): Post
+{
+    View::addLocation(__DIR__.'/../Stubs/views');
+    $category = PostCategory::firstOrCreate(['slug' => 'g'], ['name' => 'Gestão']);
+
+    return Post::create(['slug' => 'cta', 'title' => 'Post CTA', 'excerpt' => 'r', 'body' => $body, 'blog_category_id' => $category->id, 'published_at' => now()->subDay()]);
+}
+
+it('renders the mid-article CTA once, between body sections', function () {
+    config(['blog.mid_cta_view' => 'mid-cta']);
+    $post = postWithBody("Introdução.\n\n## Primeira\n\nTexto um.\n\n## Segunda\n\nTexto dois.");
+
+    $html = $this->get(route('blog.show', $post))->assertOk()->getContent();
+
+    expect(substr_count($html, 'MID CTA for Post CTA'))->toBe(1)
+        ->and(substr_count($html, 'data-blog-mid-cta'))->toBe(1)
+        ->and(substr_count($html, '<div class="blog-content">'))->toBe(2);
+
+    $this->get(route('blog.show', $post))->assertSeeInOrder([
+        '<div class="blog-content">',
+        '<h2>Primeira</h2>',
+        'Texto um.',
+        'data-blog-mid-cta',
+        'MID CTA for Post CTA',
+        '<div class="blog-content">',
+        '<h2>Segunda</h2>',
+        'Texto dois.',
+    ], false);
+});
+
+it('does not render the mid-article CTA when mid_cta_view is null', function () {
+    config(['blog.mid_cta_view' => null]);
+    $post = postWithBody("Introdução.\n\n## Primeira\n\nTexto um.\n\n## Segunda\n\nTexto dois.");
+
+    $html = $this->get(route('blog.show', $post))->assertOk()->assertSee('<h2>Segunda</h2>', false)->getContent();
+
+    expect($html)->not->toContain('data-blog-mid-cta')
+        ->and(substr_count($html, '<div class="blog-content">'))->toBe(1);
+});
+
+it('does not render the mid-article CTA on short posts', function () {
+    config(['blog.mid_cta_view' => 'mid-cta']);
+    $post = postWithBody("Um parágrafo só.\n\nE outro.");
+
+    $html = $this->get(route('blog.show', $post))->assertOk()->assertSee('E outro.')->getContent();
+
+    expect($html)->not->toContain('MID CTA')
+        ->and(substr_count($html, '<div class="blog-content">'))->toBe(1);
+});
+
+it('renders the end cta_view independently from mid_cta_view', function () {
+    config(['blog.cta_view' => 'end-cta', 'blog.mid_cta_view' => null]);
+    $post = postWithBody("Introdução.\n\n## Primeira\n\nTexto um.\n\n## Segunda\n\nTexto dois.");
+
+    $this->get(route('blog.show', $post))->assertOk()
+        ->assertSee('END CTA for Post CTA')
+        ->assertDontSee('MID CTA');
+
+    config(['blog.mid_cta_view' => 'mid-cta']);
+
+    $this->get(route('blog.show', $post))->assertOk()
+        ->assertSeeInOrder(['MID CTA for Post CTA', '<h2>Segunda</h2>', 'END CTA for Post CTA'], false);
 });

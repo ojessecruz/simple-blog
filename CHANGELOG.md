@@ -7,6 +7,7 @@ All notable changes to `simple-blog` will be documented in this file.
 ### Added
 
 - `index_blurb` lang string (pt_BR/en/es) shown as the index header subtitle when no category is active — an audience-oriented blurb (agenda, clientes, WhatsApp, gestão para quem atende). Category pages still prefer the category description.
+- `mid_cta_view` config: optional host view inserted once inside the post body, between top-level blocks — before the second `<h2>` when the post has two or more, otherwise after the block ending nearest ~40% of the content. Skipped for short posts (fewer than 4 top-level blocks). Receives `$post`; independent from `cta_view`. Backed by the new `Support\ContentSplitter`.
 - `date_format` lang string controlling public meta dates: `j \d\e F \d\e Y` for pt_BR and es ("5 de março de 2026"), `M j, Y` for en.
 
 ### Changed
