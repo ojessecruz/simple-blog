@@ -120,7 +120,7 @@
                                 <p class="mb-4 line-clamp-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
                                     {{ $post->excerpt }}
                                 </p>
-                                <div class="mt-auto flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-600 dark:text-zinc-300">
+                                <div class="mt-auto flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-700 dark:text-zinc-200">
                                     @if ($post->authorAvatarUrl())
                                         <img src="{{ $post->authorAvatarUrl() }}" alt="" class="size-[24px] shrink-0 rounded-full border border-zinc-300 object-cover dark:border-zinc-600" />
                                     @else
