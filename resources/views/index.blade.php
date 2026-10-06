@@ -101,13 +101,14 @@
                     <li class="flex">
                         <a href="{{ $post->url() }}"
                            class="group flex w-full flex-col overflow-hidden rounded-2xl border-2 border-zinc-200 bg-white transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-[4px_4px_0_0_theme(colors.zinc.200)] dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 dark:hover:shadow-[4px_4px_0_0_theme(colors.zinc.800)]">
-                            <div class="shrink-0 border-b-2 border-zinc-200 dark:border-zinc-800">
+                            <div class="shrink-0 overflow-hidden border-b-2 border-zinc-200 dark:border-zinc-800">
                                 @if($post->cover_image)
                                     <img src="{{ $post->cover_image }}" alt="{{ $post->title }}"
-                                         class="h-40 w-full object-cover">
+                                         loading="lazy"
+                                         class="aspect-[16/10] w-full object-cover transition duration-300 group-hover:scale-[1.02]">
                                 @else
                                     <div data-cover-placeholder aria-hidden="true"
-                                         class="h-40 w-full bg-zinc-100 dark:bg-zinc-800"></div>
+                                         class="aspect-[16/10] w-full bg-zinc-100 dark:bg-zinc-800"></div>
                                 @endif
                             </div>
                             <div class="flex flex-1 flex-col p-5">

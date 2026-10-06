@@ -136,7 +136,8 @@ it('reserves the cover slot on the index whether or not a post has a cover', fun
     $this->get(route('blog.index'))
         ->assertOk()
         ->assertSee('src="https://example.com/capa.jpg" alt="Com Capa"', false)
-        ->assertSee('data-cover-placeholder', false);
+        ->assertSee('data-cover-placeholder', false)
+        ->assertSee('aspect-[16/10] w-full object-cover', false);
 });
 
 it('renders the listing as a responsive multi-column grid', function () {
