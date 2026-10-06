@@ -138,3 +138,13 @@ it('reserves the cover slot on the index whether or not a post has a cover', fun
         ->assertSee('src="https://example.com/capa.jpg" alt="Com Capa"', false)
         ->assertSee('data-cover-placeholder', false);
 });
+
+it('renders the listing as a responsive multi-column grid', function () {
+    $category = PostCategory::create(['slug' => 'g', 'name' => 'Gestão']);
+    Post::create(['slug' => 'p', 'title' => 'P', 'excerpt' => 'r', 'body' => 'c', 'blog_category_id' => $category->id, 'published_at' => now()->subDay()]);
+
+    $this->get(route('blog.index'))
+        ->assertOk()
+        ->assertSee('max-w-6xl', false)
+        ->assertSee('grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3', false);
+});
