@@ -18,10 +18,12 @@ return [
     'min_read' => 'min read',
     'min' => 'min',
     'views_count' => ':count views',
+    'date_format' => 'M j, Y',
 
     // Public — index
     'blog' => 'Blog',
-    'latest_posts' => 'Latest posts.',
+    'latest_posts' => 'Latest posts',
+    'index_blurb' => 'Practical tips on scheduling, clients, WhatsApp and day-to-day management for people whose business is serving clients.',
     'no_posts_yet' => 'New content coming soon.',
 
     // Public — show

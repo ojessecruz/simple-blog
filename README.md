@@ -173,6 +173,7 @@ See `config/blog.php` (published) — every key has comments explaining what it 
 - **`author_model`** — User model
 - **`layouts.public`** / **`layouts.admin`** — Blade layouts wrapping the content
 - **`cta_view`** — optional view rendered at the end of each post (e.g. pricing, newsletter)
+- **`mid_cta_view`** — optional view inserted once inside the post body (see [Injecting a CTA into posts](#injecting-a-cta-into-posts))
 - **`public_back_url`** / **`admin_back_url`** — where the "back" links point (`null` hides them)
 - **`seo`** — site/blog names, default description and images used in titles, meta tags and the Article JSON-LD (see [SEO](#seo))
 - **`markdown`** — options passed to `Str::markdown()`
@@ -343,6 +344,22 @@ Create a view (e.g. `resources/views/components/blog-cta.blade.php`) and point t
 ```
 
 The view receives the `$post` variable and is rendered after the post content (on show) and below the feed (on index).
+
+### Mid-article CTA
+
+To also show a CTA inside the post body, point `mid_cta_view` at another view (it can be the same one):
+
+```php
+'mid_cta_view' => 'components.blog-mid-cta',
+```
+
+It is inserted once per post, only between top-level blocks (never inside a list, table, quote or code block):
+
+- posts with two or more `## ` headings get it right before the second heading, i.e. after the first section;
+- otherwise it goes after the block that ends nearest ~40% of the content;
+- short posts (fewer than 4 top-level blocks) don't get it, so it never sits at the very top or bottom.
+
+The view receives `$post` and is wrapped in `<div class="my-10" data-blog-mid-cta>`. It is independent from `cta_view`: set either, both or neither.
 
 ## JSON API
 

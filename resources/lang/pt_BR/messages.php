@@ -18,10 +18,12 @@ return [
     'min_read' => 'min de leitura',
     'min' => 'min',
     'views_count' => ':count visualizações',
+    'date_format' => 'j \d\e F \d\e Y',
 
     // Public — index
     'blog' => 'Blog',
-    'latest_posts' => 'Últimas publicações.',
+    'latest_posts' => 'Últimas publicações',
+    'index_blurb' => 'Dicas práticas de agenda, clientes, WhatsApp e gestão para quem vive de atender — salões, clínicas, estúdios e consultórios.',
     'no_posts_yet' => 'Em breve novos conteúdos.',
 
     // Public — show

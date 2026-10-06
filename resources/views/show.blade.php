@@ -58,7 +58,7 @@
                 </p>
             @endif
 
-            <div class="mt-6 flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-500 dark:text-zinc-400">
+            <div class="mt-6 flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-600 dark:text-zinc-300">
                 @if ($post->authorAvatarUrl())
                     <img src="{{ $post->authorAvatarUrl() }}" alt="" class="size-[24px] shrink-0 rounded-full border border-emerald-500 object-cover" />
                 @else
@@ -68,7 +68,7 @@
                 @if($post->published_at)
                     <span aria-hidden="true" class="text-emerald-500">✦</span>
                     <time datetime="{{ $post->published_at->toIso8601String() }}">
-                        {{ $post->published_at->translatedFormat('M j, Y') }}
+                        {{ $post->published_at->locale(app()->getLocale())->translatedFormat(__('blog::messages.date_format')) }}
                     </time>
                 @endif
                 <span aria-hidden="true" class="text-emerald-500">✦</span>
@@ -97,9 +97,30 @@
         @endif
 
         {{-- Content --}}
-        <div class="blog-content">
-            {!! $post->renderedBody() !!}
-        </div>
+        @php
+            $renderedBody = $post->renderedBody();
+            $bodyParts = config('blog.mid_cta_view')
+                ? \Jessecruz\SimpleBlog\Support\ContentSplitter::splitForMidCta($renderedBody)
+                : null;
+        @endphp
+
+        @if($bodyParts)
+            <div class="blog-content">
+                {!! $bodyParts[0] !!}
+            </div>
+
+            <div class="my-10" data-blog-mid-cta>
+                @includeIf(config('blog.mid_cta_view'))
+            </div>
+
+            <div class="blog-content">
+                {!! $bodyParts[1] !!}
+            </div>
+        @else
+            <div class="blog-content">
+                {!! $renderedBody !!}
+            </div>
+        @endif
 
         <style>
             .blog-content { color: #27272a; font-size: 1.0625rem; line-height: 1.75; }
@@ -167,7 +188,7 @@
 
         @if($relatedPosts->isNotEmpty())
             <section class="mt-12 border-t-2 border-zinc-100 pt-6 dark:border-zinc-800">
-                <h2 class="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.25em] text-zinc-500 dark:text-zinc-400">
+                <h2 class="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.25em] text-gray-600 dark:text-gray-300">
                     {{ __('blog::messages.related') }}
                 </h2>
                 <ul class="space-y-2.5 text-sm">
@@ -175,7 +196,7 @@
                         <li class="flex items-start gap-2">
                             <span aria-hidden="true" class="mt-0.5 text-emerald-500">✦</span>
                             <a href="{{ $related->url() }}"
-                               class="font-semibold text-zinc-900 underline-offset-4 transition hover:underline hover:decoration-emerald-500 hover:decoration-2 dark:text-zinc-100">
+                               class="font-semibold text-gray-900 underline decoration-emerald-500/80 decoration-1 underline-offset-4 transition hover:text-black hover:decoration-emerald-500 hover:decoration-2 dark:text-gray-100 dark:hover:text-white">
                                 {{ $related->title }}
                             </a>
                         </li>
