@@ -433,6 +433,10 @@ composer test
 
 See [CHANGELOG](CHANGELOG.md).
 
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening an issue or a pull request. Security problems are reported privately: see [SECURITY.md](SECURITY.md).
+
 ## License
 
 MIT — see [License File](LICENSE.md).
