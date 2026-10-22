@@ -226,6 +226,44 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Table of contents and heading links
+    |--------------------------------------------------------------------------
+    |
+    | Every heading of a post body gets an id built from its text, so any
+    | section can be linked to: "## Como começar" → /blog/my-post#como-comecar
+    | (repeated headings get -2, -3, …).
+    |
+    |   - enabled:      Show a table of contents above the post body.
+    |   - min_headings: Fewest listed headings for the table to show; shorter
+    |                   posts don't get one.
+    |   - depth:        Heading levels listed, counted from the post's top
+    |                   level: 1 → only the sections (usually ##), 2 → also
+    |                   their subsections (###), and so on.
+    |   - permalinks:   "#" link after each heading (shown on hover) to copy
+    |                   a link to that section.
+    |
+    | The table is also available as a component for published views:
+    |     @php([$html, $toc] = \Jessecruz\SimpleBlog\Support\TableOfContents::render($post))
+    |     <x-blog::toc :items="$toc" />
+    |
+    | Example:
+    |     'toc' => [
+    |         'enabled' => true,
+    |         'min_headings' => 4,
+    |         'depth' => 1,
+    |         'permalinks' => false,
+    |     ],
+    |
+    */
+    'toc' => [
+        'enabled' => true,
+        'min_headings' => 3,
+        'depth' => 2,
+        'permalinks' => true,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | RSS feed
     |--------------------------------------------------------------------------
     |

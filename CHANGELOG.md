@@ -2,6 +2,20 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.9.1 - 2026-10-22
+
+### Added
+
+- Heading anchors: every heading of a post body gets an id built from its text (`## Como começar` → `#como-comecar`, repeats get `-2`, `-3`, …), so sections can be linked to directly, plus a `#` permalink shown on hover (faintly visible on touch screens).
+- Table of contents: posts with at least `toc.min_headings` headings (default 3) show a collapsible "In this article" list above the body with their sections and subsections (`toc.depth`, default 2). Levels count from the post's own top heading, so bodies written with `#` or starting at `###` work too.
+- `toc` config block (`enabled`, `min_headings`, `depth`, `permalinks`).
+- `x-blog::toc` component and `Jessecruz\SimpleBlog\Support\TableOfContents::render($post)`, which returns the body HTML and the table from the same render. The component is included in the `simple-blog-views-public` publish tag.
+- `Post::renderedBody()` accepts extra CommonMark extensions; `Jessecruz\SimpleBlog\Support\HeadingAnchors` is the one behind the anchors.
+
+### Changed
+
+- Headings on the post page now render as `<h2 id="…">…<a class="blog-heading-anchor" …>#</a></h2>` instead of a bare `<h2>`. The RSS feed and `Post::renderedBody()` keep the plain headings. Published `show.blade.php` copies keep working unchanged, without anchors or table; republish or copy the new `TableOfContents::render()` call to get them.
+
 ## 0.9.0 - 2026-10-22
 
 ### Added

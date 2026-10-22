@@ -45,7 +45,7 @@ it('renders a published post by slug with markdown converted to html', function 
 
     $this->get(route('blog.show', $post))
         ->assertOk()
-        ->assertSee('<h2>Cabeçalho</h2>', false)
+        ->assertSee('<h2 id="cabecalho">Cabeçalho', false)
         ->assertSee('<strong>negrito</strong>', false);
 });
 
@@ -215,12 +215,12 @@ it('renders the mid-article CTA once, between body sections', function () {
 
     $this->get(route('blog.show', $post))->assertSeeInOrder([
         '<div class="blog-content">',
-        '<h2>Primeira</h2>',
+        '<h2 id="primeira">Primeira',
         'Texto um.',
         'data-blog-mid-cta',
         'MID CTA for Post CTA',
         '<div class="blog-content">',
-        '<h2>Segunda</h2>',
+        '<h2 id="segunda">Segunda',
         'Texto dois.',
     ], false);
 });
@@ -229,7 +229,7 @@ it('does not render the mid-article CTA when mid_cta_view is null', function () 
     config(['blog.mid_cta_view' => null]);
     $post = postWithBody("Introdução.\n\n## Primeira\n\nTexto um.\n\n## Segunda\n\nTexto dois.");
 
-    $html = $this->get(route('blog.show', $post))->assertOk()->assertSee('<h2>Segunda</h2>', false)->getContent();
+    $html = $this->get(route('blog.show', $post))->assertOk()->assertSee('<h2 id="segunda">Segunda', false)->getContent();
 
     expect($html)->not->toContain('data-blog-mid-cta')
         ->and(substr_count($html, '<div class="blog-content">'))->toBe(1);
@@ -256,5 +256,5 @@ it('renders the end cta_view independently from mid_cta_view', function () {
     config(['blog.mid_cta_view' => 'mid-cta']);
 
     $this->get(route('blog.show', $post))->assertOk()
-        ->assertSeeInOrder(['MID CTA for Post CTA', '<h2>Segunda</h2>', 'END CTA for Post CTA'], false);
+        ->assertSeeInOrder(['MID CTA for Post CTA', '<h2 id="segunda">Segunda', 'END CTA for Post CTA'], false);
 });
