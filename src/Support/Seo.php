@@ -106,6 +106,17 @@ final class Seo
         return self::defaultImage();
     }
 
+    /**
+     * Canonical URL of the current page: no query string, except the page
+     * number of a paginated listing so each page canonicalizes to itself.
+     */
+    public static function canonicalUrl(): string
+    {
+        $page = request()->integer('page');
+
+        return $page > 1 ? request()->url().'?page='.$page : request()->url();
+    }
+
     public static function language(): string
     {
         return str_replace('_', '-', app()->getLocale());

@@ -24,4 +24,8 @@ it('renders author fallbacks when author_model is not configured', function () {
 
     $this->get(route('blog.index'))->assertOk();
     $this->get(route('blog.show', $post))->assertOk();
+
+    app()->setLocale('pt_BR');
+
+    expect($post->authorName())->toBe('Equipe');
 });

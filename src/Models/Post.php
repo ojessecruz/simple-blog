@@ -34,6 +34,8 @@ use Jessecruz\SimpleBlog\Contracts\Author;
  */
 final class Post extends Model
 {
+    public const WORDS_PER_MINUTE = 200;
+
     protected $table = 'blog_posts';
 
     protected $attributes = [
@@ -92,7 +94,7 @@ final class Post extends Model
     {
         $author = $this->author;
 
-        return $author instanceof Author ? $author->getBlogAuthorName() : 'Team';
+        return $author instanceof Author ? $author->getBlogAuthorName() : __('blog::messages.team');
     }
 
     public function authorInitials(): string
@@ -117,6 +119,17 @@ final class Post extends Model
         $author = $this->author;
 
         return $author instanceof Author ? $author->getBlogAuthorAvatarUrl() : null;
+    }
+
+    /**
+     * Minutes to read a Markdown body, clamped to the 1–120 range the admin
+     * and API accept.
+     */
+    public static function estimateReadingTime(string $body): int
+    {
+        $words = count(preg_split('/\s+/u', strip_tags($body), -1, PREG_SPLIT_NO_EMPTY) ?: []);
+
+        return max(1, min(120, (int) ceil($words / self::WORDS_PER_MINUTE)));
     }
 
     public function renderedBody(): string

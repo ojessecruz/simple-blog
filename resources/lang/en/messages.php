@@ -18,6 +18,7 @@ return [
     'min_read' => 'min read',
     'min' => 'min',
     'views_count' => ':count views',
+    'team' => 'Team',
     'date_format' => 'M j, Y',
     'datetime_format' => 'M j, Y \a\t H:i',
     'datetime_short_format' => 'm/d/Y H:i',
@@ -25,8 +26,11 @@ return [
     // Public — index
     'blog' => 'Blog',
     'latest_posts' => 'Latest posts',
-    'index_blurb' => 'Practical tips on scheduling, clients, WhatsApp and day-to-day management for people whose business is serving clients.',
     'no_posts_yet' => 'New content coming soon.',
+    'newer_posts' => 'Newer',
+    'older_posts' => 'Older',
+    'pagination' => 'Pagination',
+    'page_of' => 'Page :page of :total',
 
     // Public — show
     'preview_label' => 'Preview:',
@@ -76,6 +80,7 @@ return [
     'publish_at_hint' => 'empty = draft',
     'timezone_hint' => 'Timezone: :timezone',
     'reading_time' => 'Reading time (min)',
+    'reading_time_hint' => 'estimated from the content',
     'cover_image_url' => 'Cover image URL',
     'seo' => 'SEO',
     'meta_title' => 'Meta title',
@@ -86,6 +91,9 @@ return [
     'save_and_preview' => 'Save and preview',
     'save_changes' => 'Save changes',
     'create_post' => 'Create post',
+    'post_created' => 'Post created.',
+    'post_updated' => 'Post updated.',
+    'post_deleted' => 'Post deleted.',
 
     // Admin — categories
     'blog_categories' => 'Blog categories',
@@ -98,4 +106,8 @@ return [
     'posts_count' => ':count posts',
     'no_categories' => 'No categories yet.',
     'delete_category_confirm' => 'Delete this category?',
+    'category_created' => 'Category created.',
+    'category_updated' => 'Category updated.',
+    'category_deleted' => 'Category deleted.',
+    'category_has_posts' => 'Cannot delete: this category still has posts.',
 ];

@@ -8,6 +8,10 @@
 
 @push('head')
     <title>{{ $seoTitle }}</title>
+    @unless($post->isPublished())
+        {{-- Admin preview of a draft or scheduled post --}}
+        <meta name="robots" content="noindex, nofollow">
+    @endunless
     @if($seoDescription)
         <meta name="description" content="{{ $seoDescription }}">
         <meta property="og:description" content="{{ $seoDescription }}">

@@ -18,6 +18,7 @@ return [
     'min_read' => 'min de lectura',
     'min' => 'min',
     'views_count' => ':count visualizaciones',
+    'team' => 'Equipo',
     'date_format' => 'j \d\e F \d\e Y',
     'datetime_format' => 'j \d\e F \d\e Y, H:i',
     'datetime_short_format' => 'd/m/Y H:i',
@@ -25,8 +26,11 @@ return [
     // Public — index
     'blog' => 'Blog',
     'latest_posts' => 'Últimas publicaciones',
-    'index_blurb' => 'Consejos prácticos de agenda, clientes, WhatsApp y gestión para quienes viven de atender — salones, clínicas, estudios y consultorios.',
     'no_posts_yet' => 'Próximamente nuevos contenidos.',
+    'newer_posts' => 'Más recientes',
+    'older_posts' => 'Más antiguas',
+    'pagination' => 'Paginación',
+    'page_of' => 'Página :page de :total',
 
     // Public — show
     'preview_label' => 'Vista previa:',
@@ -76,6 +80,7 @@ return [
     'publish_at_hint' => 'vacío = borrador',
     'timezone_hint' => 'Zona horaria: :timezone',
     'reading_time' => 'Tiempo de lectura (min)',
+    'reading_time_hint' => 'estimado según el contenido',
     'cover_image_url' => 'URL de la imagen de portada',
     'seo' => 'SEO',
     'meta_title' => 'Meta título',
@@ -86,6 +91,9 @@ return [
     'save_and_preview' => 'Guardar y previsualizar',
     'save_changes' => 'Guardar cambios',
     'create_post' => 'Crear publicación',
+    'post_created' => 'Publicación creada.',
+    'post_updated' => 'Publicación actualizada.',
+    'post_deleted' => 'Publicación eliminada.',
 
     // Admin — categories
     'blog_categories' => 'Categorías del blog',
@@ -98,4 +106,8 @@ return [
     'posts_count' => ':count publicaciones',
     'no_categories' => 'Aún no hay categorías.',
     'delete_category_confirm' => '¿Eliminar esta categoría?',
+    'category_created' => 'Categoría creada.',
+    'category_updated' => 'Categoría actualizada.',
+    'category_deleted' => 'Categoría eliminada.',
+    'category_has_posts' => 'No se puede eliminar: esta categoría todavía tiene publicaciones.',
 ];

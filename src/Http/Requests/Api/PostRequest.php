@@ -18,8 +18,6 @@ use Jessecruz\SimpleBlog\Models\PostCategory;
  */
 final class PostRequest extends FormRequest
 {
-    private const int WORDS_PER_MINUTE = 200;
-
     public function authorize(): bool
     {
         return true;
@@ -69,7 +67,7 @@ final class PostRequest extends FormRequest
         }
 
         if (isset($attributes['body']) && ! isset($attributes['reading_time'])) {
-            $attributes['reading_time'] = $this->estimateReadingTime($attributes['body']);
+            $attributes['reading_time'] = Post::estimateReadingTime($attributes['body']);
         }
 
         return $attributes;
@@ -105,12 +103,5 @@ final class PostRequest extends FormRequest
     private function isCreating(): bool
     {
         return $this->isMethod('POST');
-    }
-
-    private function estimateReadingTime(string $body): int
-    {
-        $words = count(preg_split('/\s+/u', strip_tags($body), -1, PREG_SPLIT_NO_EMPTY) ?: []);
-
-        return max(1, min(120, (int) ceil($words / self::WORDS_PER_MINUTE)));
     }
 }

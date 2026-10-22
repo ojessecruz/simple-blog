@@ -119,7 +119,9 @@
                         @error('published_at') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.reading_time') }}</label>
+                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                            {{ __('blog::messages.reading_time') }} <span class="text-zinc-400 dark:text-zinc-500">— {{ __('blog::messages.reading_time_hint') }}</span>
+                        </label>
                         <input type="number" min="1" max="120" wire:model="reading_time"
                                class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                         @error('reading_time') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror

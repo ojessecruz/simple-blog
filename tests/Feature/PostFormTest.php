@@ -148,3 +148,45 @@ it('saves the post and dispatches an event with the preview url when previewing'
 
     expect(Post::where('slug', 'preview-post')->exists())->toBeTrue();
 });
+
+it('estimates the reading time from the body until it is edited by hand', function () {
+    Livewire::test(PostForm::class)
+        ->set('body', str_repeat('palavra ', 650))
+        ->assertSet('reading_time', 4)
+        ->set('reading_time', 9)
+        ->set('body', str_repeat('palavra ', 50))
+        ->assertSet('reading_time', 9);
+});
+
+it('keeps the stored reading time when editing an existing post', function () {
+    $post = Post::create([
+        'slug' => 'p',
+        'title' => 'P',
+        'excerpt' => 'r',
+        'body' => 'c',
+        'blog_category_id' => $this->category->id,
+        'reading_time' => 7,
+    ]);
+
+    Livewire::test(PostForm::class, ['post' => $post])
+        ->set('body', 'outro texto')
+        ->assertSet('reading_time', 7);
+});
+
+it('labels validation errors and notices in the current locale', function () {
+    app()->setLocale('pt_BR');
+
+    $component = Livewire::test(PostForm::class)
+        ->call('save')
+        ->assertHasErrors(['title' => 'required']);
+
+    expect($component->errors()->first('title'))->toContain('Título');
+
+    Livewire::test(PostForm::class)
+        ->set('title', 'Novo Post')
+        ->set('excerpt', 'Resumo')
+        ->set('body', 'Texto')
+        ->set('blog_category_id', $this->category->id)
+        ->call('save')
+        ->assertDispatched('notify', 'Post criado.');
+});

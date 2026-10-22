@@ -52,13 +52,12 @@
                 </span>
             </h1>
 
-            <p class="mt-7 max-w-2xl text-base leading-relaxed text-zinc-700 sm:text-lg dark:text-zinc-300">
-                @if(isset($currentCategory) && $currentCategory->description)
-                    {{ $currentCategory->description }}
-                @else
-                    {{ __('blog::messages.index_blurb') }}
-                @endif
-            </p>
+            {{-- Same text as the meta description: the category's, then seo.description --}}
+            @if($seoDescription)
+                <p class="mt-7 max-w-2xl text-base leading-relaxed text-zinc-700 sm:text-lg dark:text-zinc-300">
+                    {{ $seoDescription }}
+                </p>
+            @endif
         </div>
     </header>
 
@@ -139,6 +138,34 @@
                     </li>
                 @endforeach
             </ul>
+
+            @if($posts->hasPages())
+                <nav aria-label="{{ __('blog::messages.pagination') }}" class="mt-12 flex items-center justify-between gap-4 font-mono text-xs font-semibold">
+                    @if($posts->previousPageUrl())
+                        <a href="{{ $posts->previousPageUrl() }}" rel="prev"
+                           class="group inline-flex items-center gap-1.5 rounded-lg border-2 border-zinc-200 px-3 py-2 text-zinc-600 transition-colors hover:border-zinc-400 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-zinc-500 dark:hover:text-zinc-200">
+                            <x-blog::icon.arrow-left class="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+                            {{ __('blog::messages.newer_posts') }}
+                        </a>
+                    @else
+                        <span></span>
+                    @endif
+
+                    <span class="hidden text-zinc-500 sm:inline dark:text-zinc-400">
+                        {{ __('blog::messages.page_of', ['page' => $posts->currentPage(), 'total' => $posts->lastPage()]) }}
+                    </span>
+
+                    @if($posts->nextPageUrl())
+                        <a href="{{ $posts->nextPageUrl() }}" rel="next"
+                           class="group inline-flex items-center gap-1.5 rounded-lg border-2 border-zinc-200 px-3 py-2 text-zinc-600 transition-colors hover:border-zinc-400 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-zinc-500 dark:hover:text-zinc-200">
+                            {{ __('blog::messages.older_posts') }}
+                            <x-blog::icon.arrow-right class="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                        </a>
+                    @else
+                        <span></span>
+                    @endif
+                </nav>
+            @endif
         @endif
 
         @if(config('blog.cta_view'))

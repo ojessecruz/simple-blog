@@ -150,8 +150,8 @@ The package registers:
 
 | Method | URL                              | Name                    | Description                       |
 |--------|----------------------------------|-------------------------|-----------------------------------|
-| GET    | `/blog`                          | `blog.index`            | Public listing                    |
-| GET    | `/blog/category/{slug}`         | `blog.category`         | Posts in a category               |
+| GET    | `/blog`                          | `blog.index`            | Public listing (`?page=2`, …)     |
+| GET    | `/blog/category/{slug}`         | `blog.category`         | Posts in a category (`?page=2`, …) |
 | GET    | `/blog/{slug}`                   | `blog.show`             | Individual post                   |
 | GET    | `/admin/blog`                    | `blog.admin.index`      | Admin list (filter/search)        |
 | GET    | `/admin/blog/create`              | `blog.admin.create`     | Create form                       |
@@ -170,6 +170,7 @@ See `config/blog.php` (published) — every key has comments explaining what it 
 - **`route_prefix`** / **`admin_route_prefix`** — where to mount the routes
 - **`public_middleware`** / **`admin_middleware`** — middleware stacks
 - **`api`** — opt-in JSON API: enable flag, prefix, middleware, token and page size (see [JSON API](#json-api))
+- **`per_page`** — page size of the public index and category listings (default 12)
 - **`author_model`** — User model
 - **`layouts.public`** / **`layouts.admin`** — Blade layouts wrapping the content
 - **`cta_view`** — optional view rendered at the end of each post (e.g. pricing, newsletter)
@@ -203,7 +204,7 @@ The simplest path is creating a dedicated layout for the blog with `@yield('cont
 
     @stack('head') {{-- Required: the package pushes <title>, meta, OG tags and JSON-LD here --}}
 
-    <link rel="canonical" href="{{ request()->url() }}">
+    <link rel="canonical" href="{{ \Jessecruz\SimpleBlog\Support\Seo::canonicalUrl() }}"> {{-- keeps ?page=N --}}
 
     @vite('resources/css/app.css')
 </head>
@@ -305,15 +306,19 @@ Tune them in `config/blog.php`:
     'site_name' => 'Hoot',                                              // brand; null → config('app.name')
     'blog_name' => "Hoot's Blog",                                       // index title + suffix of the other pages
     'index_title' => "Hoot's Blog | Product feedback and roadmaps",    // optional tagline for the index only
-    'description' => 'Guides on collecting feedback and shipping it.', // index + categories without one
+    'description' => 'Guides on collecting feedback and shipping it.', // index subtitle + meta description
     'image' => 'https://usehoot.app/img/og-card.png',                  // default og:image
     'publisher_logo' => 'https://usehoot.app/img/logo.png',            // Article publisher logo
 ],
 ```
 
+The index description is also shown as the subtitle under the index heading (a category shows its own description); without one, no subtitle is rendered.
+
+Paginated listings canonicalize to themselves (`/blog?page=2`), and other query strings are dropped from the canonical URL; pages past the last one return 404. Admin previews of drafts and scheduled posts send `X-Robots-Tag: noindex, nofollow` and a matching meta tag.
+
 Posts use `og_image`, then `cover_image`, then `seo.image` for their social image. The Article JSON-LD includes `headline`, `description`, `author` (from your `Author` model), `publisher`, `image`, `datePublished`, `dateModified` and `inLanguage`.
 
-If you publish and customize the public views, `Jessecruz\SimpleBlog\Support\Seo` exposes the same resolvers (`indexTitle()`, `categoryTitle($category)`, `postTitle($post)`, `postImage($post)`, `articleSchema($post)`, …) so your templates keep the fallbacks.
+If you publish and customize the public views, `Jessecruz\SimpleBlog\Support\Seo` exposes the same resolvers (`indexTitle()`, `categoryTitle($category)`, `postTitle($post)`, `postImage($post)`, `articleSchema($post)`, `canonicalUrl()`, …) so your templates keep the fallbacks.
 
 ## Customizing the visual style
 

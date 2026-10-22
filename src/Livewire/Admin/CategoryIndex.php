@@ -61,10 +61,10 @@ final class CategoryIndex extends Component
 
         if ($this->editingId) {
             PostCategory::findOrFail($this->editingId)->update($data);
-            $this->dispatch('notify', 'Category updated.');
+            $this->dispatch('notify', __('blog::messages.category_updated'));
         } else {
             PostCategory::create($data);
-            $this->dispatch('notify', 'Category created.');
+            $this->dispatch('notify', __('blog::messages.category_created'));
         }
 
         $this->cancel();
@@ -75,13 +75,13 @@ final class CategoryIndex extends Component
         $category = PostCategory::findOrFail($id);
 
         if ($category->posts()->exists()) {
-            $this->dispatch('notify', 'Cannot delete: this category still has posts.');
+            $this->dispatch('notify', __('blog::messages.category_has_posts'));
 
             return;
         }
 
         $category->delete();
-        $this->dispatch('notify', 'Category deleted.');
+        $this->dispatch('notify', __('blog::messages.category_deleted'));
     }
 
     public function render(): View
@@ -91,23 +91,16 @@ final class CategoryIndex extends Component
         ])->layout(config('blog.layouts.admin'));
     }
 
-    protected function messages(): array
-    {
-        return [
-            'required' => 'The :attribute field is required.',
-            'string' => 'The :attribute must be a string.',
-            'alpha_dash' => 'The :attribute may only contain letters, numbers, dashes and underscores.',
-            'max.string' => 'The :attribute may not exceed :max characters.',
-            'unique' => 'The :attribute has already been taken.',
-        ];
-    }
-
+    /**
+     * Field names in validation messages, labelled as in the form. The messages
+     * themselves come from the host app's validation translations.
+     */
     protected function validationAttributes(): array
     {
         return [
-            'name' => 'name',
-            'slug' => 'slug',
-            'description' => 'description',
+            'name' => __('blog::messages.name'),
+            'slug' => __('blog::messages.slug'),
+            'description' => __('blog::messages.description'),
         ];
     }
 }
