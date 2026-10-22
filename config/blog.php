@@ -283,6 +283,30 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Timezone
+    |--------------------------------------------------------------------------
+    |
+    | Timezone editors type publish dates in (admin form) and readers see them
+    | in (public pages, admin list). The database keeps storing dates in
+    | `app.timezone`; only input and display are converted.
+    |
+    | Leave `null` to use `app.timezone`. Set it when the app runs in UTC (the
+    | Laravel default) but the blog's editors and audience live elsewhere —
+    | otherwise a post scheduled for "10:00" goes out at 10:00 UTC and late
+    | posts show the next day's date.
+    |
+    | Any PHP timezone identifier is accepted.
+    |
+    | Examples:
+    |     'timezone' => null,                   // follow app.timezone
+    |     'timezone' => 'America/Sao_Paulo',
+    |     'timezone' => 'Europe/Lisbon',
+    |
+    */
+    'timezone' => null,
+
+    /*
+    |--------------------------------------------------------------------------
     | SEO defaults for the public pages
     |--------------------------------------------------------------------------
     |

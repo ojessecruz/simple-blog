@@ -115,6 +115,7 @@
                         </label>
                         <input type="datetime-local" wire:model.live="published_at"
                                class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
+                        <p class="text-xs text-zinc-400 dark:text-zinc-500 mt-1" data-blog-timezone>{{ __('blog::messages.timezone_hint', ['timezone' => \Jessecruz\SimpleBlog\Support\Dates::timezoneLabel()]) }}</p>
                         @error('published_at') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>

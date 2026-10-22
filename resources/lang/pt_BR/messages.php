@@ -19,6 +19,8 @@ return [
     'min' => 'min',
     'views_count' => ':count visualizações',
     'date_format' => 'j \d\e F \d\e Y',
+    'datetime_format' => 'j \d\e F \d\e Y, H:i',
+    'datetime_short_format' => 'd/m/Y H:i',
 
     // Public — index
     'blog' => 'Blog',
@@ -72,6 +74,7 @@ return [
     'mark_as_draft' => 'Marcar como rascunho',
     'publish_at' => 'Publicar em',
     'publish_at_hint' => 'vazio = rascunho',
+    'timezone_hint' => 'Fuso horário: :timezone',
     'reading_time' => 'Tempo de leitura (min)',
     'cover_image_url' => 'URL da imagem de capa',
     'seo' => 'SEO',

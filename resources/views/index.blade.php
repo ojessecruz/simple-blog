@@ -129,7 +129,7 @@
                                     <span>{{ $post->authorName() }}</span>
                                     <span aria-hidden="true" class="text-emerald-500">✦</span>
                                     <time datetime="{{ $post->published_at->toIso8601String() }}">
-                                        {{ $post->published_at->locale(app()->getLocale())->translatedFormat(__('blog::messages.date_format')) }}
+                                        {{ \Jessecruz\SimpleBlog\Support\Dates::format($post->published_at, __('blog::messages.date_format')) }}
                                     </time>
                                     <span aria-hidden="true" class="text-emerald-500">✦</span>
                                     <span>{{ $post->reading_time }} {{ __('blog::messages.min_read') }}</span>

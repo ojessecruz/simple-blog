@@ -85,7 +85,7 @@
                                 <span>/{{ $post->slug }}</span>
                                 @if ($post->published_at)
                                     <span>•</span>
-                                    <span>{{ $post->published_at->format('m/d/Y H:i') }}</span>
+                                    <span>{{ \Jessecruz\SimpleBlog\Support\Dates::format($post->published_at, __('blog::messages.datetime_short_format')) }}</span>
                                 @endif
                                 <span>•</span>
                                 <span>{{ $post->reading_time }} {{ __('blog::messages.min') }}</span>

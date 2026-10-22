@@ -19,6 +19,8 @@ return [
     'min' => 'min',
     'views_count' => ':count visualizaciones',
     'date_format' => 'j \d\e F \d\e Y',
+    'datetime_format' => 'j \d\e F \d\e Y, H:i',
+    'datetime_short_format' => 'd/m/Y H:i',
 
     // Public — index
     'blog' => 'Blog',
@@ -72,6 +74,7 @@ return [
     'mark_as_draft' => 'Marcar como borrador',
     'publish_at' => 'Publicar en',
     'publish_at_hint' => 'vacío = borrador',
+    'timezone_hint' => 'Zona horaria: :timezone',
     'reading_time' => 'Tiempo de lectura (min)',
     'cover_image_url' => 'URL de la imagen de portada',
     'seo' => 'SEO',

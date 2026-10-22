@@ -132,6 +132,24 @@ final class Post extends Model
         return 'slug';
     }
 
+    /**
+     * Eloquent stores a date's wall-clock time without converting it, so a
+     * value carrying another offset (an ISO 8601 string from the API, a date
+     * typed in the blog timezone) would shift by that offset. Convert it to
+     * the timezone stored dates are read back in first.
+     *
+     * @param  mixed  $value
+     * @return string|null
+     */
+    public function fromDateTime($value)
+    {
+        if (empty($value)) {
+            return $value;
+        }
+
+        return parent::fromDateTime($this->asDateTime($value)->setTimezone(date_default_timezone_get()));
+    }
+
     public function scopePublished(Builder $query): Builder
     {
         return $query->whereNotNull('published_at')

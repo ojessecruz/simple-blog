@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Jessecruz\SimpleBlog\Models\Post;
 use Jessecruz\SimpleBlog\Models\PostCategory;
+use Jessecruz\SimpleBlog\Support\Dates;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -67,7 +68,7 @@ final class PostForm extends Component
             $this->body = $post->body;
             $this->blog_category_id = $post->blog_category_id;
             $this->cover_image = $post->cover_image;
-            $this->published_at = $post->published_at?->format('Y-m-d\TH:i');
+            $this->published_at = Dates::toInput($post->published_at);
             $this->reading_time = $post->reading_time;
             $this->meta_title = $post->meta_title;
             $this->meta_description = $post->meta_description;
@@ -100,7 +101,7 @@ final class PostForm extends Component
         if ($value) {
             $this->published_at = null;
         } elseif ($this->published_at === null || $this->published_at === '') {
-            $this->published_at = now()->format('Y-m-d\TH:i');
+            $this->published_at = Dates::toInput(now());
         }
     }
 
@@ -167,6 +168,11 @@ final class PostForm extends Component
             if (($data[$nullable] ?? null) === '') {
                 $data[$nullable] = null;
             }
+        }
+
+        // The input holds a wall-clock time in the blog timezone.
+        if ($data['published_at'] !== null) {
+            $data['published_at'] = Dates::fromInput($data['published_at']);
         }
 
         $data['keywords'] = $this->keywords === ''
