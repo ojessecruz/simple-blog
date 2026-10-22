@@ -2,7 +2,7 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
-## Unreleased
+## 0.8.6 - 2026-10-22
 
 ### Added
 
