@@ -2,6 +2,12 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.9.2 - 2026-10-22
+
+### Fixed
+
+- `/blog/feed` and `/blog/sitemap.xml` returned 500 (`ParseError: syntax error, unexpected identifier "version"`) on PHP with `short_open_tag=On`. Blade only compiles what PHP's tokenizer reads as HTML, and with short tags on, the `<?` of the XML declaration started a PHP tag, so the line was left uncompiled. The declaration is now built from split strings, and a test tokenizes every view in a `short_open_tag=On` PHP process to keep any literal `<?` out of the views. Republish `feed.blade.php` / `sitemap.blade.php` if you published them.
+
 ## 0.9.1 - 2026-10-22
 
 ### Added
