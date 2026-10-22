@@ -6,6 +6,11 @@ All notable changes to `simple-blog` will be documented in this file.
 
 ### Added
 
+- RSS 2.0 feed at `/blog/feed` (route `blog.feed`) with the latest published posts: title, link, date, author, category, excerpt and cover image (`media:content`), optionally the full rendered body (`content:encoded`). Advertised on every public page with `<link rel="alternate">`. Configured by the new `feed` block (`enabled`, `limit`, `full_content`).
+- XML sitemap at `/blog/sitemap.xml` (route `blog.sitemap`) with the index, categories that have published posts and every published post, each with `lastmod`. Configured by the new `sitemap` block (`enabled`).
+- `feed.blade.php` and `sitemap.blade.php` views, included in the `simple-blog-views-public` publish tag.
+- `Seo::lastModified($post)`: the later of a post's last edit and its publication date.
+- `feed` is a reserved post slug (`Post::RESERVED_SLUGS`), rejected by the admin and the API because `/blog/feed` would shadow the post. Rename any existing post with that slug.
 - Pagination on the public index and category pages, sized by the new `per_page` config (default 12), with newer/older links and a "Page X of Y" indicator. Posts published at the same time are ordered by id so pages never overlap. Pages past the last one return 404.
 - `Seo::canonicalUrl()`: the default public layout's canonical and `og:url` now keep `?page=N` on paginated pages and drop any other query string (e.g. `utm_*`).
 - The admin form estimates the reading time from the body (200 words/minute, same as the API) for new posts, until the field is edited by hand. Existing posts keep their stored value. The estimate lives in `Post::estimateReadingTime()`.
@@ -19,6 +24,7 @@ All notable changes to `simple-blog` will be documented in this file.
 
 ### Fixed
 
+- A post saved before its scheduled date reported a `dateModified` (JSON-LD) and `article:modified_time` earlier than its publication date; both now use `Seo::lastModified()`.
 - The admin preview of drafts and scheduled posts was indexable (`index, follow` from the layout). It now sends `X-Robots-Tag: noindex, nofollow` and a `noindex` meta tag.
 - The index and category pages loaded and rendered every published post at once.
 

@@ -36,6 +36,11 @@ final class Post extends Model
 {
     public const WORDS_PER_MINUTE = 200;
 
+    /**
+     * Slugs taken by package routes under the blog prefix (/blog/feed).
+     */
+    public const RESERVED_SLUGS = ['feed'];
+
     protected $table = 'blog_posts';
 
     protected $attributes = [

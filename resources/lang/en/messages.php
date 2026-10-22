@@ -65,6 +65,7 @@ return [
     'post_form_subtitle' => 'Markdown content. Cover image and og:image via URL.',
     'title' => 'Title',
     'slug' => 'Slug',
+    'slug_reserved' => 'This slug is reserved by the blog. Choose another one.',
     'category' => 'Category',
     'select_placeholder' => 'Select...',
     'excerpt' => 'Excerpt',

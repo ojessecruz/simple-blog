@@ -10,6 +10,9 @@
 
 @push('head')
     <title>{{ $seoTitle }}</title>
+    @if(\Illuminate\Support\Facades\Route::has('blog.feed'))
+        <link rel="alternate" type="application/rss+xml" title="{{ \Jessecruz\SimpleBlog\Support\Seo::blogName() }}" href="{{ route('blog.feed') }}">
+    @endif
     @if($seoDescription)
         <meta name="description" content="{{ $seoDescription }}">
         <meta property="og:description" content="{{ $seoDescription }}">

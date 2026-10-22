@@ -8,6 +8,9 @@
 
 @push('head')
     <title>{{ $seoTitle }}</title>
+    @if(\Illuminate\Support\Facades\Route::has('blog.feed'))
+        <link rel="alternate" type="application/rss+xml" title="{{ \Jessecruz\SimpleBlog\Support\Seo::blogName() }}" href="{{ route('blog.feed') }}">
+    @endif
     @unless($post->isPublished())
         {{-- Admin preview of a draft or scheduled post --}}
         <meta name="robots" content="noindex, nofollow">
@@ -28,7 +31,7 @@
     @endif
     @if($post->published_at)
         <meta property="article:published_time" content="{{ $post->published_at->toIso8601String() }}">
-        <meta property="article:modified_time" content="{{ ($post->updated_at ?? $post->published_at)->toIso8601String() }}">
+        <meta property="article:modified_time" content="{{ \Jessecruz\SimpleBlog\Support\Seo::lastModified($post)->toIso8601String() }}">
     @endif
     @if($post->isPublished())
         <script type="application/ld+json">{!! json_encode(\Jessecruz\SimpleBlog\Support\Seo::articleSchema($post), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>

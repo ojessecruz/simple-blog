@@ -152,6 +152,8 @@ The package registers:
 |--------|----------------------------------|-------------------------|-----------------------------------|
 | GET    | `/blog`                          | `blog.index`            | Public listing (`?page=2`, …)     |
 | GET    | `/blog/category/{slug}`         | `blog.category`         | Posts in a category (`?page=2`, …) |
+| GET    | `/blog/feed`                     | `blog.feed`             | RSS feed of the latest posts      |
+| GET    | `/blog/sitemap.xml`              | `blog.sitemap`          | XML sitemap of the blog           |
 | GET    | `/blog/{slug}`                   | `blog.show`             | Individual post                   |
 | GET    | `/admin/blog`                    | `blog.admin.index`      | Admin list (filter/search)        |
 | GET    | `/admin/blog/create`              | `blog.admin.create`     | Create form                       |
@@ -176,6 +178,7 @@ See `config/blog.php` (published) — every key has comments explaining what it 
 - **`cta_view`** — optional view rendered at the end of each post (e.g. pricing, newsletter)
 - **`mid_cta_view`** — optional view inserted once inside the post body (see [Injecting a CTA into posts](#injecting-a-cta-into-posts))
 - **`share`** — which share buttons appear on posts, in what order, and the X handle to credit (see [Share buttons](#share-buttons))
+- **`feed`** / **`sitemap`** — RSS feed (on/off, item count, full content) and XML sitemap (on/off) (see [RSS feed and sitemap](#rss-feed-and-sitemap))
 - **`public_back_url`** / **`admin_back_url`** — where the "back" links point (`null` hides them)
 - **`seo`** — site/blog names, default description and images used in titles, meta tags and the Article JSON-LD (see [SEO](#seo))
 - **`timezone`** — timezone editors type publish dates in and readers see them in; the database stays in `app.timezone` (see [Dates and timezones](#dates-and-timezones))
@@ -328,7 +331,7 @@ The package ships with `emerald` as the accent colour and `zinc` as the neutral.
 # Everything (public + admin + layouts + icons)
 php artisan vendor:publish --tag="simple-blog-views"
 
-# Just the public side (index, show, share component, public layout)
+# Just the public side (index, show, share component, feed, sitemap, public layout)
 php artisan vendor:publish --tag="simple-blog-views-public"
 
 # Just the admin side (Livewire admin views + admin layout)
@@ -399,6 +402,30 @@ The block is a component, so a published view can place it anywhere (e.g. also b
 
 To change its markup, publish the public views (`--tag="simple-blog-views-public"`) and edit `resources/views/vendor/blog/components/share.blade.php`. `Jessecruz\SimpleBlog\Support\Share` exposes the resolvers it uses (`networks()`, `links($post)`, `url($network, $post)`, `label($network)`) so custom templates keep the config behavior.
 
+## RSS feed and sitemap
+
+Both are on by default and live under the blog prefix.
+
+**Feed** — `/blog/feed` is an RSS 2.0 feed of the latest published posts: title, link, publication date, author, category, excerpt and cover image (`media:content`). Every public page advertises it with `<link rel="alternate" type="application/rss+xml">`, so browsers and readers find it from the blog URL. It also works with RSS-to-email tools (Mailchimp, Kit, …) to send new posts to a newsletter.
+
+```php
+'feed' => [
+    'enabled' => true,
+    'limit' => 20,            // latest posts listed
+    'full_content' => false,  // true: also send the rendered body (<content:encoded>)
+],
+```
+
+**Sitemap** — `/blog/sitemap.xml` lists the index, every category with published posts and every published post, each with its last modification. Drafts and scheduled posts stay out until they go live. Point search engines at it from your `robots.txt`, or submit it in Google Search Console:
+
+```text
+Sitemap: https://example.com/blog/sitemap.xml
+```
+
+If your app already builds its own sitemap, set `'sitemap' => ['enabled' => false]` and add `route('blog.sitemap')` to your sitemap index instead, or keep both.
+
+`feed` is a reserved post slug: the admin and the API reject it, since `/blog/feed` would never reach the post.
+
 ## Dates and timezones
 
 Publish dates are stored in `app.timezone`, like every Laravel date. Many apps run in UTC (the Laravel default) while their editors and readers live elsewhere; set `timezone` so the blog works in local time:
@@ -448,7 +475,7 @@ Post payload:
 ```
 
 - `title`, `excerpt`, `body` and `category` (a category **slug**) are required on create and optional on update.
-- `slug` defaults to `Str::slug(title)` on create; `reading_time` is estimated from the body (200 words/minute) when omitted.
+- `slug` defaults to `Str::slug(title)` on create; `reading_time` is estimated from the body (200 words/minute) when omitted. `feed` is a reserved slug.
 - `published_at`: omitted or `null` → draft; in the past → published; in the future → scheduled. The response reports it as `status`. An offset is honored (`2026-10-01T09:00:00-03:00` and `2026-10-01T12:00:00Z` are the same instant); a value without one is read in `app.timezone`. Responses use `app.timezone`.
 - Also accepted: `cover_image`, `og_image`, `meta_title`, `meta_description` and `author_id` (validated against `author_model` when one is configured).
 

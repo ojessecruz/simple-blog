@@ -9,6 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
+use Illuminate\Validation\Rules\NotIn;
 use Illuminate\Validation\Rules\Unique;
 use Jessecruz\SimpleBlog\Models\Post;
 use Jessecruz\SimpleBlog\Models\PostCategory;
@@ -24,7 +25,7 @@ final class PostRequest extends FormRequest
     }
 
     /**
-     * @return array<string, array<int, Exists|Unique|string>>
+     * @return array<string, array<int, Exists|NotIn|Unique|string>>
      */
     public function rules(): array
     {
@@ -35,7 +36,7 @@ final class PostRequest extends FormRequest
 
         return [
             'title' => [$presence, 'string', 'max:255'],
-            'slug' => [$presence, 'string', 'max:255', 'alpha_dash', Rule::unique('blog_posts', 'slug')->ignore($post?->id)],
+            'slug' => [$presence, 'string', 'max:255', 'alpha_dash', Rule::unique('blog_posts', 'slug')->ignore($post?->id), Rule::notIn(Post::RESERVED_SLUGS)],
             'excerpt' => [$presence, 'string', 'max:255'],
             'body' => [$presence, 'string'],
             'category' => [$presence, 'string', Rule::exists('blog_categories', 'slug')],
@@ -48,6 +49,16 @@ final class PostRequest extends FormRequest
             'keywords' => ['nullable', 'array'],
             'keywords.*' => ['string', 'max:100'],
             'author_id' => $this->authorRules(),
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'slug.not_in' => __('blog::messages.slug_reserved'),
         ];
     }
 

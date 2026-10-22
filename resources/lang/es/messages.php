@@ -65,6 +65,7 @@ return [
     'post_form_subtitle' => 'Contenido en Markdown. Imagen de portada y og:image vía URL.',
     'title' => 'Título',
     'slug' => 'Slug',
+    'slug_reserved' => 'Este slug está reservado por el blog. Elige otro.',
     'category' => 'Categoría',
     'select_placeholder' => 'Selecciona...',
     'excerpt' => 'Resumen',
