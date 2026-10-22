@@ -105,11 +105,13 @@
 
         {{-- Content --}}
         @php
-            $renderedBody = $post->renderedBody();
+            [$renderedBody, $toc] = \Jessecruz\SimpleBlog\Support\TableOfContents::render($post);
             $bodyParts = config('blog.mid_cta_view')
                 ? \Jessecruz\SimpleBlog\Support\ContentSplitter::splitForMidCta($renderedBody)
                 : null;
         @endphp
+
+        <x-blog::toc :items="$toc" class="mb-10" />
 
         @if($bodyParts)
             <div class="blog-content">
@@ -135,6 +137,10 @@
             .blog-content h2 { font-size: 1.5rem; font-weight: 700; line-height: 1.3; margin-top: 2em; margin-bottom: 0.5em; color: #18181b; letter-spacing: -0.01em; }
             .blog-content h3 { font-size: 1.25rem; font-weight: 700; line-height: 1.35; margin-top: 1.75em; margin-bottom: 0.4em; color: #18181b; }
             .blog-content h2 + p, .blog-content h3 + p { margin-top: 0; }
+            .blog-content [id] { scroll-margin-top: 1.5rem; }
+            .blog-content .blog-heading-anchor { margin-left: 0.35em; color: #10b981; font-weight: 400; text-decoration: none; opacity: 0; transition: opacity 0.15s; }
+            .blog-content :is(h1, h2, h3, h4, h5, h6):hover .blog-heading-anchor, .blog-content .blog-heading-anchor:focus-visible { opacity: 1; }
+            @media (hover: none) { .blog-content .blog-heading-anchor { opacity: 0.5; } }
             .blog-content strong { color: #18181b; font-weight: 600; }
             .blog-content a { color: #18181b; font-weight: 500; text-decoration: underline; text-decoration-color: #10b981; text-decoration-thickness: 2px; text-underline-offset: 3px; }
             .blog-content a:hover { text-decoration-thickness: 3px; }
@@ -158,6 +164,7 @@
             .dark .blog-content h3,
             .dark .blog-content strong { color: #fafafa; }
             .dark .blog-content a { color: #fafafa; text-decoration-color: #34d399; }
+            .dark .blog-content .blog-heading-anchor { color: #34d399; }
             .dark .blog-content li::marker { color: #34d399; }
             .dark .blog-content blockquote { border-left-color: #34d399; color: #a1a1aa; }
             .dark .blog-content code { background: #27272a; color: #f4f4f5; }

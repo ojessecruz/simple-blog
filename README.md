@@ -178,6 +178,7 @@ See `config/blog.php` (published) — every key has comments explaining what it 
 - **`cta_view`** — optional view rendered at the end of each post (e.g. pricing, newsletter)
 - **`mid_cta_view`** — optional view inserted once inside the post body (see [Injecting a CTA into posts](#injecting-a-cta-into-posts))
 - **`share`** — which share buttons appear on posts, in what order, and the X handle to credit (see [Share buttons](#share-buttons))
+- **`toc`** — table of contents above posts (on/off, minimum headings, depth) and "#" heading links (see [Table of contents and heading links](#table-of-contents-and-heading-links))
 - **`feed`** / **`sitemap`** — RSS feed (on/off, item count, full content) and XML sitemap (on/off) (see [RSS feed and sitemap](#rss-feed-and-sitemap))
 - **`publishing`** — schedule of the command that fires `PostPublished`, announce window, webhook URLs and signing secret (see [Publishing events and webhooks](#publishing-events-and-webhooks))
 - **`public_back_url`** / **`admin_back_url`** — where the "back" links point (`null` hides them)
@@ -332,7 +333,7 @@ The package ships with `emerald` as the accent colour and `zinc` as the neutral.
 # Everything (public + admin + layouts + icons)
 php artisan vendor:publish --tag="simple-blog-views"
 
-# Just the public side (index, show, share component, feed, sitemap, public layout)
+# Just the public side (index, show, share and toc components, feed, sitemap, public layout)
 php artisan vendor:publish --tag="simple-blog-views-public"
 
 # Just the admin side (Livewire admin views + admin layout)
@@ -402,6 +403,34 @@ The block is a component, so a published view can place it anywhere (e.g. also b
 ```
 
 To change its markup, publish the public views (`--tag="simple-blog-views-public"`) and edit `resources/views/vendor/blog/components/share.blade.php`. `Jessecruz\SimpleBlog\Support\Share` exposes the resolvers it uses (`networks()`, `links($post)`, `url($network, $post)`, `label($network)`) so custom templates keep the config behavior.
+
+## Table of contents and heading links
+
+Every heading in a post body gets an id built from its text, so any section can be linked to directly: `## Como começar` becomes `/blog/my-post#como-comecar` (repeated headings get `-2`, `-3`, …; headings with nothing to slug, such as only emoji, fall back to `section`). Hovering a heading shows a `#` link to copy that address; on touch screens it stays faintly visible.
+
+Posts with at least three headings also get a collapsible "In this article" table of contents above the body. Tune both in `config/blog.php`:
+
+```php
+'toc' => [
+    'enabled' => true,     // table of contents above the body
+    'min_headings' => 3,   // fewest listed headings for the table to show
+    'depth' => 2,          // 1 → sections only (usually ##), 2 → also subsections (###)
+    'permalinks' => true,  // "#" link after each heading
+],
+```
+
+- Levels are counted from the post's top heading level, so a body written with `#` or starting at `###` gets the same table.
+- Heading text stays escaped like the rest of the body; the table repeats the plain text (no inline HTML).
+- The RSS feed's `content:encoded` and `Post::renderedBody()` keep the plain headings, without ids or `#` links.
+
+The table is a component, so a published view can place it anywhere. Render the body and the table from the same call, so the links match the ids:
+
+```blade
+@php([$html, $toc] = \Jessecruz\SimpleBlog\Support\TableOfContents::render($post))
+
+<x-blog::toc :items="$toc" />
+<div class="blog-content">{!! $html !!}</div>
+```
 
 ## RSS feed and sitemap
 

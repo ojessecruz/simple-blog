@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Jessecruz\SimpleBlog\Contracts\Author;
+use League\CommonMark\Extension\ExtensionInterface;
 
 /**
  * @property int $id
@@ -138,12 +139,15 @@ final class Post extends Model
         return max(1, min(120, (int) ceil($words / self::WORDS_PER_MINUTE)));
     }
 
-    public function renderedBody(): string
+    /**
+     * @param  list<ExtensionInterface>  $extensions  Extra CommonMark extensions, e.g. HeadingAnchors
+     */
+    public function renderedBody(array $extensions = []): string
     {
         return Str::markdown($this->body, config('blog.markdown', [
             'html_input' => 'escape',
             'allow_unsafe_links' => false,
-        ]));
+        ]), $extensions);
     }
 
     public function getRouteKeyName(): string

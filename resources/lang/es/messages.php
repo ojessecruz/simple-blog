@@ -39,6 +39,10 @@ return [
     'more_in' => 'Más en :name',
     'related' => 'Relacionados',
 
+    // Public — table of contents
+    'toc' => 'En este artículo',
+    'heading_link' => 'Enlace a la sección “:heading”',
+
     // Public — share buttons
     'share' => 'Compartir',
     'share_on' => 'Compartir en :network',
