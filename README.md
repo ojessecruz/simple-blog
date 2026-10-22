@@ -177,6 +177,7 @@ See `config/blog.php` (published) — every key has comments explaining what it 
 - **`share`** — which share buttons appear on posts, in what order, and the X handle to credit (see [Share buttons](#share-buttons))
 - **`public_back_url`** / **`admin_back_url`** — where the "back" links point (`null` hides them)
 - **`seo`** — site/blog names, default description and images used in titles, meta tags and the Article JSON-LD (see [SEO](#seo))
+- **`timezone`** — timezone editors type publish dates in and readers see them in; the database stays in `app.timezone` (see [Dates and timezones](#dates-and-timezones))
 - **`markdown`** — options passed to `Str::markdown()`
 
 ## Customizing the layout
@@ -393,6 +394,21 @@ The block is a component, so a published view can place it anywhere (e.g. also b
 
 To change its markup, publish the public views (`--tag="simple-blog-views-public"`) and edit `resources/views/vendor/blog/components/share.blade.php`. `Jessecruz\SimpleBlog\Support\Share` exposes the resolvers it uses (`networks()`, `links($post)`, `url($network, $post)`, `label($network)`) so custom templates keep the config behavior.
 
+## Dates and timezones
+
+Publish dates are stored in `app.timezone`, like every Laravel date. Many apps run in UTC (the Laravel default) while their editors and readers live elsewhere; set `timezone` so the blog works in local time:
+
+```php
+'timezone' => 'America/Sao_Paulo', // null → app.timezone
+```
+
+- The admin "Publish at" field is typed and shown in this timezone, which is displayed under the field. "10:00" means 10:00 in São Paulo, stored as 13:00 UTC.
+- Public post dates, the scheduled-post preview notice and the admin list are shown in this timezone, so a post published at 23:30 local time doesn't show the next day's date.
+- Machine-readable dates (`<time datetime>`, Open Graph, JSON-LD, the JSON API) carry their offset and point to the same instant either way.
+- Dates assigned to `Post::$published_at` with an offset (an ISO 8601 string, a Carbon in another timezone) are converted to `app.timezone` before saving.
+
+Date formats come from the `date_format`, `datetime_format` and `datetime_short_format` lang strings. In custom templates, `Jessecruz\SimpleBlog\Support\Dates::format($post->published_at, $format)` converts to the blog timezone and translates month names.
+
 ## JSON API
 
 An optional REST API to manage content from automations (n8n, CI jobs, AI agents). It is **disabled by default** — no routes are registered until you turn it on:
@@ -428,7 +444,7 @@ Post payload:
 
 - `title`, `excerpt`, `body` and `category` (a category **slug**) are required on create and optional on update.
 - `slug` defaults to `Str::slug(title)` on create; `reading_time` is estimated from the body (200 words/minute) when omitted.
-- `published_at`: omitted or `null` → draft; in the past → published; in the future → scheduled. The response reports it as `status`.
+- `published_at`: omitted or `null` → draft; in the past → published; in the future → scheduled. The response reports it as `status`. An offset is honored (`2026-10-01T09:00:00-03:00` and `2026-10-01T12:00:00Z` are the same instant); a value without one is read in `app.timezone`. Responses use `app.timezone`.
 - Also accepted: `cover_image`, `og_image`, `meta_title`, `meta_description` and `author_id` (validated against `author_model` when one is configured).
 
 To use your own auth instead of the shared token, replace the middleware stack:

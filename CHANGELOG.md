@@ -2,6 +2,25 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.8.7 - 2026-10-22
+
+### Fixed
+
+- API dates with an offset were stored by their wall-clock time, ignoring the offset: `2026-10-22T10:00:00-03:00` was saved as 10:00 in a UTC app (3 hours early), and `…13:00:00Z` as 13:00 in an `America/Sao_Paulo` app (3 hours late). `Post` now converts dates to the app timezone before saving, which also covers host code assigning a Carbon in another timezone. Dates without an offset are still read in `app.timezone`.
+- The scheduled-post preview notice showed an English month and format on pt_BR/es blogs ("agendado para December 5, 2026 at 09:00"); it now uses the new `datetime_format` lang string ("5 de dezembro de 2026, 09:00").
+
+### Added
+
+- `timezone` config: the timezone editors type publish dates in and readers see them in, while the database stays in `app.timezone`. `null` (default) keeps the previous behavior. Fixes apps running in UTC scheduling posts hours off and showing the next day's date for late-evening posts.
+- The admin "Publish at" field shows the timezone it uses (e.g. "Timezone: America/Sao_Paulo (UTC-03:00)").
+- `Support\Dates` helper (`timezone()`, `format()`, `local()`, `toInput()`, `fromInput()`) for published views.
+- `datetime_format`, `datetime_short_format` and `timezone_hint` lang strings (en, pt_BR, es).
+
+### Changed
+
+- The admin post list formats dates per locale through `datetime_short_format`: `d/m/Y H:i` on pt_BR/es (was the US `m/d/Y H:i` everywhere; en is unchanged).
+- Published copies of `index`, `show` and the admin views keep their old date code; republish or switch them to `Dates::format()` to get the timezone conversion.
+
 ## 0.8.6 - 2026-10-22
 
 ### Added

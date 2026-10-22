@@ -19,6 +19,8 @@ return [
     'min' => 'min',
     'views_count' => ':count views',
     'date_format' => 'M j, Y',
+    'datetime_format' => 'M j, Y \a\t H:i',
+    'datetime_short_format' => 'm/d/Y H:i',
 
     // Public — index
     'blog' => 'Blog',
@@ -72,6 +74,7 @@ return [
     'mark_as_draft' => 'Mark as draft',
     'publish_at' => 'Publish at',
     'publish_at_hint' => 'empty = draft',
+    'timezone_hint' => 'Timezone: :timezone',
     'reading_time' => 'Reading time (min)',
     'cover_image_url' => 'Cover image URL',
     'seo' => 'SEO',

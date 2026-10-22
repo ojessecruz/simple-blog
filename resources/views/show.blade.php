@@ -68,7 +68,7 @@
                 @if($post->published_at)
                     <span aria-hidden="true" class="text-emerald-500">✦</span>
                     <time datetime="{{ $post->published_at->toIso8601String() }}">
-                        {{ $post->published_at->locale(app()->getLocale())->translatedFormat(__('blog::messages.date_format')) }}
+                        {{ \Jessecruz\SimpleBlog\Support\Dates::format($post->published_at, __('blog::messages.date_format')) }}
                     </time>
                 @endif
                 <span aria-hidden="true" class="text-emerald-500">✦</span>
@@ -80,7 +80,7 @@
             <div class="mb-8 -rotate-[0.5deg] border-2 border-amber-500 bg-amber-50 px-4 py-3 font-mono text-sm text-amber-900 shadow-[3px_3px_0_0_#f59e0b] dark:border-amber-400 dark:bg-amber-950/30 dark:text-amber-300">
                 <strong class="font-bold">{{ __('blog::messages.preview_label') }}</strong>
                 @if($post->published_at)
-                    {{ __('blog::messages.preview_scheduled', ['date' => $post->published_at->translatedFormat('F j, Y \a\t H:i')]) }}
+                    {{ __('blog::messages.preview_scheduled', ['date' => \Jessecruz\SimpleBlog\Support\Dates::format($post->published_at, __('blog::messages.datetime_format'))]) }}
                 @else
                     {{ __('blog::messages.preview_draft') }}
                 @endif
