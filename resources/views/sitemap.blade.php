@@ -1,5 +1,5 @@
-{!! '<?xml version="1.0" encoding="UTF-8"?>' !!}
-{{-- The declaration must be the first bytes of the document; it is printed as a string so PHP's short_open_tag can't mistake it for code --}}
+{!! '<'.'?xml version="1.0" encoding="UTF-8"?>' !!}
+{{-- The declaration must be the first bytes of the document. Its opening "<" and "?" are split because, with short_open_tag=On, Blade's tokenizer reads them together as a PHP tag and leaves the line uncompiled --}}
 @php
     $lastModified = fn ($posts) => $posts
         ->map(fn ($post) => \Jessecruz\SimpleBlog\Support\Seo::lastModified($post))
