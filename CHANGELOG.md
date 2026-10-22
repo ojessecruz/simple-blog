@@ -2,6 +2,20 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.9.0 - 2026-10-22
+
+### Added
+
+- `Jessecruz\SimpleBlog\Events\PostPublished` event, dispatched once per post when it goes live — published right away or reaching its scheduled date — with the post's category and author loaded.
+- `simple-blog:announce` command that detects posts that went live and fires the event. The package schedules it on the host's scheduler (`publishing.schedule`, default every minute; `null` to schedule it yourself). Posts are claimed before dispatch, so overlapping runs never announce twice; a failing listener is reported and doesn't block the other posts. Posts that went live more than `publishing.announce_window` hours ago (default 24) are marked without firing, so imports and scheduler outages don't flood listeners.
+- Webhooks: every announcement is POSTed as JSON (`{"event": "post.published", "post": {…}}`, the JSON API's post shape) to the URLs in `publishing.webhooks` (`BLOG_WEBHOOK_URLS`), through the queue with 3 attempts, signed with `X-Simple-Blog-Signature: sha256=…` when `publishing.webhook_secret` (`BLOG_WEBHOOK_SECRET`) is set.
+- `publishing` config block (`schedule`, `announce_window`, `webhooks`, `webhook_secret`).
+
+### Upgrading
+
+- New migration adding `blog_posts.announced_at`: run `php artisan vendor:publish --tag=simple-blog-migrations` and `php artisan migrate`. Posts already live are backfilled as announced, so nothing is re-sent. Until it runs, `simple-blog:announce` exits with an error explaining this instead of failing on SQL.
+- Keep the Laravel scheduler running (`schedule:run` cron or `schedule:work`) for scheduled posts to be announced.
+
 ## 0.8.8 - 2026-10-22
 
 ### Added

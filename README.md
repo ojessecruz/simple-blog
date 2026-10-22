@@ -179,6 +179,7 @@ See `config/blog.php` (published) — every key has comments explaining what it 
 - **`mid_cta_view`** — optional view inserted once inside the post body (see [Injecting a CTA into posts](#injecting-a-cta-into-posts))
 - **`share`** — which share buttons appear on posts, in what order, and the X handle to credit (see [Share buttons](#share-buttons))
 - **`feed`** / **`sitemap`** — RSS feed (on/off, item count, full content) and XML sitemap (on/off) (see [RSS feed and sitemap](#rss-feed-and-sitemap))
+- **`publishing`** — schedule of the command that fires `PostPublished`, announce window, webhook URLs and signing secret (see [Publishing events and webhooks](#publishing-events-and-webhooks))
 - **`public_back_url`** / **`admin_back_url`** — where the "back" links point (`null` hides them)
 - **`seo`** — site/blog names, default description and images used in titles, meta tags and the Article JSON-LD (see [SEO](#seo))
 - **`timezone`** — timezone editors type publish dates in and readers see them in; the database stays in `app.timezone` (see [Dates and timezones](#dates-and-timezones))
@@ -425,6 +426,52 @@ Sitemap: https://example.com/blog/sitemap.xml
 If your app already builds its own sitemap, set `'sitemap' => ['enabled' => false]` and add `route('blog.sitemap')` to your sitemap index instead, or keep both.
 
 `feed` is a reserved post slug: the admin and the API reject it, since `/blog/feed` would never reach the post.
+
+## Publishing events and webhooks
+
+When a post goes live, the package dispatches `Jessecruz\SimpleBlog\Events\PostPublished` **once**. That covers posts published right away and scheduled posts reaching their date. Use it to post on social networks, send a newsletter or purge a cache:
+
+```php
+use Illuminate\Support\Facades\Event;
+use Jessecruz\SimpleBlog\Events\PostPublished;
+
+Event::listen(function (PostPublished $event) {
+    $post = $event->post; // category and author loaded; $post->url() is the public URL
+});
+```
+
+The `simple-blog:announce` command finds posts that went live and fires the event. The package schedules it every minute (`publishing.schedule`), so **your app's scheduler must be running**: `php artisan schedule:work` locally, or the usual `* * * * * php artisan schedule:run` cron. A post is announced at most once. If a listener throws, the error is reported and the other posts still go out.
+
+Posts that went live more than `publishing.announce_window` hours ago (default 24) are marked without firing the event. That stops a bulk import of old posts or a scheduler that was down for days from flooding your channels.
+
+**Webhooks.** For no-code tools (Zapier, Make, n8n), list URLs and every announcement is POSTed to each of them through your queue (3 attempts):
+
+```dotenv
+BLOG_WEBHOOK_URLS=https://hooks.zapier.com/hooks/catch/123/abc/,https://n8n.example.com/webhook/blog
+BLOG_WEBHOOK_SECRET=a-long-random-secret
+```
+
+```json
+{
+    "event": "post.published",
+    "post": { "id": 12, "slug": "how-to-reduce-no-shows", "title": "…", "url": "https://example.com/blog/how-to-reduce-no-shows", "status": "published", "…": "same fields as the JSON API" }
+}
+```
+
+Requests carry `X-Simple-Blog-Event: post.published` and, with a secret, `X-Simple-Blog-Signature: sha256=<HMAC-SHA256 of the raw body>`. Verify it on the receiving side:
+
+```php
+$expected = 'sha256='.hash_hmac('sha256', $request->getContent(), $secret);
+
+abort_unless(hash_equals($expected, (string) $request->header('X-Simple-Blog-Signature')), 401);
+```
+
+**Upgrading from 0.8.x**: this adds the `blog_posts.announced_at` column. Publish and run the new migration; posts already live are marked as announced, so nothing is re-sent:
+
+```bash
+php artisan vendor:publish --tag=simple-blog-migrations
+php artisan migrate
+```
 
 ## Dates and timezones
 
