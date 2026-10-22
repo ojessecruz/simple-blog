@@ -175,6 +175,42 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Share buttons
+    |--------------------------------------------------------------------------
+    |
+    | Share buttons rendered in the footer of every published post (never on
+    | admin previews of drafts or scheduled posts).
+    |
+    |   - networks: Buttons to show, in this order. An empty array hides the
+    |               share block entirely. Available:
+    |                 'whatsapp', 'x', 'linkedin', 'facebook', 'telegram',
+    |                 'email'  → share links (mailto: for email)
+    |                 'copy'   → copies the post URL to the clipboard
+    |                 'native' → opens the device's share sheet (Web Share
+    |                            API); only shown in browsers that support
+    |                            it: mobile browsers and Safari/Chrome/Edge
+    |                            on desktop (not desktop Firefox)
+    |               Unknown entries are ignored.
+    |   - x_via:    X handle credited in the post as "via @handle" (with or
+    |               without the "@"). null → no credit.
+    |
+    | The block is also available as a component you can place anywhere in
+    | a published view: <x-blog::share :post="$post" />
+    |
+    | Example:
+    |     'share' => [
+    |         'networks' => ['native', 'whatsapp', 'telegram', 'email', 'copy'],
+    |         'x_via' => 'usehoot',
+    |     ],
+    |
+    */
+    'share' => [
+        'networks' => ['whatsapp', 'x', 'linkedin', 'facebook', 'copy', 'native'],
+        'x_via' => null,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Public "Back to site" URL
     |--------------------------------------------------------------------------
     |

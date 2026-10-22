@@ -33,6 +33,14 @@ return [
     'more_in' => 'More in :name',
     'related' => 'Related',
 
+    // Public — share buttons
+    'share' => 'Share',
+    'share_on' => 'Share on :network',
+    'share_email' => 'Share by email',
+    'share_native' => 'More sharing options',
+    'copy_link' => 'Copy link',
+    'link_copied' => 'Link copied',
+
     // Admin — posts index
     'admin_subtitle' => 'Manage published posts, drafts, and scheduled posts.',
     'categories' => 'Categories',

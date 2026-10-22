@@ -174,6 +174,7 @@ See `config/blog.php` (published) — every key has comments explaining what it 
 - **`layouts.public`** / **`layouts.admin`** — Blade layouts wrapping the content
 - **`cta_view`** — optional view rendered at the end of each post (e.g. pricing, newsletter)
 - **`mid_cta_view`** — optional view inserted once inside the post body (see [Injecting a CTA into posts](#injecting-a-cta-into-posts))
+- **`share`** — which share buttons appear on posts, in what order, and the X handle to credit (see [Share buttons](#share-buttons))
 - **`public_back_url`** / **`admin_back_url`** — where the "back" links point (`null` hides them)
 - **`seo`** — site/blog names, default description and images used in titles, meta tags and the Article JSON-LD (see [SEO](#seo))
 - **`markdown`** — options passed to `Str::markdown()`
@@ -321,7 +322,7 @@ The package ships with `emerald` as the accent colour and `zinc` as the neutral.
 # Everything (public + admin + layouts + icons)
 php artisan vendor:publish --tag="simple-blog-views"
 
-# Just the public side (index, show, public layout)
+# Just the public side (index, show, share component, public layout)
 php artisan vendor:publish --tag="simple-blog-views-public"
 
 # Just the admin side (Livewire admin views + admin layout)
@@ -360,6 +361,37 @@ It is inserted once per post, only between top-level blocks (never inside a list
 - short posts (fewer than 4 top-level blocks) don't get it, so it never sits at the very top or bottom.
 
 The view receives `$post` and is wrapped in `<div class="my-10" data-blog-mid-cta>`. It is independent from `cta_view`: set either, both or neither.
+
+## Share buttons
+
+Published posts show a row of share buttons in their footer. Pick the networks and their order in `config/blog.php`:
+
+```php
+'share' => [
+    'networks' => ['whatsapp', 'x', 'linkedin', 'facebook', 'copy', 'native'], // default
+    'x_via' => 'usehoot', // optional: "via @usehoot" on X
+],
+```
+
+| Network | What it does |
+|---|---|
+| `whatsapp`, `x`, `linkedin`, `facebook`, `telegram` | Opens the network's share page in a new tab, pre-filled with the post URL (and title where supported) |
+| `email` | `mailto:` link with the title as subject and the excerpt + URL as body |
+| `copy` | Copies the post URL to the clipboard and confirms with a check icon and a screen-reader announcement |
+| `native` | Opens the device's share sheet ([Web Share API](https://developer.mozilla.org/docs/Web/API/Navigator/share)), which lists every app installed (Instagram, Telegram, Messages…). Hidden in browsers without support, such as desktop Firefox |
+
+- An empty `networks` array hides the share block; unknown entries are ignored.
+- Every button has a translated `aria-label`. The small inline script behind `copy` and `native` is emitted once per page and carries `Vite::cspNonce()` when your app sets a CSP nonce.
+- Shares are not rendered on the admin preview of drafts or scheduled posts, which have no public URL yet.
+- Link previews on the networks come from the post's Open Graph tags (see [SEO](#seo)).
+
+The block is a component, so a published view can place it anywhere (e.g. also below the title):
+
+```blade
+<x-blog::share :post="$post" />
+```
+
+To change its markup, publish the public views (`--tag="simple-blog-views-public"`) and edit `resources/views/vendor/blog/components/share.blade.php`. `Jessecruz\SimpleBlog\Support\Share` exposes the resolvers it uses (`networks()`, `links($post)`, `url($network, $post)`, `label($network)`) so custom templates keep the config behavior.
 
 ## JSON API
 

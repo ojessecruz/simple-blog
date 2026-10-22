@@ -2,6 +2,21 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `share` config (`networks`, `x_via`): choose which share buttons appear on published posts and in what order. Available: `whatsapp`, `x`, `linkedin`, `facebook`, `telegram`, `email`, `copy` (copy link to clipboard) and `native` (device share sheet via the Web Share API, hidden where unsupported). An empty `networks` array hides the block. Default: `whatsapp`, `x`, `linkedin`, `facebook`, `copy`, `native`.
+- `<x-blog::share :post="$post" />` component, backed by the new `Support\Share` resolver, so published views can place the share block anywhere. Included in the `simple-blog-views-public` publish tag.
+- Translated `aria-label`s on every share button and a screen-reader announcement when the link is copied (en, pt_BR, es).
+- Facebook, Telegram, envelope, link, check and share icons.
+
+### Changed
+
+- The post footer's hardcoded WhatsApp and X links were replaced by the configurable share block; with the default config it also shows LinkedIn, Facebook, copy link and native share. Set `share.networks` to `['whatsapp', 'x']` to keep the previous set.
+- The post footer now wraps on narrow screens instead of squeezing the share buttons next to the "More in …" link.
+- Share buttons are no longer rendered on the admin preview of drafts and scheduled posts.
+
 ## 0.8.5 - 2026-10-06
 
 ### Changed
