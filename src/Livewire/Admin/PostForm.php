@@ -164,7 +164,10 @@ final class PostForm extends Component
     private function persist(): void
     {
         $data = $this->validate();
-        $this->validate(['slug' => Rule::unique('blog_posts', 'slug')->ignore($this->post?->id)]);
+        $this->validate(
+            ['slug' => [Rule::unique('blog_posts', 'slug')->ignore($this->post?->id), Rule::notIn(Post::RESERVED_SLUGS)]],
+            ['slug.not_in' => __('blog::messages.slug_reserved')],
+        );
 
         foreach (['published_at', 'cover_image', 'og_image', 'meta_title', 'meta_description'] as $nullable) {
             if (($data[$nullable] ?? null) === '') {

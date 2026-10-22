@@ -226,6 +226,57 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | RSS feed
+    |--------------------------------------------------------------------------
+    |
+    | RSS 2.0 feed of the latest published posts at /{route_prefix}/feed
+    | (route `blog.feed`), advertised to browsers and readers by a
+    | <link rel="alternate"> on every public page. Works with feed readers
+    | and RSS-to-email tools (Mailchimp, Kit, …).
+    |
+    |   - enabled:      Registers the route. "feed" is a reserved post slug
+    |                   either way.
+    |   - limit:        How many of the latest posts the feed lists.
+    |   - full_content: Also send each post's rendered body
+    |                   (<content:encoded>), not only the excerpt. Useful
+    |                   for RSS-to-email; readers then don't need to visit.
+    |
+    | Example:
+    |     'feed' => [
+    |         'enabled' => true,
+    |         'limit' => 50,
+    |         'full_content' => true,
+    |     ],
+    |
+    */
+    'feed' => [
+        'enabled' => true,
+        'limit' => 20,
+        'full_content' => false,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | XML sitemap
+    |--------------------------------------------------------------------------
+    |
+    | Sitemap at /{route_prefix}/sitemap.xml (route `blog.sitemap`) listing
+    | the index, every category with published posts and every published
+    | post, each with its last modification date. Submit it in Google Search
+    | Console or reference it from your robots.txt:
+    |
+    |     Sitemap: https://example.com/blog/sitemap.xml
+    |
+    | Example:
+    |     'sitemap' => ['enabled' => false],   // you build your own sitemap
+    |
+    */
+    'sitemap' => [
+        'enabled' => true,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Public "Back to site" URL
     |--------------------------------------------------------------------------
     |

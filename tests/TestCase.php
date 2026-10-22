@@ -20,6 +20,14 @@ class TestCase extends Orchestra
      */
     public bool $enablesBlogApi = true;
 
+    /**
+     * Extra `blog.*` config applied before boot, for settings read when
+     * routes are registered. Set it, then call refreshApplication().
+     *
+     * @var array<string, mixed>
+     */
+    public array $bootConfig = [];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,6 +58,10 @@ class TestCase extends Orchestra
         config()->set('blog.assets', []);
         config()->set('blog.api.enabled', $this->enablesBlogApi);
         config()->set('blog.api.token', 'blog-token');
+
+        foreach ($this->bootConfig as $key => $value) {
+            config()->set("blog.{$key}", $value);
+        }
 
         Schema::create('users', function ($table) {
             $table->id();

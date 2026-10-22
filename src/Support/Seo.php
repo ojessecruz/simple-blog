@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jessecruz\SimpleBlog\Support;
 
+use Carbon\CarbonInterface;
 use Jessecruz\SimpleBlog\Models\Post;
 use Jessecruz\SimpleBlog\Models\PostCategory;
 
@@ -117,6 +118,17 @@ final class Seo
         return $page > 1 ? request()->url().'?page='.$page : request()->url();
     }
 
+    /**
+     * When a post last changed for readers: its last edit, or its publication
+     * date when it went live after that edit (a post scheduled in advance).
+     */
+    public static function lastModified(Post $post): CarbonInterface
+    {
+        $published = $post->published_at;
+
+        return $published !== null && $published->greaterThan($post->updated_at) ? $published : $post->updated_at;
+    }
+
     public static function language(): string
     {
         return str_replace('_', '-', app()->getLocale());
@@ -130,7 +142,7 @@ final class Seo
     public static function articleSchema(Post $post): array
     {
         $publishedAt = $post->published_at;
-        $modifiedAt = $post->updated_at ?? $publishedAt;
+        $modifiedAt = self::lastModified($post);
 
         $publisher = [
             '@type' => 'Organization',
@@ -152,7 +164,7 @@ final class Seo
             'inLanguage' => self::language(),
             'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => $post->url()],
             'datePublished' => $publishedAt?->toIso8601String(),
-            'dateModified' => $modifiedAt?->toIso8601String(),
+            'dateModified' => $modifiedAt->toIso8601String(),
             'author' => ['@type' => 'Person', 'name' => $post->authorName()],
             'publisher' => $publisher,
         ];
