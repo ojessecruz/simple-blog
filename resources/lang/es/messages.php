@@ -33,6 +33,14 @@ return [
     'more_in' => 'Más en :name',
     'related' => 'Relacionados',
 
+    // Public — share buttons
+    'share' => 'Compartir',
+    'share_on' => 'Compartir en :network',
+    'share_email' => 'Enviar por correo',
+    'share_native' => 'Más opciones para compartir',
+    'copy_link' => 'Copiar enlace',
+    'link_copied' => 'Enlace copiado',
+
     // Admin — posts index
     'admin_subtitle' => 'Gestiona publicaciones publicadas, borradores y programadas.',
     'categories' => 'Categorías',

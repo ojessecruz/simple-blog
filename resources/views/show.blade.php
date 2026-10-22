@@ -162,22 +162,13 @@
         </style>
 
         {{-- Footer --}}
-        <div class="mt-14 flex items-center justify-between border-t-2 border-zinc-100 pt-6 text-sm text-zinc-700 dark:border-zinc-800 dark:text-zinc-200">
+        <div class="mt-14 flex flex-wrap items-center justify-between gap-4 border-t-2 border-zinc-100 pt-6 text-sm text-zinc-700 dark:border-zinc-800 dark:text-zinc-200">
             <a href="{{ route('blog.category', $post->category) }}"
                class="underline-offset-4 transition hover:text-zinc-900 hover:underline hover:decoration-emerald-500 hover:decoration-2 dark:hover:text-zinc-200">
                 {{ __('blog::messages.more_in', ['name' => $post->category->name]) }}
             </a>
 
-            <div class="flex items-center gap-3">
-                <a href="https://wa.me/?text={{ urlencode($post->title.' - '.$post->url()) }}" target="_blank" rel="noopener"
-                   class="rounded-lg border-2 border-zinc-200 p-2 text-zinc-500 transition hover:-rotate-6 hover:border-emerald-500 hover:text-emerald-600 dark:border-zinc-700 dark:hover:border-emerald-500 dark:hover:text-emerald-400" title="WhatsApp">
-                    <x-blog::icon.whatsapp class="h-4 w-4" />
-                </a>
-                <a href="https://twitter.com/intent/tweet?url={{ urlencode($post->url()) }}&text={{ urlencode($post->title) }}" target="_blank" rel="noopener"
-                   class="rounded-lg border-2 border-zinc-200 p-2 text-zinc-500 transition hover:-rotate-6 hover:border-emerald-500 hover:text-emerald-600 dark:border-zinc-700 dark:hover:border-emerald-500 dark:hover:text-emerald-400" title="X (Twitter)">
-                    <x-blog::icon.x-twitter class="h-4 w-4" />
-                </a>
-            </div>
+            <x-blog::share :post="$post" />
         </div>
 
         @if(config('blog.cta_view'))

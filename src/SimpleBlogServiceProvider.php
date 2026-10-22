@@ -52,7 +52,7 @@ final class SimpleBlogServiceProvider extends PackageServiceProvider
      * Publish tags for views — all prefixed with the package name "simple-blog":
      *
      *   --tag="simple-blog-views"          → everything (public + admin + layouts)
-     *   --tag="simple-blog-views-public"   → public templates + public layout
+     *   --tag="simple-blog-views-public"   → public templates + share component + public layout
      *   --tag="simple-blog-views-admin"    → Livewire admin templates + admin layout
      *   --tag="simple-blog-views-layouts"  → just the public + admin layouts
      */
@@ -68,6 +68,7 @@ final class SimpleBlogServiceProvider extends PackageServiceProvider
         $this->publishes([
             $views.'/index.blade.php' => $target('index.blade.php'),
             $views.'/show.blade.php' => $target('show.blade.php'),
+            $views.'/components/share.blade.php' => $target('components/share.blade.php'),
             $views.'/layouts/public.blade.php' => $target('layouts/public.blade.php'),
         ], 'simple-blog-views-public');
 
