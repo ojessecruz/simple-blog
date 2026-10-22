@@ -7,9 +7,8 @@
     {{-- Each public view pushes its own <title>, description, OG tags and JSON-LD --}}
     @stack('head')
 
-    <link rel="canonical" href="{{ request()->url() }}">
-    <meta name="robots" content="index, follow">
-    <meta property="og:url" content="{{ url()->current() }}">
+    <link rel="canonical" href="{{ \Jessecruz\SimpleBlog\Support\Seo::canonicalUrl() }}">
+    <meta property="og:url" content="{{ \Jessecruz\SimpleBlog\Support\Seo::canonicalUrl() }}">
     <meta property="og:site_name" content="{{ \Jessecruz\SimpleBlog\Support\Seo::siteName() }}">
     <meta property="og:locale" content="{{ app()->getLocale() }}">
 

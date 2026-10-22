@@ -148,3 +148,22 @@ it('does not emit JSON-LD on the admin preview of a draft', function () {
         ->assertOk()
         ->assertDontSee('application/ld+json', false);
 });
+
+it('keeps admin previews of unpublished posts out of search engines', function () {
+    $post = publishedPost(['published_at' => null]);
+
+    $this->actingAs(User::create(['name' => 'Admin']))
+        ->get(route('blog.admin.preview', $post))
+        ->assertOk()
+        ->assertHeader('X-Robots-Tag', 'noindex, nofollow')
+        ->assertSee('<meta name="robots" content="noindex, nofollow">', false);
+});
+
+it('emits no robots directive on published posts', function () {
+    $post = publishedPost();
+
+    $this->get(route('blog.show', $post))
+        ->assertOk()
+        ->assertHeaderMissing('X-Robots-Tag')
+        ->assertDontSee('name="robots"', false);
+});

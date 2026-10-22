@@ -62,3 +62,12 @@ it('refuses to delete a category that has posts', function () {
 
     expect(PostCategory::find($category->id))->not->toBeNull();
 });
+
+it('sends notices in the current locale', function () {
+    app()->setLocale('pt_BR');
+
+    Livewire::test(CategoryIndex::class)
+        ->set('name', 'Nova Cat')
+        ->call('save')
+        ->assertDispatched('notify', 'Categoria criada.');
+});

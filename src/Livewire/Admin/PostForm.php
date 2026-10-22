@@ -54,6 +54,8 @@ final class PostForm extends Component
 
     public bool $autoSlug = true;
 
+    public bool $autoReadingTime = true;
+
     public bool $isDraft = true;
 
     public bool $splitView = false;
@@ -75,6 +77,7 @@ final class PostForm extends Component
             $this->og_image = $post->og_image;
             $this->keywords = implode(', ', $post->keywords ?? []);
             $this->autoSlug = false;
+            $this->autoReadingTime = false;
             $this->isDraft = $post->published_at === null;
         }
     }
@@ -89,6 +92,18 @@ final class PostForm extends Component
     public function updatedSlug(): void
     {
         $this->autoSlug = false;
+    }
+
+    public function updatedBody(string $value): void
+    {
+        if ($this->autoReadingTime) {
+            $this->reading_time = Post::estimateReadingTime($value);
+        }
+    }
+
+    public function updatedReadingTime(): void
+    {
+        $this->autoReadingTime = false;
     }
 
     public function updatedPublishedAt(?string $value): void
@@ -108,7 +123,7 @@ final class PostForm extends Component
     public function save(): void
     {
         $this->persist();
-        $this->dispatch('notify', $this->post?->wasRecentlyCreated ? 'Post created.' : 'Post updated.');
+        $this->dispatch('notify', $this->post?->wasRecentlyCreated ? __('blog::messages.post_created') : __('blog::messages.post_updated'));
         $this->redirectRoute('blog.admin.index', navigate: true);
     }
 
@@ -125,37 +140,24 @@ final class PostForm extends Component
         ])->layout(config('blog.layouts.admin'));
     }
 
-    protected function messages(): array
-    {
-        return [
-            'required' => 'The :attribute field is required.',
-            'string' => 'The :attribute must be a string.',
-            'integer' => 'The :attribute must be a number.',
-            'date' => 'The :attribute must be a valid date.',
-            'url' => 'The :attribute must be a valid URL.',
-            'alpha_dash' => 'The :attribute may only contain letters, numbers, dashes and underscores.',
-            'max.string' => 'The :attribute may not exceed :max characters.',
-            'max.numeric' => 'The :attribute may not be greater than :max.',
-            'min.numeric' => 'The :attribute must be at least :min.',
-            'unique' => 'The :attribute has already been taken.',
-            'exists' => 'The selected :attribute is invalid.',
-        ];
-    }
-
+    /**
+     * Field names in validation messages, labelled as in the form. The messages
+     * themselves come from the host app's validation translations.
+     */
     protected function validationAttributes(): array
     {
         return [
-            'title' => 'title',
-            'slug' => 'slug',
-            'excerpt' => 'excerpt',
-            'body' => 'content',
-            'blog_category_id' => 'category',
-            'cover_image' => 'cover image',
-            'published_at' => 'publish date',
-            'reading_time' => 'reading time',
-            'meta_title' => 'meta title',
-            'meta_description' => 'meta description',
-            'og_image' => 'og:image',
+            'title' => __('blog::messages.title'),
+            'slug' => __('blog::messages.slug'),
+            'excerpt' => __('blog::messages.excerpt'),
+            'body' => __('blog::messages.content_markdown'),
+            'blog_category_id' => __('blog::messages.category'),
+            'cover_image' => __('blog::messages.cover_image_url'),
+            'published_at' => __('blog::messages.publish_at'),
+            'reading_time' => __('blog::messages.reading_time'),
+            'meta_title' => __('blog::messages.meta_title'),
+            'meta_description' => __('blog::messages.meta_description'),
+            'og_image' => __('blog::messages.og_image_url'),
         ];
     }
 

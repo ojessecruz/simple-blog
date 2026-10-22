@@ -103,6 +103,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Posts per page
+    |--------------------------------------------------------------------------
+    |
+    | Page size of the public index and category listings (`?page=2`, …).
+    | Multiples of 6 fill the 2- and 3-column grid evenly. Pages past the
+    | last one return 404.
+    |
+    | Example:
+    |     'per_page' => 18,
+    |
+    */
+    'per_page' => 12,
+
+    /*
+    |--------------------------------------------------------------------------
     | Author model
     |--------------------------------------------------------------------------
     |
@@ -323,7 +338,9 @@ return [
     |   - index_title:     Full <title> for the index only, when you want a
     |                      tagline there. null → blog_name.
     |   - description:     Meta description for the index and for categories
-    |                      without their own description. null → no tag.
+    |                      without their own description, also shown as the
+    |                      subtitle under the index heading. null → no tag
+    |                      and no subtitle.
     |   - image:           Absolute URL of the default og:image for the index,
     |                      categories and posts without a cover. null → no tag.
     |   - publisher_logo:  Absolute URL of the logo used in the Article

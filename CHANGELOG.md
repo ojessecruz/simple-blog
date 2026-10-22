@@ -2,6 +2,26 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.8.8 - 2026-10-22
+
+### Added
+
+- Pagination on the public index and category pages, sized by the new `per_page` config (default 12), with newer/older links and a "Page X of Y" indicator. Posts published at the same time are ordered by id so pages never overlap. Pages past the last one return 404.
+- `Seo::canonicalUrl()`: the default public layout's canonical and `og:url` now keep `?page=N` on paginated pages and drop any other query string (e.g. `utm_*`).
+- The admin form estimates the reading time from the body (200 words/minute, same as the API) for new posts, until the field is edited by hand. Existing posts keep their stored value. The estimate lives in `Post::estimateReadingTime()`.
+- Translated admin notices (post created/updated/deleted, category created/updated/deleted, "category still has posts") and fallback author name ("Equipe"/"Equipo").
+
+### Changed
+
+- **The index subtitle now comes from `seo.description`** instead of the `index_blurb` lang string, which shipped niche copy ("Practical tips on scheduling, clients, WhatsApp…") to every blog. Without `seo.description`, no subtitle is rendered. Set `seo.description` to keep one; it is also the index meta description. The `index_blurb` key was removed.
+- Admin validation messages come from the host app's validation translations (the components no longer override them with hardcoded English); field names use the form labels in the current locale.
+- The default public layout no longer emits `<meta name="robots" content="index, follow">`, which is the default anyway.
+
+### Fixed
+
+- The admin preview of drafts and scheduled posts was indexable (`index, follow` from the layout). It now sends `X-Robots-Tag: noindex, nofollow` and a `noindex` meta tag.
+- The index and category pages loaded and rendered every published post at once.
+
 ## 0.8.7 - 2026-10-22
 
 ### Fixed

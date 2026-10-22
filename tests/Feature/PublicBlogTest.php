@@ -151,23 +151,31 @@ it('renders the listing as a responsive multi-column grid', function () {
         ->assertSee('grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3', false);
 });
 
-it('shows the ICP blurb on the index header in pt_BR', function () {
+it('shows seo.description as the index subtitle, and no subtitle when it is unset', function () {
     config()->set('blog.locale', 'pt_BR');
 
     $this->get(route('blog.index'))
         ->assertOk()
         ->assertSee('Últimas publicações')
-        ->assertSee('Dicas práticas de agenda, clientes, WhatsApp e gestão para quem vive de atender');
+        ->assertDontSee('Dicas práticas de agenda')
+        ->assertDontSee('<p class="mt-7', false);
+
+    config()->set('blog.seo.description', 'Guias sobre agenda e clientes.');
+
+    $this->get(route('blog.index'))
+        ->assertOk()
+        ->assertSee('<p class="mt-7', false)
+        ->assertSee('Guias sobre agenda e clientes.');
 });
 
-it('prefers the category description over the index blurb', function () {
-    config()->set('blog.locale', 'pt_BR');
+it('prefers the category description over seo.description', function () {
+    config()->set('blog.seo.description', 'Guias sobre agenda e clientes.');
     $category = PostCategory::create(['slug' => 'g', 'name' => 'Gestão', 'description' => 'Tudo sobre gestão.']);
 
     $this->get(route('blog.category', $category))
         ->assertOk()
         ->assertSee('Tudo sobre gestão.')
-        ->assertDontSee('Dicas práticas de agenda');
+        ->assertDontSee('Guias sobre agenda e clientes.');
 });
 
 it('formats meta dates in Portuguese when the locale is pt_BR', function () {

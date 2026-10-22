@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Jessecruz\SimpleBlog\Http\Controllers;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 use Jessecruz\SimpleBlog\Models\Post;
@@ -13,10 +16,7 @@ final class BlogController extends Controller
 {
     public function index(): View
     {
-        $posts = Post::published()
-            ->with('category', 'author')
-            ->latest('published_at')
-            ->get();
+        $posts = $this->paginate(Post::published());
 
         $categories = PostCategory::orderBy('name')->get();
 
@@ -46,11 +46,7 @@ final class BlogController extends Controller
 
     public function category(PostCategory $category): View
     {
-        $posts = Post::published()
-            ->where('blog_category_id', $category->id)
-            ->with('category', 'author')
-            ->latest('published_at')
-            ->get();
+        $posts = $this->paginate(Post::published()->where('blog_category_id', $category->id));
 
         $categories = PostCategory::orderBy('name')->get();
         $currentCategory = $category;
@@ -58,7 +54,7 @@ final class BlogController extends Controller
         return view('blog::index', compact('posts', 'categories', 'currentCategory'));
     }
 
-    public function preview(Post $post): View
+    public function preview(Post $post): Response
     {
         $relatedPosts = Post::query()
             ->where('id', '!=', $post->id)
@@ -70,6 +66,27 @@ final class BlogController extends Controller
 
         $post->load('category', 'author');
 
-        return view('blog::show', compact('post', 'relatedPosts'));
+        // Header rather than a meta tag alone, so it holds with any host layout.
+        return response()
+            ->view('blog::show', compact('post', 'relatedPosts'))
+            ->header('X-Robots-Tag', 'noindex, nofollow');
+    }
+
+    /**
+     * @param  Builder<Post>  $query
+     * @return LengthAwarePaginator<int, Post>
+     */
+    private function paginate(Builder $query): LengthAwarePaginator
+    {
+        $posts = $query
+            ->with('category', 'author')
+            ->latest('published_at')
+            ->latest('id')
+            ->paginate(max(1, (int) config('blog.per_page', 12)));
+
+        // Pages past the end would render an empty listing search engines can index.
+        abort_if($posts->isEmpty() && $posts->currentPage() > 1, 404);
+
+        return $posts;
     }
 }
