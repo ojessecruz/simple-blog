@@ -68,7 +68,11 @@ class TestCase extends Orchestra
             $table->string('name')->nullable();
         });
 
-        foreach (File::allFiles(__DIR__.'/../database/migrations') as $migration) {
+        // create_* first: the add_* migrations alter those tables.
+        $migrations = collect(File::allFiles(__DIR__.'/../database/migrations'))
+            ->sortBy(fn ($file) => (str_starts_with($file->getFilename(), 'create_') ? '0' : '1').$file->getFilename());
+
+        foreach ($migrations as $migration) {
             (include $migration->getRealPath())->up();
         }
     }

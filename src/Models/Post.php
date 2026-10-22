@@ -21,6 +21,7 @@ use Jessecruz\SimpleBlog\Contracts\Author;
  * @property string|null $cover_image
  * @property int|null $author_id
  * @property Carbon|null $published_at
+ * @property Carbon|null $announced_at
  * @property int $reading_time
  * @property int $views_count
  * @property string|null $meta_title
@@ -178,6 +179,7 @@ final class Post extends Model
     {
         return [
             'published_at' => 'datetime',
+            'announced_at' => 'datetime',
             'keywords' => 'array',
             'reading_time' => 'int',
             'views_count' => 'int',

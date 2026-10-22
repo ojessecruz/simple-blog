@@ -277,6 +277,51 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Publishing events and webhooks
+    |--------------------------------------------------------------------------
+    |
+    | When a post goes live — published right away or reaching its scheduled
+    | date — the package dispatches Jessecruz\SimpleBlog\Events\PostPublished
+    | once and POSTs it to the webhooks below. Listen to it to post on social
+    | networks, send a newsletter, purge a cache, etc.
+    |
+    | The `simple-blog:announce` command detects posts that went live. The
+    | package schedules it for you, so your app's scheduler must be running
+    | (`php artisan schedule:work`, or the `schedule:run` cron).
+    |
+    |   - schedule:        Cron expression for the command. null → not
+    |                      scheduled (run `simple-blog:announce` yourself).
+    |   - announce_window: Hours. Posts that went live longer ago than this
+    |                      (imports, backdated posts, a scheduler that was
+    |                      down for days) are marked as announced without
+    |                      firing the event. null → announce them all.
+    |   - webhooks:        URLs that receive a JSON POST
+    |                      ({"event": "post.published", "post": {...}}, the
+    |                      same post shape as the JSON API) through your
+    |                      queue, retried up to 3 times. BLOG_WEBHOOK_URLS in
+    |                      .env, comma-separated.
+    |   - webhook_secret:  Signs each body: header X-Simple-Blog-Signature is
+    |                      "sha256=" + HMAC-SHA256(body, secret).
+    |                      BLOG_WEBHOOK_SECRET in .env. null → unsigned.
+    |
+    | Example:
+    |     'publishing' => [
+    |         'schedule' => '0,15,30,45 * * * *',  // every 15 minutes
+    |         'announce_window' => 48,
+    |         'webhooks' => ['https://hooks.zapier.com/hooks/catch/123/abc/'],
+    |         'webhook_secret' => env('BLOG_WEBHOOK_SECRET'),
+    |     ],
+    |
+    */
+    'publishing' => [
+        'schedule' => '* * * * *',
+        'announce_window' => 24,
+        'webhooks' => array_values(array_filter(explode(',', (string) env('BLOG_WEBHOOK_URLS', '')))),
+        'webhook_secret' => env('BLOG_WEBHOOK_SECRET'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Public "Back to site" URL
     |--------------------------------------------------------------------------
     |
