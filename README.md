@@ -180,6 +180,7 @@ See `config/blog.php` (published) — every key has comments explaining what it 
 - **`share`** — which share buttons appear on posts, in what order, and the X handle to credit (see [Share buttons](#share-buttons))
 - **`toc`** — table of contents above posts (on/off, minimum headings, depth) and "#" heading links (see [Table of contents and heading links](#table-of-contents-and-heading-links))
 - **`feed`** / **`sitemap`** — RSS feed (on/off, item count, full content) and XML sitemap (on/off) (see [RSS feed and sitemap](#rss-feed-and-sitemap))
+- **`views`** — post view counting: on/off, skip bots, once per visitor session (see [View counting](#view-counting))
 - **`publishing`** — schedule of the command that fires `PostPublished`, announce window, webhook URLs and signing secret (see [Publishing events and webhooks](#publishing-events-and-webhooks))
 - **`public_back_url`** / **`admin_back_url`** — where the "back" links point (`null` hides them)
 - **`seo`** — site/blog names, default description and images used in titles, meta tags and the Article JSON-LD (see [SEO](#seo))
@@ -455,6 +456,26 @@ Sitemap: https://example.com/blog/sitemap.xml
 If your app already builds its own sitemap, set `'sitemap' => ['enabled' => false]` and add `route('blog.sitemap')` to your sitemap index instead, or keep both.
 
 `feed` is a reserved post slug: the admin and the API reject it, since `/blog/feed` would never reach the post.
+
+## View counting
+
+Each read of a public post adds to its `views_count`, shown in the admin post list. By default the count leaves out:
+
+- **Bots** — requests whose User-Agent is empty or names a crawler, link preview, AI agent, uptime checker or script (Googlebot, WhatsApp and Slack previews, GPTBot, curl, …). Bots that pose as regular browsers can't be told apart and still count.
+- **Reloads** — each post counts once per visitor session. The session remembers the last 50 posts read.
+- **HEAD requests** and admin previews.
+
+Counting never touches the post's `updated_at`, so the sitemap's `<lastmod>`, the feed and the `dateModified` meta only move when the post is edited.
+
+```php
+'views' => [
+    'enabled' => true,           // false: stop counting (e.g. you rely on your own analytics)
+    'ignore_bots' => true,
+    'once_per_session' => true,  // false: count every page load
+],
+```
+
+The per-session rule needs the session started by the default `web` public middleware. If your `public_middleware` has no session, every request counts.
 
 ## Publishing events and webhooks
 

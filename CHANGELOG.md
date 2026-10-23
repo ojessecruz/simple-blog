@@ -2,6 +2,21 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.9.3 - 2026-10-23
+
+### Fixed
+
+- Every read of a post bumped its `updated_at`, so the sitemap's `<lastmod>`, the feed's `lastBuildDate`, the `article:modified_time` and JSON-LD `dateModified` tags and the API's `updated_at` changed on each visit, telling search engines the post had been edited. Views are now counted without touching `updated_at` or firing the model's `updating`/`updated` events. Posts already read keep the date of their last view until their next edit.
+
+### Changed
+
+- Views no longer count requests from bots (empty User-Agent, crawlers, link previews, AI agents, scripts), reloads of a post within the same visitor session, or `HEAD` requests. Set `views.ignore_bots` / `views.once_per_session` to `false` for the old behavior.
+
+### Added
+
+- `views` config block (`enabled`, `ignore_bots`, `once_per_session`).
+- `Jessecruz\SimpleBlog\Support\ViewCounter`, which does the counting (`record($post, $request)`, `isBot($userAgent)`).
+
 ## 0.9.2 - 2026-10-22
 
 ### Fixed
