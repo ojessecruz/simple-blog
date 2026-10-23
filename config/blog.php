@@ -315,6 +315,40 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | View counting
+    |--------------------------------------------------------------------------
+    |
+    | Each read of a public post adds to its `views_count`, shown in the
+    | admin post list. Only GET requests count — admin previews never do —
+    | and counting never changes the post's last-modified date.
+    |
+    |   - enabled:          Count views at all. false → views_count stays as
+    |                       it is (e.g. you rely on your own analytics).
+    |   - ignore_bots:      Skip requests whose User-Agent is empty or names
+    |                       a crawler, link preview, AI agent or script
+    |                       (Googlebot, WhatsApp/Slack previews, GPTBot,
+    |                       curl, …). Bots posing as browsers still count.
+    |   - once_per_session: Count each post once per visitor session, so
+    |                       reloads don't add up. Needs a session (the
+    |                       default `web` public middleware starts one);
+    |                       without it every request counts.
+    |
+    | Example:
+    |     'views' => [
+    |         'enabled' => true,
+    |         'ignore_bots' => true,
+    |         'once_per_session' => false,   // count every page load
+    |     ],
+    |
+    */
+    'views' => [
+        'enabled' => true,
+        'ignore_bots' => true,
+        'once_per_session' => true,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Publishing events and webhooks
     |--------------------------------------------------------------------------
     |

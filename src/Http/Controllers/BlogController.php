@@ -6,11 +6,13 @@ namespace Jessecruz\SimpleBlog\Http\Controllers;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 use Jessecruz\SimpleBlog\Models\Post;
 use Jessecruz\SimpleBlog\Models\PostCategory;
+use Jessecruz\SimpleBlog\Support\ViewCounter;
 
 final class BlogController extends Controller
 {
@@ -23,13 +25,13 @@ final class BlogController extends Controller
         return view('blog::index', compact('posts', 'categories'));
     }
 
-    public function show(Post $post): View
+    public function show(Post $post, Request $request): View
     {
         if (! $post->isPublished()) {
             abort(404);
         }
 
-        $post->increment('views_count');
+        ViewCounter::record($post, $request);
 
         $relatedPosts = Post::published()
             ->where('id', '!=', $post->id)
