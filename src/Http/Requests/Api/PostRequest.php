@@ -13,6 +13,7 @@ use Illuminate\Validation\Rules\NotIn;
 use Illuminate\Validation\Rules\Unique;
 use Jessecruz\SimpleBlog\Models\Post;
 use Jessecruz\SimpleBlog\Models\PostCategory;
+use Jessecruz\SimpleBlog\Support\Images;
 
 /**
  * Validates post creation (POST, fields required) and partial updates (PATCH, fields optional).
@@ -42,8 +43,8 @@ final class PostRequest extends FormRequest
             'category' => [$presence, 'string', Rule::exists('blog_categories', 'slug')],
             'published_at' => ['nullable', 'date'],
             'reading_time' => ['sometimes', 'integer', 'min:1', 'max:120'],
-            'cover_image' => ['nullable', 'url', 'max:2048'],
-            'og_image' => ['nullable', 'url', 'max:2048'],
+            'cover_image' => Images::urlRules(),
+            'og_image' => Images::urlRules(),
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string', 'max:255'],
             'keywords' => ['nullable', 'array'],

@@ -44,3 +44,17 @@ it('prepends the import when no tailwindcss import is present', function () {
     expect(File::get(resource_path('css/app.css')))
         ->toStartWith("@import '../../vendor/ojessecruz/simple-blog/resources/css/simple-blog.css';");
 });
+
+it('reminds to link the public disk for image uploads', function () {
+    $this->artisan('simple-blog:install')
+        ->expectsConfirmation('Run the blog migrations now?', 'no')
+        ->expectsOutputToContain('php artisan storage:link')
+        ->assertSuccessful();
+
+    config()->set('filesystems.default', 's3');
+
+    $this->artisan('simple-blog:install')
+        ->expectsConfirmation('Run the blog migrations now?', 'no')
+        ->doesntExpectOutputToContain('storage:link')
+        ->assertSuccessful();
+});

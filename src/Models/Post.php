@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Jessecruz\SimpleBlog\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Jessecruz\SimpleBlog\Contracts\Author;
+use Jessecruz\SimpleBlog\Support\Images;
 use League\CommonMark\Extension\ExtensionInterface;
 
 /**
@@ -66,6 +68,13 @@ final class Post extends Model
         'og_image',
         'keywords',
     ];
+
+    protected static function booted(): void
+    {
+        // Uploaded images go once no post uses them: replaced, removed, or the post deleted.
+        self::updated(Images::deleteDropped(...));
+        self::deleted(Images::deleteDropped(...));
+    }
 
     public function category(): BelongsTo
     {
@@ -171,6 +180,27 @@ final class Post extends Model
         }
 
         return parent::fromDateTime($this->asDateTime($value)->setTimezone(date_default_timezone_get()));
+    }
+
+    /**
+     * Cover image URL. Uploads are stored as their path on the images disk
+     * and read back as its URL; external URLs pass through.
+     *
+     * @return Attribute<string|null, string|null>
+     */
+    protected function coverImage(): Attribute
+    {
+        return Attribute::make(get: fn (?string $value) => Images::url($value), set: fn (?string $value) => Images::path($value));
+    }
+
+    /**
+     * Social image URL, stored like the cover image.
+     *
+     * @return Attribute<string|null, string|null>
+     */
+    protected function ogImage(): Attribute
+    {
+        return Attribute::make(get: fn (?string $value) => Images::url($value), set: fn (?string $value) => Images::path($value));
     }
 
     public function scopePublished(Builder $query): Builder

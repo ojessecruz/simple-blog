@@ -349,6 +349,51 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Image uploads
+    |--------------------------------------------------------------------------
+    |
+    | The post form can upload the cover and social (og:image) images to a
+    | filesystem disk, besides taking a URL. A post stores an upload as its
+    | path on the disk and builds the URL when read, so changing the disk's
+    | URL (APP_URL, a CDN) updates every image.
+    |
+    | Readers load the images straight from the disk's URL, so it must be
+    | public: the `public` disk needs `php artisan storage:link`. Where local
+    | files don't survive a deploy (containers, serverless), use S3, R2 or
+    | similar; those disks need a `url` with the bucket's public domain,
+    | otherwise URLs point at the API endpoint.
+    |
+    |   - enabled:   false → no uploads, images by URL only.
+    |                BLOG_IMAGES_ENABLED in .env.
+    |   - disk:      Disk from config/filesystems.php. null → the app's
+    |                default disk (FILESYSTEM_DISK), except Laravel's private
+    |                `local` disk, replaced by `public`. Set it when your
+    |                default disk is private. A name that isn't configured
+    |                there turns uploads off. BLOG_IMAGES_DISK in .env.
+    |   - directory: Folder on the disk. An upload no post uses any more —
+    |                replaced, removed or its post deleted — is deleted.
+    |   - max_size:  Largest upload, in kilobytes. PHP's
+    |                upload_max_filesize (2 MB by default) and Livewire's
+    |                temporary upload limit (12 MB) also apply.
+    |
+    | Example:
+    |     'images' => [
+    |         'enabled' => true,
+    |         'disk' => 'r2',            // not the default disk
+    |         'directory' => 'blog/images',
+    |         'max_size' => 5120,        // 5 MB
+    |     ],
+    |
+    */
+    'images' => [
+        'enabled' => env('BLOG_IMAGES_ENABLED', true),
+        'disk' => env('BLOG_IMAGES_DISK'),
+        'directory' => 'blog',
+        'max_size' => 2048,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Publishing events and webhooks
     |--------------------------------------------------------------------------
     |
