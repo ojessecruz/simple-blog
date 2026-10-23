@@ -52,6 +52,12 @@ Publish the views (optional, only if you want to customize):
 php artisan vendor:publish --tag="simple-blog-views"
 ```
 
+If your default disk is Laravel's `local` one, link the `public` disk so uploaded cover and social images are served (see [Image uploads](#image-uploads)):
+
+```bash
+php artisan storage:link
+```
+
 Make Tailwind aware of the package views, otherwise it won't compile the classes they use and the blog renders unstyled.
 
 **Tailwind v4** (CSS-based config) — import the package's CSS entrypoint from your app's main stylesheet. It registers the package views as a source, and because the path is resolved relative to the package file, your app never has to know the package's internal structure:
@@ -181,6 +187,7 @@ See `config/blog.php` (published) — every key has comments explaining what it 
 - **`toc`** — table of contents above posts (on/off, minimum headings, depth) and "#" heading links (see [Table of contents and heading links](#table-of-contents-and-heading-links))
 - **`feed`** / **`sitemap`** — RSS feed (on/off, item count, full content) and XML sitemap (on/off) (see [RSS feed and sitemap](#rss-feed-and-sitemap))
 - **`views`** — post view counting: on/off, skip bots, once per visitor session (see [View counting](#view-counting))
+- **`images`** — cover and social image uploads: on/off, disk (default: `FILESYSTEM_DISK`), folder and size limit (see [Image uploads](#image-uploads))
 - **`publishing`** — schedule of the command that fires `PostPublished`, announce window, webhook URLs and signing secret (see [Publishing events and webhooks](#publishing-events-and-webhooks))
 - **`public_back_url`** / **`admin_back_url`** — where the "back" links point (`null` hides them)
 - **`seo`** — site/blog names, default description and images used in titles, meta tags and the Article JSON-LD (see [SEO](#seo))
@@ -477,6 +484,39 @@ Counting never touches the post's `updated_at`, so the sitemap's `<lastmod>`, th
 
 The per-session rule needs the session started by the default `web` public middleware. If your `public_middleware` has no session, every request counts.
 
+## Image uploads
+
+The post form takes images in two places:
+
+- **Images section**: the cover image and the social image (`og:image`), each as a URL or as an upload. The picked file is previewed right away and stored when the post is saved.
+- **Insert image** button above the body editor: the file is stored right away, and its Markdown (`![file name](https://…/blog/my-post-k3j9x2ab.jpg)`) is inserted at the cursor, in a paragraph of its own. The file name becomes the alt text; edit it into a description.
+
+Files are named after the post (`blog/my-post-k3j9x2ab.jpg`). JPG, PNG, GIF and WebP are accepted, checked by content, not by name. SVG is refused, since it can carry scripts.
+
+```php
+'images' => [
+    'enabled' => env('BLOG_IMAGES_ENABLED', true),  // false: URLs only, no upload button
+    'disk' => env('BLOG_IMAGES_DISK'),              // null: your default disk (FILESYSTEM_DISK)
+    'directory' => 'blog',
+    'max_size' => 2048,                              // kilobytes
+],
+```
+
+- **Uploads go to your app's default disk (`FILESYSTEM_DISK`), in the `blog` folder.** If your default is S3, R2 or similar, images land there.
+  - Laravel's own `local` disk is private, so when it is the default the `public` disk is used instead. Run `php artisan storage:link` once for it.
+  - If your default disk is private for another reason, or you want the images elsewhere, set `BLOG_IMAGES_DISK` to a disk name from `config/filesystems.php`. A name that isn't configured there turns uploads off.
+- **The disk must be public**, because readers load the images from its URL. Where local files don't survive a deploy (containers, serverless), use S3, R2 or a similar disk.
+- **S3 and Cloudflare R2**: give the disk a `url` with the bucket's public domain (an `r2.dev` URL or a custom domain). Without it, URLs point at the API endpoint, which needs credentials. Files are written without an ACL, so R2 works.
+  - When that bucket is your default disk, Livewire also uploads its temporary files straight from the browser to the bucket, which needs CORS on the bucket. To keep them on the server instead, set `temporary_file_upload.disk` to `local` in `config/livewire.php`.
+- **For the cover and social images, the post keeps the file's path on the disk, not its URL.** The URL is built each time the post is read, so a new `APP_URL`, a CDN in front of the disk or a different bucket URL applies to every image at once. `$post->cover_image`, `$post->og_image`, the views, the feed and the API all return the full URL. Saving a post back with that URL, from the form or through the API, keeps the upload.
+  - Images in the body are plain Markdown, so they keep the full URL from the moment they were inserted.
+- **Files are deleted once no post uses them**, whether as its cover, as its social image or in its body. That happens when an image is replaced, removed, switched to an external URL or taken out of the body and the post is saved, or when the post is deleted.
+  - A file whose URL also appears in another post stays until that post drops it too. Only files inside `directory` are ever deleted.
+  - A body image inserted into a post that is never saved stays on the disk.
+- **Upload limits**: `max_size` is checked by the form. PHP's `upload_max_filesize` (2 MB by default) and Livewire's temporary upload limit (12 MB) apply as well, so raise those to accept larger files.
+
+With `images.enabled` off, images in the body are added by hand as Markdown (`![alt](url)`).
+
 ## Publishing events and webhooks
 
 When a post goes live, the package dispatches `Jessecruz\SimpleBlog\Events\PostPublished` **once**. That covers posts published right away and scheduled posts reaching their date. Use it to post on social networks, send a newsletter or purge a cache:
@@ -575,6 +615,7 @@ Post payload:
 - `slug` defaults to `Str::slug(title)` on create; `reading_time` is estimated from the body (200 words/minute) when omitted. `feed` is a reserved slug.
 - `published_at`: omitted or `null` → draft; in the past → published; in the future → scheduled. The response reports it as `status`. An offset is honored (`2026-10-01T09:00:00-03:00` and `2026-10-01T12:00:00Z` are the same instant); a value without one is read in `app.timezone`. Responses use `app.timezone`.
 - Also accepted: `cover_image`, `og_image`, `meta_title`, `meta_description` and `author_id` (validated against `author_model` when one is configured).
+- `cover_image` and `og_image` are URLs both ways. Uploaded images come back as their full URL, and sending that URL back keeps the upload (see [Image uploads](#image-uploads)).
 
 To use your own auth instead of the shared token, replace the middleware stack:
 

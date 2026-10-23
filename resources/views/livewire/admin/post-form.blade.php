@@ -61,11 +61,35 @@
                 </div>
             </div>
 
-            <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-6">
+            <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-6"
+                 x-data="{
+                     insertImage(markdown) {
+                         const area = this.$refs.body;
+                         const start = area.selectionStart ?? area.value.length;
+                         const before = area.value.slice(0, start).replace(/[ \t]+$/, '');
+                         const after = area.value.slice(area.selectionEnd ?? start).replace(/^[ \t]+/, '');
+                         const block = (before === '' || before.endsWith('\n\n') ? '' : before.endsWith('\n') ? '\n' : '\n\n')
+                             + markdown + (after.startsWith('\n\n') ? '' : after.startsWith('\n') ? '\n' : '\n\n');
+                         area.value = before + block + after;
+                         area.selectionStart = area.selectionEnd = (before + block).length;
+                         area.dispatchEvent(new Event('input', { bubbles: true }));
+                         area.focus();
+                     },
+                 }"
+                 x-on:blog-insert-image.window="insertImage($event.detail.markdown)">
                 <div class="flex items-center justify-between gap-3 mb-3 flex-wrap">
                     <label class="text-xs font-medium text-zinc-500 dark:text-zinc-400">{{ __('blog::messages.content_markdown') }}</label>
                     <div class="flex items-center gap-3">
-                        <span class="text-xs text-zinc-500 hidden sm:inline">{{ __('blog::messages.images_hint') }}</span>
+                        @if ($imagesEnabled)
+                            <label class="cursor-pointer inline-flex items-center gap-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 px-2.5 py-1 text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 focus-within:ring-2 focus-within:ring-emerald-500 transition-colors">
+                                <x-blog::icon.photo class="w-4 h-4" />
+                                <span wire:loading.remove wire:target="bodyUpload">{{ __('blog::messages.insert_image') }}</span>
+                                <span wire:loading wire:target="bodyUpload">{{ __('blog::messages.image_uploading') }}</span>
+                                <input type="file" wire:model="bodyUpload" accept="image/jpeg,image/png,image/gif,image/webp" class="sr-only">
+                            </label>
+                        @else
+                            <span class="text-xs text-zinc-500 hidden sm:inline">{{ __('blog::messages.images_hint') }}</span>
+                        @endif
                         <div class="inline-flex rounded-md border border-zinc-200 dark:border-zinc-700 p-0.5">
                             <button type="button" wire:click="$set('splitView', false)"
                                     title="{{ __('blog::messages.edit_only') }}"
@@ -83,7 +107,7 @@
                     </div>
                 </div>
                 <div class="grid gap-4 {{ $splitView ? 'lg:grid-cols-2' : 'grid-cols-1' }}">
-                    <textarea wire:model.live.debounce.500ms="body" rows="22"
+                    <textarea wire:model.live.debounce.500ms="body" x-ref="body" rows="22"
                               class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm font-mono leading-relaxed focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                               placeholder="## Heading&#10;&#10;Your Markdown content..."></textarea>
                     @if($splitView)
@@ -97,6 +121,7 @@
                     @endif
                 </div>
                 @error('body') <p class="text-xs text-red-500 mt-2">{{ $message }}</p> @enderror
+                @error('bodyUpload') <p class="text-xs text-red-500 mt-2">{{ $message }}</p> @enderror
             </div>
 
             <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-6 space-y-4">
@@ -108,7 +133,7 @@
                         {{ __('blog::messages.mark_as_draft') }}
                     </label>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
                             {{ __('blog::messages.publish_at') }} <span class="text-zinc-400 dark:text-zinc-500">— {{ __('blog::messages.publish_at_hint') }}</span>
@@ -126,30 +151,68 @@
                                class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
                         @error('reading_time') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
-                    <div>
-                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.cover_image_url') }}</label>
-                        <input type="url" wire:model="cover_image" placeholder="https://..."
-                               class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
-                        @error('cover_image') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
-                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-6 space-y-4">
+                <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{{ __('blog::messages.images') }}</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    @foreach (['cover_image' => 'coverUpload', 'og_image' => 'ogUpload'] as $field => $upload)
+                        @php($preview = $this->imagePreview($field))
+                        <div data-blog-image="{{ $field }}">
+                            <label for="blog-{{ $field }}" class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                                {{ __('blog::messages.'.$field) }} <span class="text-zinc-400 dark:text-zinc-500">— {{ __('blog::messages.'.$field.'_hint') }}</span>
+                            </label>
+                            <div class="relative mb-2 aspect-[1200/630] overflow-hidden rounded-md border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 flex items-center justify-center">
+                                @if ($preview)
+                                    <img src="{{ $preview }}" alt="" class="h-full w-full object-cover">
+                                    <button type="button" wire:click="clearImage('{{ $field }}')"
+                                            title="{{ __('blog::messages.image_remove') }}"
+                                            aria-label="{{ __('blog::messages.image_remove') }}"
+                                            class="absolute top-2 right-2 rounded-full bg-zinc-900/70 p-1.5 text-white hover:bg-zinc-900 transition-colors">
+                                        <x-blog::icon.x-mark class="w-4 h-4" />
+                                    </button>
+                                @else
+                                    <x-blog::icon.photo class="w-10 h-10 text-zinc-300 dark:text-zinc-700" />
+                                @endif
+                                <div wire:loading.flex wire:target="{{ $upload }}"
+                                     class="absolute inset-0 items-center justify-center bg-white/75 dark:bg-zinc-900/75 text-xs font-medium text-zinc-600 dark:text-zinc-300">
+                                    {{ __('blog::messages.image_uploading') }}
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <input id="blog-{{ $field }}" type="url" wire:model.blur="{{ $field }}" placeholder="https://..." @disabled($this->{$upload})
+                                       class="block w-full flex-1 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 min-w-0 disabled:opacity-50">
+                                @if ($imagesEnabled)
+                                    <label class="shrink-0 cursor-pointer inline-flex items-center gap-1.5 rounded-md border border-zinc-300 dark:border-zinc-700 px-3 py-2 text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 focus-within:ring-2 focus-within:ring-emerald-500 transition-colors">
+                                        <x-blog::icon.arrow-up-tray class="w-4 h-4" />
+                                        {{ __('blog::messages.image_upload') }}
+                                        <input type="file" wire:model="{{ $upload }}" accept="image/jpeg,image/png,image/gif,image/webp" class="sr-only">
+                                    </label>
+                                @endif
+                            </div>
+                            @if ($this->{$upload})
+                                <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                    {{ __('blog::messages.image_pending', ['name' => $this->{$upload}->getClientOriginalName()]) }}
+                                    <button type="button" wire:click="$set('{{ $upload }}', null)" class="underline underline-offset-2 hover:text-zinc-900 dark:hover:text-zinc-100">{{ __('blog::messages.cancel') }}</button>
+                                </p>
+                            @elseif ($imagesEnabled)
+                                <p class="text-xs text-zinc-400 dark:text-zinc-500 mt-1">{{ __('blog::messages.image_upload_hint', ['size' => $maxUpload]) }}</p>
+                            @endif
+                            @error($field) <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                            @error($upload) <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
             <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-6 space-y-4">
                 <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{{ __('blog::messages.seo') }}</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.meta_title') }}</label>
-                        <input type="text" wire:model="meta_title"
-                               class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
-                        @error('meta_title') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.og_image_url') }}</label>
-                        <input type="url" wire:model="og_image" placeholder="https://..."
-                               class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
-                        @error('og_image') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
-                    </div>
+                <div>
+                    <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.meta_title') }}</label>
+                    <input type="text" wire:model="meta_title"
+                           class="block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
+                    @error('meta_title') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">{{ __('blog::messages.meta_description') }}</label>

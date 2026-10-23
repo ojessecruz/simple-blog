@@ -2,6 +2,27 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.9.4 - 2026-10-23
+
+### Added
+
+- Image uploads.
+  - The post form has a new **Images** section that takes the cover and social (`og:image`) images either as a URL or as an upload, with a preview before saving.
+  - An **Insert image** button above the body editor uploads an image right away and inserts its Markdown (`![file name](url)`) at the cursor.
+  - Files go to the app's default disk (`FILESYSTEM_DISK`) in a `blog` folder, named after the post. When the default is Laravel's private `local` disk, `public` is used instead.
+  - Configured by the new `images` block: `enabled`, `disk` (overrides the default disk), `directory` and `max_size`.
+  - Only JPG, PNG, GIF and WebP are accepted, checked by content; SVG is refused.
+- Uploads are stored as their path on the disk and read back as the disk's URL, so a new `APP_URL` or a CDN applies to every image. `$post->cover_image` and `$post->og_image`, the views, the feed and the API keep returning full URLs, and saving that URL back keeps the upload.
+- An uploaded file is deleted once no post uses it as its cover, as its social image or in its body. That happens when it is replaced, removed, switched to a URL or taken out of the body, or when its post is deleted. Only files inside `images.directory` are ever deleted.
+- `Jessecruz\SimpleBlog\Support\Images`.
+- `simple-blog:install` reminds you to run `php artisan storage:link` when images go to the `public` disk and it isn't linked yet.
+
+### Changed
+
+- The cover image field moved out of **Publishing** and the og:image field out of **SEO**, both into the new **Images** section. Published `post-form.blade.php` copies keep working, with URLs only; republish the admin views to get uploads.
+- An image field value that isn't a URL is now read as a path on the images disk. The admin and the API only ever accepted URLs.
+- A post's social image (`og:image`, `twitter:image`, JSON-LD `image`, the feed's `media:content`) is always an absolute URL, including on disks that serve relative ones (`/storage/…`).
+
 ## 0.9.3 - 2026-10-23
 
 ### Fixed

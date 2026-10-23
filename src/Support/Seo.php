@@ -94,13 +94,14 @@ final class Seo
 
     /**
      * Social image for a post: explicit og_image, then cover image, then the
-     * configured default.
+     * configured default. Absolute, since uploads on a disk without a base
+     * URL resolve to "/storage/…".
      */
     public static function postImage(Post $post): ?string
     {
         foreach ([$post->og_image, $post->cover_image] as $candidate) {
             if (is_string($candidate) && $candidate !== '') {
-                return $candidate;
+                return url($candidate);
             }
         }
 

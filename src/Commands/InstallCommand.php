@@ -6,6 +6,7 @@ namespace Jessecruz\SimpleBlog\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Jessecruz\SimpleBlog\Support\Images;
 
 final class InstallCommand extends Command
 {
@@ -39,12 +40,18 @@ final class InstallCommand extends Command
             $this->call('migrate');
         }
 
-        $this->newLine();
-        $this->components->info('Simple Blog installed. Next steps:');
-        $this->components->bulletList([
+        $steps = [
             'Protect the admin: set `admin_middleware` in config/blog.php (e.g. add an auth/role middleware).',
             'Build your CSS so the blog styles compile: `npm run build` (or `npm run dev`).',
-        ]);
+        ];
+
+        if (Images::disk() === 'public' && ! File::exists(public_path('storage'))) {
+            $steps[] = 'Serve uploaded images: `php artisan storage:link` (or set `images.disk` in config/blog.php to another disk).';
+        }
+
+        $this->newLine();
+        $this->components->info('Simple Blog installed. Next steps:');
+        $this->components->bulletList($steps);
 
         return self::SUCCESS;
     }
