@@ -147,7 +147,7 @@ final class ContentSplitter
 
         $root = null;
         foreach ($document->childNodes as $child) {
-            if ($child->nodeType === XML_PI_NODE) {
+            if (self::isEncodingHint($child)) {
                 continue;
             }
 
@@ -168,5 +168,20 @@ final class ContentSplitter
         }
 
         return $nodes;
+    }
+
+    /**
+     * The `<?xml encoding="utf-8" ?>` prefix that makes libxml read the input
+     * as UTF-8. libxml up to 2.13 keeps it as a processing instruction; 2.14+
+     * parses HTML like HTML5 and keeps it as a comment instead.
+     */
+    private static function isEncodingHint(DOMNode $node): bool
+    {
+        if ($node->nodeType === XML_PI_NODE) {
+            return true;
+        }
+
+        return $node->nodeType === XML_COMMENT_NODE
+            && str_starts_with(trim((string) $node->nodeValue), '?xml');
     }
 }

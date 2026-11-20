@@ -2,6 +2,12 @@
 
 All notable changes to `simple-blog` will be documented in this file.
 
+## 0.9.5 - 2026-11-20
+
+### Fixed
+
+- The mid-article CTA (`mid_cta_view`) never showed on systems with libxml 2.14 or newer, such as Ubuntu 26.04. Those versions parse HTML like HTML5 and keep the `<?xml encoding="utf-8" ?>` prefix the splitter adds as a comment rather than a processing instruction, so the splitter gave up on every post. It now skips the prefix in either form.
+
 ## 0.9.4 - 2026-10-23
 
 ### Added
